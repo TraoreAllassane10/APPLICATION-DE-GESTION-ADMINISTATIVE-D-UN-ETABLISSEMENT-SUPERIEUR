@@ -134,363 +134,381 @@ function Create() {
                 specialite: enseignantSelectionne.specialite,
                 telephone: enseignantSelectionne.telephone || '',
             }));
-        }}
-
-        return (
-            <AppLayout>
-                <Head title="Enseignant" />
-
-                <div className="p-6">
-                    <div className="mb-6">
-                        <Link
-                            href="/professeur"
-                            className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            <ArrowLeft className="h-3.5 w-3.5" /> Retour aux
-                            enseignants
-                        </Link>
-                        <h1 className="text-2xl font-bold tracking-tight">
-                            Nouvel enseignant
-                        </h1>
-                        <p className="mt-0.5 text-sm text-muted-foreground">
-                            Remplissez les informations pour enregistrer un
-                            nouvel enseignant.
-                        </p>
-                    </div>
-
-                    <Card className="shadow-sm">
-                        <CardHeader className="pb-4">
-                            <CardTitle>Information de l'enseignant</CardTitle>
-                            <CardDescription>
-                                Renseigner les informations personnelle de
-                                l'enseignant
-                            </CardDescription>
-                        </CardHeader>
-
-                        <Separator />
-
-                        {/* Option d'enregistrement */}
-                        <CardContent className="pb-4">
-                            <FieldSet className="w-full max-w-xs">
-                                <FieldLegend variant="label">
-                                    Mode d'enregistrement
-                                </FieldLegend>
-                                <FieldDescription>
-                                    Choisissez une option d'enregistrement.
-                                </FieldDescription>
-
-                                <RadioGroup
-                                    defaultValue={option}
-                                    onValueChange={setOption}
-                                    className="mt-4"
-                                >
-                                    <div className="flex flex-row items-center gap-3">
-                                        <RadioGroupItem value="1" id="nouvel" />
-                                        <Label htmlFor="nouvel">
-                                            Nouvel enseignant
-                                        </Label>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <RadioGroupItem
-                                            value="2"
-                                            id="existant"
-                                        />
-                                        <Label htmlFor="existant">
-                                            Enseignant existant
-                                        </Label>
-                                    </div>
-                                </RadioGroup>
-                            </FieldSet>
-                        </CardContent>
-
-                        <Separator />
-
-                        {/* Choix de l'enseignement existant */}
-                        <CardContent>
-                            <Field className="w-full">
-                                <FieldLabel>Enseignant</FieldLabel>
-                                <Select
-                                    disabled={option == '1'}
-                                    onValueChange={(v) =>
-                                        handleSelectEnseignant(v)
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Choose department" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {professeurs.map((prof) => (
-                                                <SelectItem
-                                                    key={prof.id}
-                                                    value={prof.id.toString()}
-                                                >
-                                                    {prof.nom_prenom}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                                <FieldDescription>
-                                    Selectionnez l'enseignant.
-                                </FieldDescription>
-                            </Field>
-                        </CardContent>
-
-                        <Separator />
-
-                        {/* Informations Indentitaire */}
-                        <CardContent>
-                            <Field className="w-full">
-                                <FieldLabel>
-                                    Informations sur l'identité
-                                </FieldLabel>
-
-                                <div>
-                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                                        <div>
-                                            <Label>
-                                                Matricule {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                value={formData.matricule}
-                                                onChange={(e) =>
-                                                    handleChange(
-                                                        'matricule',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                disabled={option == '2'}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Nom et Prenom{' '}
-                                                {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                value={formData.nom_prenom}
-                                                onChange={(e) =>
-                                                    handleChange(
-                                                        'nom_prenom',
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                disabled={option == '2'}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Sexe {champObligatoire()}
-                                            </Label>
-                                            <Select
-                                                value={formData.sexe}
-                                                onValueChange={(v) =>
-                                                    handleChange('sexe', v)
-                                                }
-                                                disabled={option == '2'}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Choisir un sexe" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        <SelectItem value="M">
-                                                            M
-                                                        </SelectItem>
-                                                        <SelectItem value="F">
-                                                            F
-                                                        </SelectItem>
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Date de naissance{' '}
-                                                {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                type="date"
-                                                value={formData.date_naissance}
-                                                onChange={(e) =>
-                                                    handleChange('date_naissance', e.target.value)
-                                                }
-                                                disabled={option == '2'}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Pays {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                value={formData.pays}
-                                                onChange={(e) =>
-                                                   handleChange('pays', e.target.value)
-                                                }
-                                                disabled={option == '2'}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Spécialité {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                value={formData.specialite}
-                                                onChange={(e) =>
-                                                   handleChange("specialite", e.target.value)
-                                                }
-                                                disabled={option == '2'}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>Telephone</Label>
-                                            <Input
-                                                value={formData.telephone}
-                                                onChange={(e) =>
-                                                    handleChange("telephone", e.target.value)
-                                                }
-                                             
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Field>
-                        </CardContent>
-
-                        <Separator />
-
-                        {/* Informations sur la fonction */}
-                        <CardContent>
-                            <Field className="w-full">
-                                <FieldLabel>
-                                    Informations sur la fonction
-                                </FieldLabel>
-
-                                <div>
-                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                                        <div>
-                                            <Label>
-                                                Dernier diplôme{' '}
-                                                {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                value={formData.diplome}
-                                                onChange={(e) =>
-                                                     handleChange("diplome", e.target.value)
-                                                }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                grade{champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                type="number"
-                                                value={formData.grade}
-                                                onChange={(e) =>
-                                                      handleChange("grade", e.target.value)
-                                                }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Statut {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                type="number"
-                                                value={formData.statut}
-                                                onChange={(e) =>
-                                                             handleChange("statut", e.target.value)
-                                                }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Année de prise de fonction{' '}
-                                                {champObligatoire()}
-                                            </Label>
-                                            <Input
-                                                type="number"
-                                                value={formData.annee_prise_fonction}
-                                                onChange={(e) =>
-                                                   handleChange("annee_prise_fonction", e.target.value)
-                                                }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>Formation continue</Label>
-                                            <Input
-                                                type="number"
-                                                value={formData.formation_continue}
-                                                onChange={(e) =>
-                                                     handleChange("formation_continue", e.target.value)
-                                                }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Nombre d'heure de cours prévues
-                                                / An
-                                            </Label>
-                                            <Input
-                                                type="number"
-                                                value={
-                                                    formData.nombre_heure_cours_prevue
-                                                }
-                                                onChange={(e) =>
-                                                    handleChange("nombre_heure_cours_prevue", e.target.value)
-                                                }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <Label>
-                                                Nombre d'heure de cours
-                                                réalisées / An
-                                            </Label>
-                                            <Input
-                                                type="number"
-                                                value={
-                                                    formData.nombre_heure_cours_realise
-                                                }
-                                                onChange={(e) =>
-                                                  handleChange("nombre_heure_cours_realise", e.target.value)
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Field>
-                        </CardContent>
-                    </Card>
-
-                    {/* Navigation */}
-                    <div className="mt-4 flex justify-between">
-                        <Button variant="outline">
-                            <Link href="/professeur">Retour</Link>
-                        </Button>
-
-                        <Button disabled={!canRegister} onClick={handleSubmit}>
-                            <CheckCircle />
-                            Enregistrer
-                        </Button>
-                    </div>
-                </div>
-            </AppLayout>
-        );
+        }
     };
 
+    return (
+        <AppLayout>
+            <Head title="Enseignant" />
+
+            <div className="p-6">
+                <div className="mb-6">
+                    <Link
+                        href="/professeur"
+                        className="mb-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                        <ArrowLeft className="h-3.5 w-3.5" /> Retour aux
+                        enseignants
+                    </Link>
+                    <h1 className="text-2xl font-bold tracking-tight">
+                        Nouvel enseignant
+                    </h1>
+                    <p className="mt-0.5 text-sm text-muted-foreground">
+                        Remplissez les informations pour enregistrer un nouvel
+                        enseignant.
+                    </p>
+                </div>
+
+                <Card className="shadow-sm">
+                    <CardHeader className="pb-4">
+                        <CardTitle>Information de l'enseignant</CardTitle>
+                        <CardDescription>
+                            Renseigner les informations personnelle de
+                            l'enseignant
+                        </CardDescription>
+                    </CardHeader>
+
+                    <Separator />
+
+                    {/* Option d'enregistrement */}
+                    <CardContent className="pb-4">
+                        <FieldSet className="w-full max-w-xs">
+                            <FieldLegend variant="label">
+                                Mode d'enregistrement
+                            </FieldLegend>
+                            <FieldDescription>
+                                Choisissez une option d'enregistrement.
+                            </FieldDescription>
+
+                            <RadioGroup
+                                defaultValue={option}
+                                onValueChange={setOption}
+                                className="mt-4"
+                            >
+                                <div className="flex flex-row items-center gap-3">
+                                    <RadioGroupItem value="1" id="nouvel" />
+                                    <Label htmlFor="nouvel">
+                                        Nouvel enseignant
+                                    </Label>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <RadioGroupItem value="2" id="existant" />
+                                    <Label htmlFor="existant">
+                                        Enseignant existant
+                                    </Label>
+                                </div>
+                            </RadioGroup>
+                        </FieldSet>
+                    </CardContent>
+
+                    <Separator />
+
+                    {/* Choix de l'enseignement existant */}
+                    <CardContent>
+                        <Field className="w-full">
+                            <FieldLabel>Enseignant</FieldLabel>
+                            <Select
+                                disabled={option == '1'}
+                                onValueChange={(v) => handleSelectEnseignant(v)}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choose department" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        {professeurs.map((prof) => (
+                                            <SelectItem
+                                                key={prof.id}
+                                                value={prof.id.toString()}
+                                            >
+                                                {prof.nom_prenom}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <FieldDescription>
+                                Selectionnez l'enseignant.
+                            </FieldDescription>
+                        </Field>
+                    </CardContent>
+
+                    <Separator />
+
+                    {/* Informations Indentitaire */}
+                    <CardContent>
+                        <Field className="w-full">
+                            <FieldLabel>Informations sur l'identité</FieldLabel>
+
+                            <div>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                    <div>
+                                        <Label>
+                                            Matricule {champObligatoire()}
+                                        </Label>
+                                        <Input
+                                            value={formData.matricule}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'matricule',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={option == '2'}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>
+                                            Nom et Prenom {champObligatoire()}
+                                        </Label>
+                                        <Input
+                                            value={formData.nom_prenom}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'nom_prenom',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={option == '2'}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>Sexe {champObligatoire()}</Label>
+                                        <Select
+                                            value={formData.sexe}
+                                            onValueChange={(v) =>
+                                                handleChange('sexe', v)
+                                            }
+                                            disabled={option == '2'}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Choisir un sexe" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectItem value="M">
+                                                        M
+                                                    </SelectItem>
+                                                    <SelectItem value="F">
+                                                        F
+                                                    </SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Label>
+                                            Date de naissance{' '}
+                                            {champObligatoire()}
+                                        </Label>
+                                        <Input
+                                            type="date"
+                                            value={formData.date_naissance}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'date_naissance',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={option == '2'}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>Pays {champObligatoire()}</Label>
+                                        <Input
+                                            value={formData.pays}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'pays',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={option == '2'}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>
+                                            Spécialité {champObligatoire()}
+                                        </Label>
+                                        <Input
+                                            value={formData.specialite}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'specialite',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={option == '2'}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>Telephone</Label>
+                                        <Input
+                                            value={formData.telephone}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'telephone',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </Field>
+                    </CardContent>
+
+                    <Separator />
+
+                    {/* Informations sur la fonction */}
+                    <CardContent>
+                        <Field className="w-full">
+                            <FieldLabel>
+                                Informations sur la fonction
+                            </FieldLabel>
+
+                            <div>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                    <div>
+                                        <Label>
+                                            Dernier diplôme {champObligatoire()}
+                                        </Label>
+                                        <Input
+                                            value={formData.diplome}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'diplome',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>grade{champObligatoire()}</Label>
+                                        <Input
+                                            type="number"
+                                            value={formData.grade}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'grade',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>
+                                            Statut {champObligatoire()}
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            value={formData.statut}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'statut',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>
+                                            Année de prise de fonction{' '}
+                                            {champObligatoire()}
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            value={
+                                                formData.annee_prise_fonction
+                                            }
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'annee_prise_fonction',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>Formation continue</Label>
+                                        <Input
+                                            type="number"
+                                            value={formData.formation_continue}
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'formation_continue',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>
+                                            Nombre d'heure de cours prévues / An
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            value={
+                                                formData.nombre_heure_cours_prevue
+                                            }
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'nombre_heure_cours_prevue',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>
+                                            Nombre d'heure de cours réalisées /
+                                            An
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            value={
+                                                formData.nombre_heure_cours_realise
+                                            }
+                                            onChange={(e) =>
+                                                handleChange(
+                                                    'nombre_heure_cours_realise',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </Field>
+                    </CardContent>
+                </Card>
+
+                {/* Navigation */}
+                <div className="mt-4 flex justify-between">
+                    <Button variant="outline">
+                        <Link href="/professeur">Retour</Link>
+                    </Button>
+
+                    <Button disabled={!canRegister} onClick={handleSubmit}>
+                        <CheckCircle />
+                        Enregistrer
+                    </Button>
+                </div>
+            </div>
+        </AppLayout>
+    );
+}
 
 export default Create;
