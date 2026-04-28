@@ -1,10 +1,12 @@
 import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
@@ -19,10 +21,13 @@ import {
     History,
     LayoutDashboard,
     Settings2,
+    User,
     UserCog,
     Users,
 } from 'lucide-react';
 import AppLogo from './app-logo';
+import { NavMain } from './nav-main';
+import personnels from '@/routes/personnels';
 
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
@@ -58,11 +63,6 @@ export function AppSidebar() {
             href: professeur(),
             icon: UserCog,
         },
-        // {
-        //     title: 'Programmes',
-        //     href: seance(),
-        //     icon: CalendarDays,
-        // },
         ...(isAuthorize
             ? [
                   {
@@ -73,6 +73,15 @@ export function AppSidebar() {
               ]
             : []),
     ];
+
+    const mainNavItemsPersonnel: NavItem[] = [
+        {
+            title: 'Personnels',
+            href: "/personnels",
+            icon: User,
+        },
+    ];
+
     const footerNavItems: NavItem[] = [
         {
             title: 'Configurations',
@@ -96,7 +105,8 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={mainNavItems} title='Gestion Académique' />
+                <NavMain items={mainNavItemsPersonnel} title='Gestion du personnel' />
             </SidebarContent>
 
             <SidebarFooter>
