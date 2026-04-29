@@ -140,7 +140,7 @@ export function Step1({
                     <TextInput field="bp" data={data} setData={setData} />
                 </Field>
 
-                <Field label="RIB">
+                <Field label="RIB de l'employé">
                     <TextInput field="rib" data={data} setData={setData} />
                 </Field>
             </div>

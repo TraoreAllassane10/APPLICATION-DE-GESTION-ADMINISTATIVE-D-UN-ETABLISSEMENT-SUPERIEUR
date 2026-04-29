@@ -35,9 +35,12 @@ export const emptyForm = (): PersonnelFormData => ({
     email: '',
     bp: '',
     rib: '',
-    proprietaire: '',
+    proprietaire: false,
     nom_entreprise: '',
     numero_registre_commerce: '',
+
+    formations: [],
+    experiences: [],
 });
 
 interface PersonnelFormProps {
@@ -158,7 +161,7 @@ export function PersonnelForm({
                                 <CheckCircle2 className="mr-1.5 h-4 w-4" />
                                 {isEdit
                                     ? 'Enregistrer les modifications'
-                                    : "Créer l'étudiant"}
+                                    : "Enregistrer l'employé"}
                             </>
                         )}
                     </Button>

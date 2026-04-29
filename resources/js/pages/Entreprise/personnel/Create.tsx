@@ -1,14 +1,13 @@
 import { PersonnelForm } from '@/components/Entreprise/Personnel/PersonnelForm';
 import AppLayout from '@/layouts/app-layout';
+import { PersonnelFormData } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-import { useState } from 'react';
 
 const Create = () => {
-
-    const handleSubmit = () => {
-
-    }
+    const handleSubmit = (data: PersonnelFormData) => {
+        console.log(data);
+    };
 
     return (
         <AppLayout>
@@ -32,7 +31,11 @@ const Create = () => {
                     </p>
                 </div>
 
-                <PersonnelForm onSubmit={handleSubmit} onCancel={() => router.visit('/personnels')} isLoading />
+                <PersonnelForm
+                    onSubmit={handleSubmit}
+                    onCancel={() => router.visit('/personnels')}
+                    isLoading
+                />
             </div>
         </AppLayout>
     );

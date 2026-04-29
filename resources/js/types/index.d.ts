@@ -281,8 +281,8 @@ export interface Personnel {
     matricule?: string;
     fonction: string;
     situation_matrimoniale: string;
-    nombre_enfant: number;
-    nombre_enfant_charge: number;
+    nombre_enfant: string;
+    nombre_enfant_charge: string;
     telephone: string;
     email: string;
     bp: string;
@@ -299,6 +299,7 @@ export interface Personnel {
 export type PersonnelFormData = Omit<
     Personnel | formations | experiences | documents
 >;
+
 
 export interface Formation {
     id: string;
