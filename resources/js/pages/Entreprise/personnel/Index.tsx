@@ -32,6 +32,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     Edit,
+    Eye,
     GraduationCap,
     PlusCircle,
     Trash2,
@@ -75,7 +76,7 @@ const Index = () => {
                             Personnels
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
-                            Gérez les personnels.
+                            Gérez le personnel.
                         </p>
                     </div>
 
@@ -166,7 +167,17 @@ const Index = () => {
                                                 >
                                                     <DropdownMenuItem asChild>
                                                         <Link
-                                                            href={`/niveau/${personnel.id}/edit`}
+                                                            href={`/personnels/${personnel.id}/show`}
+                                                            className="flex cursor-pointer items-center gap-2"
+                                                        >
+                                                            <Eye className="h-4 w-4" />{' '}
+                                                            Profil
+                                                        </Link>
+                                                    </DropdownMenuItem>
+
+                                                    <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={`/personnels/${personnel.id}/edit`}
                                                             className="flex cursor-pointer items-center gap-2"
                                                         >
                                                             <Edit className="h-4 w-4" />{' '}

@@ -56,9 +56,10 @@ export interface Etudiant {
     genre: string;
     nom: string;
     prenom: string;
-
+    date_naissance: string;
+    lieu_naissance: string;
+    nationnalite: string;
     statut: StatutEtudiant;
-
     email: string | null;
     pays_residence: string | null;
     etablissement_origine: string | null;
@@ -299,7 +300,6 @@ export interface Personnel {
 export type PersonnelFormData = Omit<
     Personnel | formations | experiences | documents
 >;
-
 
 export interface Formation {
     id: string;
