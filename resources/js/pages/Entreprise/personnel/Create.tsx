@@ -1,12 +1,15 @@
 import { PersonnelForm } from '@/components/Entreprise/Personnel/PersonnelForm';
+import usePersonnel from '@/hooks/Entreprise/usePersonnel';
 import AppLayout from '@/layouts/app-layout';
 import { PersonnelFormData } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 
 const Create = () => {
+    const { createPersonnel } = usePersonnel();
+
     const handleSubmit = (data: PersonnelFormData) => {
-        console.log(data);
+        createPersonnel(data);
     };
 
     return (

@@ -25,7 +25,7 @@ export const emptyForm = (): PersonnelFormData => ({
     genre: '',
     date_naissance: '',
     lieu_naissance: '',
-    nationnalite: '',
+    nationalite: '',
     matricule: '',
     fonction: '',
     situation_matrimoniale: '',
@@ -73,7 +73,7 @@ export function PersonnelForm({
                 data.genre &&
                 data.date_naissance &&
                 data.lieu_naissance &&
-                data.nationnalite
+                data.nationalite
             );
         return true;
     };

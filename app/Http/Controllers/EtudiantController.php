@@ -65,9 +65,9 @@ class EtudiantController extends Controller
             //Creation d'un etudiant
             $this->etudiantService->create($data);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
+            return response()->json(["success" => false ,"message" => $e->getMessage()]);
         }
     }
 

@@ -9,4 +9,6 @@ class Experience extends Model
 {
     /** @use HasFactory<\Database\Factories\Entreprise\ExperienceFactory> */
     use HasFactory;
+
+    protected $guarded = [];
 }

@@ -9,4 +9,6 @@ class Document extends Model
 {
     /** @use HasFactory<\Database\Factories\Entreprise\DocumentFactory> */
     use HasFactory;
+
+    protected $guarded = [];
 }

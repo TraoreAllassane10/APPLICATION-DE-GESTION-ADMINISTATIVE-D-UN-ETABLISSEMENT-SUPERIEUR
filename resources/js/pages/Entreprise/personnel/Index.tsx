@@ -1,3 +1,4 @@
+import Avatar from '@/components/etudiant/Avatar';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,22 +12,49 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
     Table,
     TableBody,
+    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/react';
-import { PlusCircle } from 'lucide-react';
+import { BreadcrumbItem, Meta, Personnel } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
+import {
+    ChevronDown,
+    Edit,
+    GraduationCap,
+    PlusCircle,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Personnels', href: '/personnels' },
 ];
 
+export interface PersonnelData {
+    data: Personnel[];
+    meta: Meta;
+}
+
+export interface PersonnelProps {
+    personnels: PersonnelData;
+    [key: string]: unknown;
+}
+
 const Index = () => {
+    const { personnels } = usePage<PersonnelProps>().props;
+
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
     const handleDelete = () => {
@@ -51,7 +79,7 @@ const Index = () => {
                         </p>
                     </div>
 
-                    <Link href='/personnels/create'>
+                    <Link href="/personnels/create">
                         <Button className="gap-2 transition duration-300 hover:bg-red-700">
                             <PlusCircle className="h-4 w-4" />
                             Ajouter un employers
@@ -64,41 +92,60 @@ const Index = () => {
                     <Table>
                         <TableHeader>
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
-                                <TableHead>Nom</TableHead>
-                                <TableHead>Prenom</TableHead>
+                                <TableHead>Nom et Prenom</TableHead>
                                 <TableHead>Genre</TableHead>
                                 <TableHead>Fonction</TableHead>
-                                <TableHead>Telephone</TableHead>
+                                <TableHead>Date de naissance</TableHead>
                                 <TableHead className="w-[80px]" />
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {/* {niveaux.data.length === 0 ? (
+                            {personnels.data.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={3} className="h-48 text-center">
+                                    <TableCell
+                                        colSpan={3}
+                                        className="h-48 text-center"
+                                    >
                                         <div className="flex flex-col items-center gap-2 text-muted-foreground">
                                             <GraduationCap className="h-10 w-10 opacity-20" />
-                                            <p className="text-sm">Aucun niveau enregistré.</p>
+                                            <p className="text-sm">
+                                                Aucun employé enregistré.
+                                            </p>
                                         </div>
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                niveaux.data.map((niveau) => (
-                                    <TableRow key={niveau.id} className="group">
-
+                                personnels.data.map((personnel) => (
+                                    <TableRow
+                                        key={personnel.id}
+                                        className="group"
+                                    >
                                         <TableCell>
                                             <div className="flex items-center gap-2.5">
-                                                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-xs font-bold text-primary">
-                                                    {niveau.nom.slice(0, 2).toUpperCase()}
+                                                <Avatar
+                                                    nom={personnel.nom}
+                                                    prenom={personnel.prenom}
+                                                    genre={personnel.genre}
+                                                />
+                                                <div>
+                                                    {personnel.nom}{' '}
+                                                    {personnel.prenom}
                                                 </div>
-                                                <span className="text-sm font-medium">
-                                                    {niveau.nom}
-                                                </span>
                                             </div>
                                         </TableCell>
 
                                         <TableCell className="text-sm text-muted-foreground">
-                                            {niveau.filiere.nom}
+                                            {personnel.genre}
+                                        </TableCell>
+
+                                        <TableCell className="text-sm text-muted-foreground">
+                                            {personnel.fonction}
+                                        </TableCell>
+
+                                        <TableCell className="text-sm text-muted-foreground">
+                                            {new Date(
+                                                personnel.date_naissance,
+                                            ).toLocaleDateString('fr-FR')}
                                         </TableCell>
 
                                         <TableCell>
@@ -109,44 +156,45 @@ const Index = () => {
                                                         size="sm"
                                                         className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
                                                     >
-                                                        Actions <ChevronDown className="h-3 w-3" />
+                                                        Actions{' '}
+                                                        <ChevronDown className="h-3 w-3" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="w-48">
+                                                <DropdownMenuContent
+                                                    align="end"
+                                                    className="w-48"
+                                                >
                                                     <DropdownMenuItem asChild>
                                                         <Link
-                                                            href={`/niveau/${niveau.id}/edit`}
+                                                            href={`/niveau/${personnel.id}/edit`}
                                                             className="flex cursor-pointer items-center gap-2"
                                                         >
-                                                            <Edit className="h-4 w-4" /> Modifier
+                                                            <Edit className="h-4 w-4" />{' '}
+                                                            Modifier
                                                         </Link>
                                                     </DropdownMenuItem>
-
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={`/niveau/${niveau.id}/liste-de-classe`}
-                                                            className="flex cursor-pointer items-center gap-2"
-                                                        >
-                                                            <Users2Icon className="h-4 w-4" /> Liste de classe
-                                                        </Link>
-                                                    </DropdownMenuItem>
-
 
                                                     <DropdownMenuSeparator />
 
                                                     <DropdownMenuItem
-                                                        onClick={() => setSelectedId(niveau.id)}
+                                                        onClick={() =>
+                                                            setSelectedId(
+                                                                Number(
+                                                                    personnel.id,
+                                                                ),
+                                                            )
+                                                        }
                                                         className="cursor-pointer gap-2 text-destructive focus:text-destructive"
                                                     >
-                                                        <Trash2 className="h-4 w-4" /> Supprimer
+                                                        <Trash2 className="h-4 w-4" />{' '}
+                                                        Supprimer
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
-
                                     </TableRow>
                                 ))
-                            )} */}
+                            )}
                         </TableBody>
                     </Table>
                 </Card>

@@ -68,7 +68,7 @@ export function Step1({
 
                 <Field label="Nationnalité" required>
                     <SelectInput
-                        field="nationnalite"
+                        field="nationalite"
                         data={data}
                         setData={setData}
                         options={NATIONALITES}

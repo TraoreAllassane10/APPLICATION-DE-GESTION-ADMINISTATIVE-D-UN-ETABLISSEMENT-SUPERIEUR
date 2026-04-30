@@ -277,7 +277,7 @@ export interface Personnel {
     genre: string;
     date_naissance: string;
     lieu_naissance: string;
-    nationnalite: string;
+    nationalite: string;
     matricule?: string;
     fonction: string;
     situation_matrimoniale: string;
