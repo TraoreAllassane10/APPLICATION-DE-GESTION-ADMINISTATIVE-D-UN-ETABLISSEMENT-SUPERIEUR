@@ -26,5 +26,7 @@ class PersonnelService
 
     public function updatePersonnel(Personnel $personnel, array $data) {}
 
-    public function deletePersonnel(Personnel $personnel) {}
+    public function deletePersonnel(Personnel $personnel) {
+          return $this->personnelRepository->delete($personnel);
+    }
 }

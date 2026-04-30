@@ -68,7 +68,12 @@ export default function usePersonnel() {
                 .delete(`/personnels/${id}/delete`)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Employés supprimé !');
+                        toast.success(
+                            response.data.message ??
+                                'Employés supprimé avec succès!',
+                        );
+
+                        router.visit(personnels());
                     }
                 })
                 .catch((error) => {

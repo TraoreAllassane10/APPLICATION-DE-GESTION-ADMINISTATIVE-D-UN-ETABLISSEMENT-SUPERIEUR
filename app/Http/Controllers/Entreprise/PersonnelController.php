@@ -49,5 +49,15 @@ class PersonnelController extends Controller
     }
     public function edit(Personnel $personnel) {}
     public function update(Personnel $personnel, UpdatePersonnelRequest $request) {}
-    public function delete(Personnel $personnel) {}
+    public function delete(Personnel $personnel)
+    {
+        try {
+            $this->personnelService->deletePersonnel($personnel);
+
+            return response()->json(["success" => true, "message" => "Employé supprimé avec succès"]);
+        } catch (Exception $e) {
+            Log::error('Erreur lors de la supression d\'un employé', ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => $e->getMessage()]);
+        }
+    }
 }

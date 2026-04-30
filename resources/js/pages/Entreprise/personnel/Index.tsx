@@ -26,6 +26,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import usePersonnel from '@/hooks/Entreprise/usePersonnel';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Meta, Personnel } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -58,9 +59,11 @@ const Index = () => {
 
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
+    const {deletePersonnel} = usePersonnel()
+
     const handleDelete = () => {
         if (selectedId) {
-            // deleteNiveau(selectedId);
+            deletePersonnel(selectedId.toString());
             setSelectedId(null);
         }
     };
@@ -220,12 +223,12 @@ const Index = () => {
                     <AlertDialogContent>
                         <AlertDialogHeader>
                             <AlertDialogTitle>
-                                Supprimer ce niveau ?
+                                Supprimer cet employé ?
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                                 Cette action est irréversible. La suppression de
-                                ce niveau peut entraîner une perte de données
-                                liées (inscriptions, scolarités, séances, etc.).
+                                cet peut entraîner une perte de données
+                                liées (formations, experiences, etc.).
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
