@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UserRoleSeeder::class);
 
-            Etudiant::factory(50)->create();
+        // Etudiant::factory(50)->create();
         // User::factory(10)->create();
 
         // $roleAdmin = Role::where("name", RoleUser::ADMINISTRATEUR->value)->get();
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         //     ]
         // );
 
-        // $userAdmin->assignRole([$roleAdmin, $rolePedagogique, $roleEnseignant, $roleScolarite]);
+        // $userAdmin->assignRole([$roleAdmin, $rolePedagogique, $roleScolarite]);
 
         // $userInspecteurPedagogique = User::firstOrCreate(
         //     ['email' => 'peda@gmail.com'],

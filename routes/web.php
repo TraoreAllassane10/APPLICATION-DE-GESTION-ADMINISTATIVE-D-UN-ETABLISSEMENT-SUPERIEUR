@@ -8,6 +8,7 @@ use App\Http\Controllers\Administrateur\ScolariteController;
 use App\Http\Controllers\Administrateur\UserController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\FiliereController;
 use App\Http\Controllers\Pedagogie\HoraireController;
@@ -189,6 +190,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware("administrateur")->controller(ActivityLogController::class)->group(function () {
         Route::get("historiques", "index")->name("historique");
         Route::get("historiques/{activite}", "show")->name("historique.show");
+    });
+
+
+    // ----------------------------GESTION DU PERSONNEL-------------------------------
+    Route::middleware("administrateur")->controller(PersonnelController::class)->group(function () {
+        Route::get("personnels", "index")->name("personnels");
+        Route::get("personnels/create", "create")->name("personnels.create");
+        Route::post("personnels", "store")->name("personnels.store");
+        Route::get("personnels/{personnel}/show", "show")->name("personnels.show");
+        Route::get("personnels/{personnel}/edit", "edit")->name("personnels.edit");
+        Route::put("personnels/{personnel}/update", "update")->name("personnels.update");
+        Route::delete("/personnels/{personnel}/delete", "delete")->name("personnels.delete");
     });
 });
 

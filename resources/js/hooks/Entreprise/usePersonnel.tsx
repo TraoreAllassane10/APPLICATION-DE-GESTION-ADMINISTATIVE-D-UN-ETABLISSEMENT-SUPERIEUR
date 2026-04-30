@@ -1,51 +1,25 @@
-import { etudiants } from '@/routes';
-import { EtudiantFormData } from '@/types';
+import { personnels } from '@/routes';
+import { PersonnelFormData } from '@/types';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function useEtudiant() {
+export default function usePersonnel() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const rechercheEtFiltrage = (search: string, filtreStatut: string, filtreGenre: string) => {
-        try {
-            return router.get(
-                `/etudiants`,
-                {
-                    search: search,
-                    statut: filtreStatut,
-                    genre: filtreGenre,
-                    page: 1
-                },
-                {
-                    preserveState: true,
-                    replace: true,
-                },
-            );
-        } catch (error) {
-            console.log('Erreur lors de la recherche ou du filtarge : ', error);
-        }
-    };
-
-    // Création d'un etudiant
-    const createEtudiant = async (data: EtudiantFormData) => {
+    const createPersonnel = async (data: PersonnelFormData) => {
         try {
             setIsLoading(true);
 
             await axios
-                .post('/etudiants', data)
+                .post('/personnels', data)
                 .then((response) => {
-                    if (response.data.message) {
-                        toast.error(response.data.message);
-                        return;
-                    }
-
                     if (response.data.success) {
-                        toast.success('Etudiant crée avec succès !');
+                        toast.success('Employés crée avec succès !');
 
-                        // Redirection vers la page d'affichage des seances
-                        router.visit(etudiants());
+                        // Redirection vers la page d'affichage des personnels
+                        router.visit(personnels());
                     }
                 })
                 .catch((error) => {
@@ -60,19 +34,18 @@ export default function useEtudiant() {
         }
     };
 
-    // Modification d'un etudiant
-    const updateEtudiant = async (id: string, data: EtudiantFormData) => {
+    const updatePersonnel = async (id: string, data: PersonnelFormData) => {
         try {
             setIsLoading(true);
 
             await axios
-                .put(`/etudiants/${id}/update`, data)
+                .put(`/personnels/${id}/update`, data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Etudiant modifié avec succès !');
+                        toast.success('Employés modifié avec succès !');
 
                         // Redirection sur la page d'affiche
-                        router.visit('/etudiants');
+                        router.visit('/personnels');
                     }
                 })
                 .catch((error) => {
@@ -87,21 +60,25 @@ export default function useEtudiant() {
         }
     };
 
-    // Suppression d'un etudiant
-    const deleteEtudiant = async (id: string) => {
+    const deletePersonnel = async (id: string) => {
         try {
             setIsLoading(true);
 
             await axios
-                .delete(`/etudiants/${id}/delete`)
+                .delete(`/personnels/${id}/delete`)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Etudiant supprimé !');
+                        toast.success(
+                            response.data.message ??
+                                'Employés supprimé avec succès!',
+                        );
+
+                        router.visit(personnels());
                     }
                 })
                 .catch((error) => {
                     toast.error(
-                        'Erreur survenue lors de la suppression du seance',
+                        "Erreur survenue lors de la suppression d'employés",
                     );
                     console.log(error);
                 });
@@ -114,10 +91,9 @@ export default function useEtudiant() {
     };
 
     return {
-        createEtudiant,
-        updateEtudiant,
-        deleteEtudiant,
-        rechercheEtFiltrage,
+        createPersonnel,
+        updatePersonnel,
+        deletePersonnel,
         isLoading,
     };
 }

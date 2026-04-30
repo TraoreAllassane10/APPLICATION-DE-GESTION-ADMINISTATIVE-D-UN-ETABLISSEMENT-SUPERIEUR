@@ -60,7 +60,6 @@ export interface Etudiant {
     lieu_naissance: string;
     nationnalite: string;
     statut: StatutEtudiant;
-
     email: string | null;
     pays_residence: string | null;
     etablissement_origine: string | null;
@@ -155,7 +154,7 @@ export interface Professeur {
     formation_continue: number;
     nombre_heure_cours_prevue: number;
     nombre_heure_cours_realise: number;
-    annee_academiques: any
+    annee_academiques: any;
 }
 
 export interface Cours {
@@ -269,4 +268,57 @@ export interface Activite {
     ancienne_valeur: any | null;
     nouvelle_valeur: any | null;
     created_at: string;
+}
+
+// ----------Gestion du personnel-------------
+export interface Personnel {
+    id: string;
+    nom: string;
+    prenom: string;
+    genre: string;
+    date_naissance: string;
+    lieu_naissance: string;
+    nationalite: string;
+    matricule?: string;
+    fonction: string;
+    situation_matrimoniale: string;
+    nombre_enfant: string;
+    nombre_enfant_charge: string;
+    telephone: string;
+    email: string;
+    bp: string;
+    rib: string;
+    proprietaire: boolean;
+    nom_entreprise: string;
+    numero_registre_commerce: string;
+
+    formations: Formation[];
+    experiences: Experience[];
+    documents: Document[];
+}
+
+export type PersonnelFormData = Omit<
+    Personnel | formations | experiences | documents
+>;
+
+export interface Formation {
+    id: string;
+    annee: string;
+    diplome: string;
+    ecole: string;
+}
+
+export interface Experience {
+    id: number;
+    annee: string;
+    nom_ecole: string;
+    fonction: string;
+    nombre_annee_enseignement: string;
+    matiere_enseignee: string;
+}
+
+export interface Document {
+    id: number;
+    nom: string;
+    chemin: string;
 }
