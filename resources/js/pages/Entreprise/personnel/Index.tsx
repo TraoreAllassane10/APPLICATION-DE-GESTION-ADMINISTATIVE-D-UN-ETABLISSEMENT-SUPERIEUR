@@ -59,7 +59,7 @@ const Index = () => {
 
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    const {deletePersonnel} = usePersonnel()
+    const { deletePersonnel } = usePersonnel();
 
     const handleDelete = () => {
         if (selectedId) {
@@ -227,8 +227,8 @@ const Index = () => {
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                                 Cette action est irréversible. La suppression de
-                                cet peut entraîner une perte de données
-                                liées (formations, experiences, etc.).
+                                cet peut entraîner une perte de données liées
+                                (formations, experiences, etc.).
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
