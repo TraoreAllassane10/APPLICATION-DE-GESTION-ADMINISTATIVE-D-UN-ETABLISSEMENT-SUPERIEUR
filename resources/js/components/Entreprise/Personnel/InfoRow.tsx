@@ -19,7 +19,11 @@ export default function InfoRow({
                 <p
                     className={`${label == 'Fonction' && 'rounded-full bg-green-100 px-4 text-green-500 ring-1 ring-green-500'} mt-0.5 text-sm font-medium break-words`}
                 >
-                    {value ? value : <span className="italic">aucun</span>}
+                    {value !== null ? (
+                        value
+                    ) : (
+                        <span className="italic">aucun</span>
+                    )}
                 </p>
             </div>
         </div>

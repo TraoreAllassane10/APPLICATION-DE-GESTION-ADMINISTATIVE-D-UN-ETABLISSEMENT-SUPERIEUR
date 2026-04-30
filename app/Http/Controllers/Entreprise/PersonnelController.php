@@ -47,8 +47,23 @@ class PersonnelController extends Controller
             return response()->json(["success" => false, "message" => $e->getMessage()]);
         }
     }
-    public function edit(Personnel $personnel) {}
-    public function update(Personnel $personnel, UpdatePersonnelRequest $request) {}
+    public function edit(Personnel $personnel)
+    {
+        return Inertia::render('Entreprise/personnel/Edit', ["personnel" => $personnel]);
+    }
+    public function update(Personnel $personnel, UpdatePersonnelRequest $request)
+    {
+        $data = $request->validated();
+
+        try {
+            $this->personnelService->updatePersonnel($personnel, $data);
+
+            return response()->json(["success" => true, "message" => "Employé modifiée avec succès"]);
+        } catch (Exception $e) {
+            Log::error('Erreur lors de la modification d\'un employé', ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => $e->getMessage()]);
+        }
+    }
     public function delete(Personnel $personnel)
     {
         try {

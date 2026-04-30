@@ -47,10 +47,8 @@ const Show = () => {
 
                 {/* Identité */}
                 <Card>
-                    <CardHeader>
-                        <h1 className="font-semibold text-muted-foreground">
-                            Indentification
-                        </h1>
+                    <CardHeader className="font-semibold text-muted-foreground">
+                        Indentification
                     </CardHeader>
 
                     <Separator />
@@ -171,9 +169,11 @@ const Show = () => {
                     <CardContent>
                         <Table>
                             <TableHeader>
-                                <TableHead>Année(s)</TableHead>
-                                <TableHead>Diplome(s) obtenu(s)</TableHead>
-                                <TableHead>Ecole / Université</TableHead>
+                                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                                    <TableHead>Année(s)</TableHead>
+                                    <TableHead>Diplome(s) obtenu(s)</TableHead>
+                                    <TableHead>Ecole / Université</TableHead>
+                                </TableRow>
                             </TableHeader>
 
                             <TableBody>
@@ -223,13 +223,15 @@ const Show = () => {
                     <CardContent>
                         <Table>
                             <TableHeader>
-                                <TableHead>Année(s)</TableHead>
-                                <TableHead>Ecole / Université</TableHead>
-                                <TableHead>Fonction</TableHead>
-                                <TableHead>
-                                    Nombre d'annee d'enseignement
-                                </TableHead>
-                                <TableHead>matières enseignées</TableHead>
+                                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                                    <TableHead>Année(s)</TableHead>
+                                    <TableHead>Ecole / Université</TableHead>
+                                    <TableHead>Fonction</TableHead>
+                                    <TableHead>
+                                        Nombre d'annee d'enseignement
+                                    </TableHead>
+                                    <TableHead>matières enseignées</TableHead>
+                                </TableRow>
                             </TableHeader>
 
                             <TableBody>

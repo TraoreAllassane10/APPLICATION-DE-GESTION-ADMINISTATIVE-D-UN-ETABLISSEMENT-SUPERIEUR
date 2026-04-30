@@ -56,7 +56,6 @@ export function PersonnelForm({
     isEdit = false,
     onSubmit,
     onCancel,
-    isLoading,
 }: PersonnelFormProps) {
     const [step, setStep] = useState(1);
     const [data, setData] = useState<PersonnelFormData>(

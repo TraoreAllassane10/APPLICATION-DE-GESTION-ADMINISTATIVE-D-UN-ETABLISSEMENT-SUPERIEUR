@@ -6,14 +6,10 @@ import { EtudiantForm } from '@/components/etudiant/EtudiantForm';
 import useEtudiant from '@/hooks/useEtudiant';
 import { Etudiant, EtudiantFormData } from '@/types';
 
-const MOCK_IP = 'ETU-2024-001';
-
 export default function Edit() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
 
-    // const etudiant = ETUDIANTS.find((e) => e.ip === MOCK_IP)!;
-
-    const { updateEtudiant, isLoading } = useEtudiant();
+    const { updateEtudiant } = useEtudiant();
 
     // On exclut created_at / updated_at pour correspondre à EtudiantFormData
     const { created_at, updated_at, ...initialData } = etudiant;
@@ -24,7 +20,7 @@ export default function Edit() {
 
     return (
         <AppLayout>
-            <Head title={`Modifier — ${etudiant.prenom} ${etudiant.nom}`} />
+            <Head title={`Modifier — ${etudiant.nom} ${etudiant.prenom}`} />
 
             <div className="p-6">
                 <div className="mb-6">
@@ -35,8 +31,8 @@ export default function Edit() {
                         <ArrowLeft className="h-3.5 w-3.5" /> Retour au profil
                     </Link>
                     <h1 className="text-2xl font-bold tracking-tight">
-                        Modifier — {etudiant.civilite} {etudiant.prenom}{' '}
-                        {etudiant.nom}
+                        Modifier — {etudiant.civilite} {etudiant.nom}{' '}
+                        {etudiant.prenom}
                     </h1>
                     <p className="mt-0.5 text-sm text-muted-foreground">
                         Mettez à jour les informations de l'étudiant.
