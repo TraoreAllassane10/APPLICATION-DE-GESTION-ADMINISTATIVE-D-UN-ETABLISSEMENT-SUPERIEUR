@@ -200,7 +200,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post("personnels", "store")->name("personnels.store");
         Route::get("personnels/{personnel}/show", "show")->name("personnels.show");
         Route::get("personnels/{personnel}/edit", "edit")->name("personnels.edit");
-        Route::put("personnels/{personnel}/update", "update")->name("personnels.update");
+        
+        // Post, parce que j'utilise formData coté frontent. FormData ne supporte pas PUT
+        Route::post("personnels/{personnel}/update", "update")->name("personnels.update");
         Route::delete("/personnels/{personnel}/delete", "delete")->name("personnels.delete");
     });
 });

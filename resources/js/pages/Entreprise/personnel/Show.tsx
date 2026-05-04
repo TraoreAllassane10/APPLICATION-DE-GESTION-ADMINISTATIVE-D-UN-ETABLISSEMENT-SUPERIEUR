@@ -1,4 +1,5 @@
 import InfoRow from '@/components/Entreprise/Personnel/InfoRow';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -11,7 +12,7 @@ import {
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Personnel } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     Building,
     Calendar,
@@ -47,8 +48,15 @@ const Show = () => {
 
                 {/* Identité */}
                 <Card>
-                    <CardHeader className="font-semibold text-muted-foreground">
-                        Indentification
+                    <CardHeader className="flex flex-row place-items-center justify-between">
+                        <h1 className="font-semibold text-muted-foreground">
+                            Indentification
+                        </h1>
+                        <Button variant={'outline'}>
+                            <Link href={`/personnels/${personnel.id}/edit`}>
+                                Modifier
+                            </Link>
+                        </Button>
                     </CardHeader>
 
                     <Separator />
@@ -267,6 +275,63 @@ const Show = () => {
                                             </TableCell>
                                             <TableCell>
                                                 {experience.matiere_enseignee}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+
+                {/* Documents */}
+                <Card>
+                    <CardHeader>
+                        <h1 className="font-semibold text-muted-foreground">
+                            Pièces jointes
+                        </h1>
+                    </CardHeader>
+
+                    <Separator />
+
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                                    <TableHead>Nom du fichier</TableHead>
+                                    <TableHead>Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+
+                            <TableBody>
+                                {personnel.documents.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={2}
+                                            className="h-10 text-center"
+                                        >
+                                            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                                <p className="text-sm">
+                                                    Aucune pièce jointe ajoutée.
+                                                </p>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    personnel.documents.map((document) => (
+                                        <TableRow key={document.id}>
+                                            <TableCell>
+                                                {document.nom}
+                                            </TableCell>
+                                            <TableCell>
+                                                <a
+                                                    href={`/storage/${document.chemin}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-primary hover:underline"
+                                                >
+                                                    Télécharger
+                                                </a>
                                             </TableCell>
                                         </TableRow>
                                     ))

@@ -2,6 +2,7 @@
 
 namespace App\Models\Entreprise;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,13 +32,31 @@ class Personnel extends Model
         'numero_registre_commerce'
     ];
 
-    protected $with = ['formations', 'experiences'];
+    protected $casts = [
+        'proprietaire' => 'boolean',
+    ];
 
-    public function formations() {
+    protected $with = ['formations', 'experiences', 'documents'];
+
+    protected function proprietaire(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => filter_var($value, FILTER_VALIDATE_BOOLEAN)
+        );
+    }
+
+    public function formations()
+    {
         return $this->hasMany(Formation::class);
     }
 
-    public function experiences() {
+    public function experiences()
+    {
         return $this->hasMany(Experience::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
     }
 }

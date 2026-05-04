@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle2, Phone, User, Users } from 'lucide-react';
+import { BookOpen, CheckCircle2, Paperclip, Phone, User, Users } from 'lucide-react';
 
 export const STEPS = [
     {
@@ -19,6 +19,12 @@ export const STEPS = [
         label: 'Experience Professionnelle',
         description: 'Experiences professionnelles',
         icon: Users,
+    },
+    {
+        id: 5,
+        label: 'Documents',
+        description: 'Pièces jointes',
+        icon: Paperclip,
     },
 ];
 

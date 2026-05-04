@@ -10,6 +10,7 @@ use App\Models\Entreprise\Personnel;
 use App\Services\Entreprise\PersonnelService;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PersonnelController extends Controller

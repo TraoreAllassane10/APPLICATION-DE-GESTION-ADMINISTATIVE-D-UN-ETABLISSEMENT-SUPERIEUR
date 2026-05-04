@@ -299,7 +299,9 @@ export interface Personnel {
 
 export type PersonnelFormData = Omit<
     Personnel | formations | experiences | documents
->;
+> & {
+    files: File[];
+};
 
 export interface Formation {
     id: string;
