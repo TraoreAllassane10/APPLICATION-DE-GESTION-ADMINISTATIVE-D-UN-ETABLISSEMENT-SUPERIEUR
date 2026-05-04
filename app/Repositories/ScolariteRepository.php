@@ -30,24 +30,28 @@ class ScolariteRepository
         ]);
     }
 
-    public function update(Scolarite $scolarite ,array $data)
+    public function update(Scolarite $scolarite, array $data)
     {
         return $scolarite->update([
-                "annee_universitaire_id" => $data['annee_id'],
-                "niveau_id" => $data['niveau_id'],
-                "type" => $data['type'],
-                "montant" => $data['montant'],
-            ]);
+            "annee_universitaire_id" => $data['annee_id'],
+            "niveau_id" => $data['niveau_id'],
+            "type" => $data['type'],
+            "montant" => $data['montant'],
+        ]);
     }
 
-    public function delete(Scolarite $scolarite) {
+    public function delete(Scolarite $scolarite)
+    {
         return $scolarite->delete();
     }
 
     public function scolariteExiste(string $niveau_id, string $type)
     {
+        $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
+
         return Scolarite::where("niveau_id", $niveau_id)
             ->where("type", $type)
+            ->where('annee_universitaire_id', $anneeActive->id)
             ->exists();
     }
 }
