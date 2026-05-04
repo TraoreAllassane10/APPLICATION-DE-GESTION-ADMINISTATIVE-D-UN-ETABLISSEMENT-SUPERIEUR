@@ -15,6 +15,8 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 
 ## Fonctionnalités principale
 
+1. Gestion académiques
+
 ### Gestion des années académique
 
 - CRUD années académique
@@ -65,6 +67,13 @@ Ce projet vise à digitaliser la gestion académique en offrant une plateforme c
 
 - Historique des actions (création, modification, suppression)
 - Traçabilité des utilisateurs
+
+2. Gestion d'entreprise
+
+### Gestion du personnels
+- Ajout des employés avec leur formations, experiences et documents (pdf, doc, jpg, jpeg, etc.)
+- Modification des employés
+- Visualisation des profils avec la possiblité de voir les pièces jointes
 
 ## Stack technique
 

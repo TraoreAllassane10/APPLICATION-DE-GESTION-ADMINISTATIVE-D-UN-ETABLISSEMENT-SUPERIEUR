@@ -17,7 +17,7 @@ export default function InfoRow({
                     {label}
                 </p>
                 <p
-                    className={`${label == 'Fonction' && 'rounded-full bg-green-100 px-4 text-green-500 ring-1 ring-green-500'} mt-0.5 text-sm font-medium break-words`}
+                    className={`${label == 'Fonction' && 'rounded-full text-red-500'} mt-0.5 text-sm font-medium break-words`}
                 >
                     {value !== null ? (
                         value

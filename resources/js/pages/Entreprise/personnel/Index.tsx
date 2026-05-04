@@ -86,7 +86,7 @@ const Index = () => {
                     <Link href="/personnels/create">
                         <Button className="gap-2 transition duration-300 hover:bg-red-700">
                             <PlusCircle className="h-4 w-4" />
-                            Ajouter un employers
+                            Ajouter un employé
                         </Button>
                     </Link>
                 </div>

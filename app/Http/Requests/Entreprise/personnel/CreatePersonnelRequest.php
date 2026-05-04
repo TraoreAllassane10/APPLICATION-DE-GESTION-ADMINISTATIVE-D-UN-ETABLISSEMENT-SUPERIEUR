@@ -38,11 +38,13 @@ class CreatePersonnelRequest extends FormRequest
             'bp' => ['nullable', 'string', 'max:255'],
             'rib' => ['nullable', 'string', 'max:255'],
             'nom_entreprise' => ['nullable', 'string', 'max:255'],
-            'proprietaire' => ['nullable', 'boolean'],
+            'proprietaire' => ['nullable'],
             'numero_registre_commerce' => ['nullable', 'string', 'max:255'],
 
-            'formations' => ['nullable', 'array'],
-            'experiences' => ['nullable', 'array'],
+            'formations' => ['nullable', ],
+            'experiences' => ['nullable',],
+            'documents' => ['nullable', ],
+            'files' => ['nullable', ],
         ];
     }
 
@@ -91,6 +93,7 @@ class CreatePersonnelRequest extends FormRequest
             'numero_registre_commerce.max' => 'Le numéro de registre de commerce ne doit pas dépasser 255 caractères.',
             'formations.array' => 'Le champs formations doit etre un tableau',
             'experiences.array' => 'Le champs experiences doit etre un tableau',
+            'documents.array' => 'Le champs documents doit etre un tableau',
         ];
     }
 }

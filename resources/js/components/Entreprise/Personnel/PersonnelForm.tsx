@@ -17,6 +17,7 @@ import { Step1 } from './steps/Step1';
 import { Step2 } from './steps/Step2';
 import { Step3 } from './steps/Step3';
 import { Step4 } from './steps/Step4';
+import { Step5 } from './steps/Step5';
 
 export const emptyForm = (): PersonnelFormData => ({
     id: '',
@@ -41,6 +42,10 @@ export const emptyForm = (): PersonnelFormData => ({
 
     formations: [],
     experiences: [],
+    // A stocker dans la bd
+    files: [],
+    // Pour l'affichage coté front
+    documents: [],
 });
 
 interface PersonnelFormProps {
@@ -95,6 +100,10 @@ export function PersonnelForm({
             title: 'Expériences professionnelles',
             description: 'Renseigner ses expériences professionnelles.',
         },
+        5: {
+            title: 'Documents',
+            description: "Téléversez les pièces jointes de l'employé.",
+        },
     };
 
     return (
@@ -118,6 +127,7 @@ export function PersonnelForm({
                     {step === 2 && <Step2 data={data} setData={setData} />}
                     {step === 3 && <Step3 data={data} setData={setData} />}
                     {step === 4 && <Step4 data={data} setData={setData} />}
+                    {step === 5 && <Step5 data={data} setData={setData} />}
                 </CardContent>
             </Card>
 
