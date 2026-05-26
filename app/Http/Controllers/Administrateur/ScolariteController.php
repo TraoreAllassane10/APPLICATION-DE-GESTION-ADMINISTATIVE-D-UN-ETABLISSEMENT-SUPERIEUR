@@ -11,6 +11,7 @@ use App\Services\AnneeAcademiqueService;
 use App\Services\NiveauService;
 use App\Services\ScolariteService;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ScolariteController extends Controller
@@ -18,7 +19,7 @@ class ScolariteController extends Controller
     public function __construct(
         protected ScolariteService $scolariteService,
         protected AnneeAcademiqueService $anneeAcademiqueService,
-         protected NiveauService $niveauService 
+        protected NiveauService $niveauService
     ) {}
 
     public function index()
@@ -38,26 +39,37 @@ class ScolariteController extends Controller
                 "types" => ScolariteType::cases()
             ]);
         } catch (Exception $e) {
+            Log::error("Erreur lors l'afficahge de la vue de scolarite", ["erreur" => $e->getMessage()]);
             return response()->json(["message" => $e->getMessage()]);
         }
     }
 
     public function store(CreateScolariteRequest $request)
     {
-        $data = $request->validated();
+        try {
+            $data = $request->validated();
 
-        return $this->scolariteService->createScolarite($data);
+            return $this->scolariteService->createScolarite($data);
+        } catch (Exception $e) {
+            Log::error("Erreur lors la création d'une scolarité", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors la création d'une scolarité"]);
+        }
     }
 
     public function edit(Scolarite $scolarite)
     {
-        $niveaux = $this->niveauService->getAllNiveaux();
+        try {
+            $niveaux = $this->niveauService->getAllNiveaux();
 
-        return Inertia::render("scolarite/Edit", [
-            "scolarite" => $scolarite,
-            "niveaux" => $niveaux,
-            "types" => ScolariteType::cases()
-        ]);
+            return Inertia::render("scolarite/Edit", [
+                "scolarite" => $scolarite,
+                "niveaux" => $niveaux,
+                "types" => ScolariteType::cases()
+            ]);
+        } catch (Exception $e) {
+            Log::error("Erreur lors de l'affichage de la vue d'edition d'une scolarité", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de l'affichage de la vue d'edition d'une scolarité"]);
+        }
     }
 
     public function update(UpdateScolariteRequest $request, Scolarite $scolarite)
@@ -72,7 +84,8 @@ class ScolariteController extends Controller
                 return response()->json(["success" => true]);
             }
         } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
+            Log::error("Erreur lors de la mise à jour d'une scolarité", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la mise à jour d'une scolarité"]);
         }
     }
 
@@ -86,7 +99,8 @@ class ScolariteController extends Controller
                 return response()->json(["success" => true]);
             }
         } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
+            Log::error("Erreur lors de la suppression d'une scolarité", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la suppression d'une scolarité"]);
         }
     }
 }
