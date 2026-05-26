@@ -4,9 +4,6 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
@@ -27,7 +24,6 @@ import {
 } from 'lucide-react';
 import AppLogo from './app-logo';
 import { NavMain } from './nav-main';
-import personnels from '@/routes/personnels';
 
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
@@ -63,6 +59,8 @@ export function AppSidebar() {
             href: professeur(),
             icon: UserCog,
         },
+        
+        // Onglets disponible que pour les administrateur
         ...(isAuthorize
             ? [
                   {
@@ -77,7 +75,7 @@ export function AppSidebar() {
     const mainNavItemsPersonnel: NavItem[] = [
         {
             title: 'Personnels',
-            href: "/personnels",
+            href: '/personnels',
             icon: User,
         },
     ];
@@ -105,14 +103,22 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} title='Gestion Académique' />
-                <NavMain items={mainNavItemsPersonnel} title='Gestion du personnel' />
+                <NavMain items={mainNavItems} title="Gestion Académique" />
+
+                {/* Cette partie est disponible que pour l'administrateur */}
+                {isAuthorize && (
+                    <NavMain
+                        items={mainNavItemsPersonnel}
+                        title="Gestion du personnel"
+                    />
+                )}
             </SidebarContent>
 
             <SidebarFooter>
-                {isAuthorize && (
+
+          
                     <NavFooter items={footerNavItems} className="mt-auto" />
-                )}
+     
 
                 <NavUser />
             </SidebarFooter>

@@ -38,6 +38,7 @@ import {
     StatFinanciere,
     StatGlobales,
 } from '@/types';
+import { fmt } from '@/utils/util';
 
 interface DashboardProps {
     anneeActive: Annee;
@@ -84,10 +85,6 @@ export default function Dashboard() {
                             </span>
                         </p>
                     </div>
-                    {/* <div className="hidden items-center gap-2 rounded-lg border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground sm:flex">
-                        <Clock className="h-3.5 w-3.5" />
-                        Données en temps réel
-                    </div> */}
                 </div>
 
                 {/* ── Stats globales ───────────────────────────────────────────── */}
@@ -99,7 +96,7 @@ export default function Dashboard() {
                         icon={Users}
                         color="text-blue-600"
                         bg="bg-blue-50"
-                        trend={{ label: '+12 ce mois', up: true }}
+                        // trend={{ label: '+12 ce mois', up: true }}
                     />
                     <StatCard
                         label="Inscriptions"
@@ -108,7 +105,7 @@ export default function Dashboard() {
                         icon={GraduationCap}
                         color="text-violet-600"
                         bg="bg-violet-50"
-                        trend={{ label: '+5 ce mois', up: true }}
+                        // trend={{ label: '+5 ce mois', up: true }}
                     />
                     <StatCard
                         label="Enseignants"
@@ -189,23 +186,23 @@ export default function Dashboard() {
                                         {[
                                             {
                                                 label: 'Total attendu',
-                                                value:
-                                                    stats_financiere.totalAttendu +
-                                                    ' FCFA',
+                                                value: fmt(
+                                                    stats_financiere.totalAttendu,
+                                                ),
                                                 color: 'text-foreground',
                                             },
                                             {
                                                 label: 'Montant payé',
-                                                value:
-                                                    stats_financiere.totalPaye +
-                                                    ' FCFA',
+                                                value: fmt(
+                                                    stats_financiere.totalPaye,
+                                                ),
                                                 color: 'text-emerald-600',
                                             },
                                             {
                                                 label: 'Reste à payer',
-                                                value:
-                                                    stats_financiere.resteAPayer +
-                                                    ' FCFA',
+                                                value: fmt(
+                                                    stats_financiere.resteAPayer,
+                                                ),
                                                 color: 'text-rose-600',
                                             },
                                         ].map(({ label, value, color }) => (

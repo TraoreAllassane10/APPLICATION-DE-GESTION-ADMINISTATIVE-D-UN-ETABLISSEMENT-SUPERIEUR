@@ -12,7 +12,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DataNiveau, Etudiant } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Download, Eye, GraduationCap, Printer } from 'lucide-react';
+import { Eye, GraduationCap, Printer } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -46,7 +46,10 @@ const ListeDeClasse = () => {
                             </span>
                         </h1>
 
-                        <a href={`/niveau/${niveau.id}/liste-de-classe/imprimer`} target='_blank'>
+                        <a
+                            href={`/niveau/${niveau.id}/liste-de-classe/imprimer`}
+                            target="_blank"
+                        >
                             <Button variant="outline" size="sm">
                                 <Printer />
                                 Telécharger la liste de classe

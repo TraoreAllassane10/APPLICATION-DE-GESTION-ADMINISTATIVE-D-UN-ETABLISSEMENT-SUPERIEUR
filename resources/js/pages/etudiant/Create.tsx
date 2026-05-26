@@ -6,7 +6,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 
 export default function Create() {
-    const { createEtudiant, isLoading } = useEtudiant();
+    const { createEtudiant } = useEtudiant();
 
     // Creation d'un etudiant
     const handleSubmit = (data: EtudiantFormData) => {

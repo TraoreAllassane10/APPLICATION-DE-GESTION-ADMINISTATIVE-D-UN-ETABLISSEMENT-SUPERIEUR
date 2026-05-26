@@ -42,7 +42,6 @@ const TABS: {
 
 export default function Show() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
-    const MOCK_IP = 'ETU-2024-001';
 
     const [activeTab, setActiveTab] = useState<Tab>('profil');
 
@@ -81,8 +80,8 @@ export default function Show() {
                             <div className="min-w-0 flex-1">
                                 <div className="mb-1 flex flex-wrap items-center gap-2">
                                     <h1 className="text-xl font-bold tracking-tight">
-                                        {etudiant.civilite} {etudiant.nom} {' '} {etudiant.prenom}
-                                        
+                                        {etudiant.civilite} {etudiant.nom}{' '}
+                                        {etudiant.prenom}
                                     </h1>
                                     <StatutBadge statut={etudiant.statut} />
                                     <Badge
@@ -131,7 +130,7 @@ export default function Show() {
                                     </Button>
                                 </a>
 
-                                 <a
+                                <a
                                     href={`/etudiants/${etudiant.ip}/certificat-scolarite`}
                                     target="_blank"
                                 >
