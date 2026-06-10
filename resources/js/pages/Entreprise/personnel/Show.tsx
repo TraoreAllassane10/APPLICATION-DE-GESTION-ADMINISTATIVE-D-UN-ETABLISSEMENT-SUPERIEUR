@@ -16,6 +16,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import {
     Building,
     Calendar,
+    Download,
     Globe,
     Hash,
     Mail,
@@ -328,10 +329,17 @@ const Show = () => {
                                                     href={`/storage/${document.chemin}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-primary hover:underline"
+                                               
                                                 >
+                                                     <Button variant={'outline'}>
+                                                    <Download />
                                                     Télécharger
+                                                </Button>
                                                 </a>
+                                            </TableCell>
+
+                                            <TableCell>
+                                               
                                             </TableCell>
                                         </TableRow>
                                     ))

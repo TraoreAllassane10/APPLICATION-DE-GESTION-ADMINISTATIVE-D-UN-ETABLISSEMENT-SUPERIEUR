@@ -2,10 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    NativeSelect,
-    NativeSelectOption,
-} from '@/components/ui/native-select';
 import useCours from '@/hooks/useCours';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
@@ -46,7 +42,7 @@ interface ProfesseurProps {
 }
 
 const Edit = () => {
-    const { cours, professeurs } = usePage<ProfesseurProps>().props;
+    const { cours } = usePage<ProfesseurProps>().props;
 
     const [nom, setNom] = useState(cours.nom);
 

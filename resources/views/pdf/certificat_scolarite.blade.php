@@ -137,7 +137,7 @@
     </div>
 
     <div style="position: absolute; bottom: 0; font-size: 12px; text-align: center; border-top: 1px solid black;">
-        <p>Daloa quartier Evêché à 200 m de la résidence Behy : BP 2455 Daloa / Tél : +225 27 21 29 30 31 Mob. : +225 07
+        <p>Daloa quartier Evêché à 200 m de la résidence Behy : BP 2455 Daloa / Mob. : +225 07
             89 98 00
             00 / 01 71 64 67 67 / 05 04 14 14 87 / RCCM : CI-DAL2017-B-6688 / CC : 1749543R</p>
     </div>

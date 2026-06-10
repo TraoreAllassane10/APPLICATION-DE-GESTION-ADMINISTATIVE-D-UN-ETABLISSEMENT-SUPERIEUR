@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Models\Etudiant;
 use App\Services\EtudiantService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EtudiantController extends Controller
 {
@@ -40,7 +41,8 @@ class EtudiantController extends Controller
                 'filters' => $request->only(['search', 'genre', 'statut'])
             ]);
         } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
+            Log::error("Erreur lors de l'affichage des etudiants", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la mise à jour d'une scolarité"]);
         }
     }
 
@@ -67,7 +69,8 @@ class EtudiantController extends Controller
 
             return response()->json(["success" => true]);
         } catch (Exception $e) {
-            return response()->json(["success" => false ,"message" => $e->getMessage()]);
+            Log::error("Erreur lors de la création d'un etudiant", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la création d'un etudiant"]);
         }
     }
 
@@ -91,9 +94,10 @@ class EtudiantController extends Controller
             // Modification de l'etudiant
             $this->etudiantService->update($etudiant, $data);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
+            Log::error("Erreur lors de la mise à jour d'un etudiant", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la mise à jour d'un etudiant"]);
         }
     }
 
@@ -103,19 +107,30 @@ class EtudiantController extends Controller
             //Suppression d'une filiere
             $this->etudiantService->delete($etudiant);
 
-            return response()->json(["success" => "true"]);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
+            Log::error("Erreur lors de la suppression d'un etudiant", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la suppression d'un etudiant"]);
         }
     }
 
     public function getFicheIndentification(string $etudiant)
     {
-        return $this->etudiantService->ficheIdentification($etudiant);
+        try {
+            return $this->etudiantService->ficheIdentification($etudiant);
+        } catch (Exception $e) {
+            Log::error("Erreur lors de la recuperation de la fiche d'indentification", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la recuperation de la fiche d'indentification"]);
+        }
     }
 
     public function certificatDeScolarite(string $etudiant)
     {
-        return $this->etudiantService->getCertificatDeScolarite($etudiant);
+        try {
+            return $this->etudiantService->getCertificatDeScolarite($etudiant);
+        } catch (Exception $e) {
+            Log::error("Erreur lors de la génération du certificat de scolairé", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la génération du certificat de scolairé"]);
+        }
     }
 }

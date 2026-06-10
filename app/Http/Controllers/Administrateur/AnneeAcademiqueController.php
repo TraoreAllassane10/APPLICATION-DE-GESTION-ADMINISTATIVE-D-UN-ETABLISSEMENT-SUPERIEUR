@@ -11,6 +11,7 @@ use App\Services\AnneeAcademiqueService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class AnneeAcademiqueController extends Controller
@@ -27,6 +28,7 @@ class AnneeAcademiqueController extends Controller
                 "annees" => $annees
             ]);
         } catch (Exception $e) {
+            Log::error('Erreur lors la recuperation de la liste des années', ["erreur" => $e->getMessage()]);
             return response()->json(["message" => $e->getMessage()]);
         }
     }
@@ -55,6 +57,8 @@ class AnneeAcademiqueController extends Controller
 
             return response()->json(["success" => true]);
         } catch (Exception $e) {
+            Log::error('Erreur lors de la création d\'une année', ["erreur" => $e->getMessage()]);
+
             return response()->json(["message" => $e->getMessage()]);
         }
     }
@@ -82,6 +86,7 @@ class AnneeAcademiqueController extends Controller
 
             return response()->json(["success" => true]);
         } catch (Exception $e) {
+            Log::error('Erreur lors de la modification d\'une année', ["erreur" => $e->getMessage()]);
             return response()->json(["message" => $e->getMessage()]);
         }
     }
@@ -94,6 +99,7 @@ class AnneeAcademiqueController extends Controller
 
             return response()->json(["success" => true]);
         } catch (Exception $e) {
+            Log::error('Erreur lors de la suppression d\'une année', ["erreur" => $e->getMessage()]);
             return response()->json(["message" => $e->getMessage()]);
         }
     }
@@ -109,6 +115,7 @@ class AnneeAcademiqueController extends Controller
                 "annees" => $data[1]
             ]);
         } catch (Exception $e) {
+
             return response()->json(["message" => $e->getMessage()]);
         }
     }
@@ -122,6 +129,7 @@ class AnneeAcademiqueController extends Controller
                 "success" => true,
             ]);
         } catch (Exception $e) {
+            Log::error('Erreur lors du changement de l\'annee', ["erreur" => $e->getMessage()]);
             return response()->json(["message" => $e->getMessage()]);
         }
     }

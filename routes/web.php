@@ -11,11 +11,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\FiliereController;
-use App\Http\Controllers\Pedagogie\HoraireController;
 use App\Http\Controllers\Pedagogie\NiveauController;
 use App\Http\Controllers\Pedagogie\SalleController;
-use App\Http\Controllers\Pedagogie\SeanceController;
-use App\Http\Controllers\Pedagogie\SemaineController;
 use App\Http\Controllers\Pedagogie\SiteController;
 use App\Http\Controllers\ProfesseurController;
 use Illuminate\Support\Facades\Route;
@@ -117,17 +114,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
     });
 
-    //Routes seance
-    Route::controller(SeanceController::class)->group(function () {
-        Route::get("seance", "index")->name("seance");
-        Route::get("seance/create", "create")->name("seance.create");
-        Route::post("seance", "store")->name("seance.store");
-        Route::get("seance/{seance}/edit", "edit")->name("seance.edit");
-        Route::put("seance/{seance}/update", "update")->name("seance.update");
-        Route::delete("seance/{seance}/delete", "delete")->name("seance.delete");
-        Route::get("seance/export", "exportPDF")->name("seance.pdf");
-    });
-
     //Routes Etudiant
     Route::controller(EtudiantController::class)->group(function () {
         Route::get("etudiants", "index")->name("etudiants");
@@ -140,24 +126,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/etudiants/{etudiant}/fiche', "getFicheIndentification")->name('etudiants.fiche');
         Route::get('/etudiants/{etudiant}/certificat-scolarite', "certificatDeScolarite")->name('etudiants.certificatDeScolarite');
-    });
-
-    //Routes Horaires
-    Route::controller(HoraireController::class)->group(function () {
-        Route::get("horaire", "index")->name("horaire");
-        Route::post("horaire", "store")->name("horaire.store");
-        Route::get("horaire/{horaire}/edit", "edit")->name("horaire.edit");
-        Route::put("horaire/{horaire}/update", "update")->name("horaire.update");
-        Route::delete("horaire/{horaire}/delete", "delete")->name("horaire.delete");
-    });
-
-    //Routes Semaine
-    Route::controller(SemaineController::class)->group(function () {
-        Route::get("semaine", "index")->name("semaine");
-        Route::post("semaine", "store")->name("semaine.store");
-        Route::get("semaine/{semaine}/edit", "edit")->name("semaine.edit");
-        Route::put("semaine/{semaine}/update", "update")->name("semaine.update");
-        Route::delete("semaine/{semaine}/delete", "delete")->name("semaine.delete");
     });
 
     // Routes Inscription

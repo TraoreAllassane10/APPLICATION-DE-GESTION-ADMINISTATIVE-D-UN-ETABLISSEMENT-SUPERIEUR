@@ -50,7 +50,8 @@ class DashboardController extends Controller
         $dernieres_inscriptions = Inscription::with([
             "etudiant",
             "niveaux"
-        ])->latest()->limit(5)->get();
+        ])->where("annee_universitaire_id", $anneeActive->id)
+            ->latest()->limit(5)->get();
 
 
         // Repartition des niveaux

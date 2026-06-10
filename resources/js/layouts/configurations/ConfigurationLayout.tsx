@@ -3,71 +3,52 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { annee, filiere } from '@/routes';
-import { NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Auth, NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
-
-const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Annne Universitaire Active',
-        href: '/configurations',
-        icon: null,
-    },
-    {
-        title: 'Annne academiques',
-        href: annee(),
-        icon: null,
-    },
-    {
-        title: 'Periode Academiques',
-        href: '#',
-        icon: null,
-    },
-    {
-        title: 'Filières',
-        href: filiere(),
-        icon: null,
-    },
-    {
-        title: 'Scolarités',
-        href: '/scolarite',
-        icon: null,
-    },
-    {
-        title: 'Utilisateurs',
-        href: '/utilisateurs',
-        icon: null,
-    },
-    // {
-    //     title: 'Sites',
-    //     href: site(),
-    //     icon: null,
-    // },
-    // {
-    //     title: 'Salles',
-    //     href: salle(),
-    //     icon: null,
-    // },
-    // {
-    //     title: 'Matières',
-    //     href: cours(),
-    //     icon: null,
-    // },
-
-    // {
-    //     title: 'Semaines',
-    //     href: semaine(),
-    //     icon: null,
-    // },
-    // {
-    //     title: 'Horaires',
-    //     href: horaire(),
-    //     icon: null,
-    // },
-];
 
 const ConfigurationLayout = ({ children }: PropsWithChildren) => {
     const currentPath = window.location.pathname;
+    const { auth } = usePage<{ auth: Auth }>().props;
+
+    const isAuthorize = auth.user?.roles?.some(
+        (role) => role.name == 'Administrateur',
+    );
+
+    const sidebarNavItems: NavItem[] = [
+        {
+            title: 'Annne Universitaire Active',
+            href: '/configurations',
+            icon: null,
+        },
+        {
+            title: 'Annne academiques',
+            href: annee(),
+            icon: null,
+        },
+        {
+            title: 'Filières',
+            href: filiere(),
+            icon: null,
+        },
+
+        // Onglets disponible que pour les administrateur
+        ...(isAuthorize
+            ? [
+                  {
+                      title: 'Scolarités',
+                      href: '/scolarite',
+                      icon: null,
+                  },
+                  {
+                      title: 'Utilisateurs',
+                      href: '/utilisateurs',
+                      icon: null,
+                  },
+              ]
+            : []),
+    ];
+
     return (
         <div className="px-4 py-6">
             <Heading
