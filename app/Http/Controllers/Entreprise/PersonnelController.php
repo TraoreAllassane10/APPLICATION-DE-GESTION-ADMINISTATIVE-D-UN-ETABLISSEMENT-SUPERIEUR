@@ -10,7 +10,6 @@ use App\Models\Entreprise\Personnel;
 use App\Services\Entreprise\PersonnelService;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PersonnelController extends Controller
@@ -45,7 +44,7 @@ class PersonnelController extends Controller
             return response()->json(["success" => true, "message" => "Employé crée avec succès"]);
         } catch (Exception $e) {
             Log::error('Erreur lors de la creation d\'un employé', ["erreur" => $e->getMessage()]);
-            return response()->json(["success" => false, "message" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => 'Erreur lors de la creation d\'un employé']);
         }
     }
     public function edit(Personnel $personnel)
@@ -62,7 +61,7 @@ class PersonnelController extends Controller
             return response()->json(["success" => true, "message" => "Employé modifiée avec succès"]);
         } catch (Exception $e) {
             Log::error('Erreur lors de la modification d\'un employé', ["erreur" => $e->getMessage()]);
-            return response()->json(["success" => false, "message" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => 'Erreur lors de la modification d\'un employé']);
         }
     }
     public function delete(Personnel $personnel)
@@ -73,7 +72,7 @@ class PersonnelController extends Controller
             return response()->json(["success" => true, "message" => "Employé supprimé avec succès"]);
         } catch (Exception $e) {
             Log::error('Erreur lors de la supression d\'un employé', ["erreur" => $e->getMessage()]);
-            return response()->json(["success" => false, "message" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => 'Erreur lors de la supression d\'un employé']);
         }
     }
 }
