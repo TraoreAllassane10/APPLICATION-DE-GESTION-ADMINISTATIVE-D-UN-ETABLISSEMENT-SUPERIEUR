@@ -89,39 +89,30 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
-                                <AppLogo />
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
+       <Sidebar collapsible="icon" variant="inset" className="bg-slate-950 border-r border-white/5">
+        <SidebarHeader className="border-b border-white/5 pb-3">
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton size="lg" asChild className="hover:bg-white/5">
+                        <Link href={dashboard()} prefetch>
+                            <AppLogo />
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+        </SidebarHeader>
 
-            <SidebarContent>
-                <NavMain items={mainNavItems} title="Gestion Académique" />
+        <SidebarContent className="px-2 py-3">
+            <NavMain items={mainNavItems} title="Gestion académique" />
+            {isAuthorize && (
+                <NavMain items={mainNavItemsPersonnel} title="Personnel" />
+            )}
+        </SidebarContent>
 
-                {/* Cette partie est disponible que pour l'administrateur */}
-                {isAuthorize && (
-                    <NavMain
-                        items={mainNavItemsPersonnel}
-                        title="Gestion du personnel"
-                    />
-                )}
-            </SidebarContent>
-
-            <SidebarFooter>
-
-          
-                    <NavFooter items={footerNavItems} className="mt-auto" />
-     
-
-                <NavUser />
-            </SidebarFooter>
-        </Sidebar>
+        <SidebarFooter className="border-t border-white/5 p-2">
+            <NavFooter items={footerNavItems} className="mt-auto" />
+            <NavUser />
+        </SidebarFooter>
+    </Sidebar>
     );
 }
