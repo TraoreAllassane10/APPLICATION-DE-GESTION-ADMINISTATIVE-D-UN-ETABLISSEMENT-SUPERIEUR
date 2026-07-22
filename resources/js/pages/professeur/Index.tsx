@@ -34,7 +34,7 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     Edit,
-    Eye,
+    Folder,
     PlusCircle,
     Sheet,
     Trash2,
@@ -81,7 +81,7 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">
-                            Enseignants
+                            Gestion des enseignants
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
                             {professeurs.data.length} professeur
@@ -211,8 +211,8 @@ const Index = () => {
                                                                 href={`/professeur/${prof.id}/show`}
                                                                 className="flex cursor-pointer items-center gap-2"
                                                             >
-                                                                <Eye className="h-4 w-4" />
-                                                                Voir profil
+                                                                <Folder className="h-4 w-4" />
+                                                                Dossier
                                                             </Link>
                                                         </DropdownMenuItem>
 

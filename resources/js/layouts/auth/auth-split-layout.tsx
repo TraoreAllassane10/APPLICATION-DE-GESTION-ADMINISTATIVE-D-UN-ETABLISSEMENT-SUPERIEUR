@@ -34,7 +34,7 @@ export default function AuthSplitLayout({
                     INEC DALOA
                 </Link>
                 <div className="relative z-20 mt-38">
-                    <h1 className='text-4xl font-bold w-[600px]'>Plateforme de Gestion des Emplois du Temps</h1>
+                    <h1 className='text-4xl font-bold tracking-wide leading-12'>Application de gestion administrative - INEC SA</h1>
                 </div>
             </div>
             <div className="w-full lg:p-8">

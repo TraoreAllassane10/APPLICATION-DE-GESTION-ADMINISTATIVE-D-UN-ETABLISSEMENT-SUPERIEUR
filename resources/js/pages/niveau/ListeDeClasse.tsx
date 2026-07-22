@@ -12,7 +12,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DataNiveau, Etudiant } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Eye, GraduationCap, Printer } from 'lucide-react';
+import { Folder, GraduationCap, Printer } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -127,8 +127,8 @@ const ListeDeClasse = () => {
                                                         variant="outline"
                                                         size="sm"
                                                     >
-                                                        <Eye />
-                                                        Voir le profil
+                                                        <Folder />
+                                                        Consulter son dossier
                                                     </Button>
                                                 </Link>
                                             </TableCell>

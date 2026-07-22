@@ -97,7 +97,7 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">
-                            Classes
+                            Gestion des classes
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
                             Gérez les niveaux et leurs filières.
