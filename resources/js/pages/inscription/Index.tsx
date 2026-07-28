@@ -3,7 +3,6 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
     Eye,
-    FileText,
     GraduationCap,
     PlusCircle,
     Search,
@@ -129,8 +128,8 @@ export default function Index() {
                 {/* Header */}
                 <div className="flex items-start justify-between">
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight">
-                            Inscriptions
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            Gestion des inscriptions
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
                             Gérez les inscriptions des étudiants.
@@ -359,10 +358,10 @@ export default function Index() {
                                                             Voir les détails
                                                         </Link>
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem className="cursor-pointer gap-2">
+                                                    {/* <DropdownMenuItem className="cursor-pointer gap-2">
                                                         <FileText className="h-4 w-4" />{' '}
                                                         Générer le bulletin
-                                                    </DropdownMenuItem>
+                                                    </DropdownMenuItem> */}
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem
                                                         onClick={() => {

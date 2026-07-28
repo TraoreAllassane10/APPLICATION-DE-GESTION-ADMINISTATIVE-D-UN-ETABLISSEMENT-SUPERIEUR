@@ -1,5 +1,6 @@
 import ActionBadgeHistorique from '@/components/historique/ActionBadgeHistorique';
 import StatCardsHistoriques from '@/components/historique/StatCardsHistoriques';
+import PaginationLinks from '@/components/Pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,7 +27,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { Activite, BreadcrumbItem } from '@/types';
+import { Activite, BreadcrumbItem, Meta } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     Activity,
@@ -46,10 +47,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Historique', href: '/historique' },
 ];
 
+interface ActionData {
+    data: Activite[];
+    meta: Meta;
+    links: any;
+}
+
 interface ActionProps {
-    activites: Activite[];
+    activites: ActionData;
     [key: string]: unknown;
 }
+
 
 // ── Config actions ────────────────────────────────────────────────────────────
 
@@ -95,10 +103,10 @@ const Index = () => {
 
     // Valeurs uniques pour les selects
     const entitesUniques = [
-        ...new Set(activites.map((a) => a.entite_type).filter(Boolean)),
+        ...new Set(activites.data.map((a) => a.entite_type).filter(Boolean)),
     ].sort();
 
-    const filtered = activites.filter((a) => {
+    const filtered = activites.data.filter((a) => {
         const q = search.toLowerCase();
         const matchSearch =
             !q ||
@@ -147,7 +155,7 @@ const Index = () => {
                 </div>
 
                 {/* Stats */}
-                <StatCardsHistoriques activites={activites} />
+                <StatCardsHistoriques activites={activites.data} />
 
                 {/* Filtres */}
                 <Card className="shadow-sm">
@@ -383,7 +391,11 @@ const Index = () => {
                                     );
                                 })
                             )}
+
+                            <PaginationLinks links={activites.links} />
                         </TableBody>
+
+
                     </Table>
                 </Card>
             </div>

@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
-    Eye,
+    Folder,
     Pencil,
     PlusCircle,
     Search,
@@ -108,7 +108,7 @@ export default function Index() {
                 <div className="flex items-start justify-between">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">
-                            Étudiants
+                            Gestion des étudiants
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
                             Gérez le fichier des étudiants enregistrés.
@@ -316,8 +316,8 @@ export default function Index() {
                                                             href={`/etudiants/${e.ip}/show`}
                                                             className="flex cursor-pointer items-center gap-2"
                                                         >
-                                                            <Eye className="h-4 w-4" />{' '}
-                                                            Voir le profil
+                                                            <Folder className="h-4 w-4" />{' '}
+                                                            Dossier
                                                         </Link>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem asChild>
