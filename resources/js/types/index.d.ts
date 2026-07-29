@@ -257,6 +257,17 @@ export interface RepartitionNiveau {
     couleur: string;
 }
 
+// Paiement
+export interface Paiement {
+    id: number;
+    reference: string;
+    date_paiement: string;
+    methode_paiement: string;
+    montant: number;
+    nom_receveur: string;
+    inscription: Inscription
+}
+
 // Historique des actions
 export interface Activite {
     id: string;

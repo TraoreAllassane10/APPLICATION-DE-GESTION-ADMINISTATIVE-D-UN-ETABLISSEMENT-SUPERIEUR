@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pedagogie;
 
 use App\Exports\EnseignantExport;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\professeur\CreateProfesseurRequest;
 use App\Http\Requests\professeur\UpdateProfesseurRequest;
-use Exception;
-use Inertia\Inertia;
-use App\Models\Professeur;
 use App\Http\Resources\ProfesseurResource;
+use App\Models\Professeur;
 use App\Services\AnneeAcademiqueService;
 use App\Services\ProfesseurService;
+use Exception;
+use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProfesseurController extends Controller

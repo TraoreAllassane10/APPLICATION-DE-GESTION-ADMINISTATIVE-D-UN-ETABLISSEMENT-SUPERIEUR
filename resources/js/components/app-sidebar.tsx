@@ -13,6 +13,7 @@ import { dashboard, historique, niveau, professeur } from '@/routes';
 import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
+    Banknote,
     ClipboardList,
     GraduationCap,
     History,
@@ -59,10 +60,15 @@ export function AppSidebar() {
             href: professeur(),
             icon: UserCog,
         },
-        
+
         // Onglets disponible que pour les administrateur
         ...(isAuthorize
             ? [
+                  {
+                      title: 'Paiements',
+                      href: '/paiements',
+                      icon: Banknote,
+                  },
                   {
                       title: 'Historiques des actions',
                       href: historique(),
@@ -89,30 +95,38 @@ export function AppSidebar() {
     ];
 
     return (
-       <Sidebar collapsible="icon" variant="inset" className="bg-slate-950 border-r border-white/5">
-        <SidebarHeader className="border-b border-white/5 pb-3">
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" asChild className="hover:bg-white/5">
-                        <Link href={dashboard()} prefetch>
-                            <AppLogo />
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </SidebarHeader>
+        <Sidebar
+            collapsible="icon"
+            variant="inset"
+            className="border-r border-white/5 bg-slate-950"
+        >
+            <SidebarHeader className="border-b border-white/5 pb-3">
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton
+                            size="lg"
+                            asChild
+                            className="hover:bg-white/5"
+                        >
+                            <Link href={dashboard()} prefetch>
+                                <AppLogo />
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarHeader>
 
-        <SidebarContent className="px-2 py-3">
-            <NavMain items={mainNavItems} title="Gestion académique" />
-            {isAuthorize && (
-                <NavMain items={mainNavItemsPersonnel} title="Personnel" />
-            )}
-        </SidebarContent>
+            <SidebarContent className="px-2 py-3">
+                <NavMain items={mainNavItems} title="Gestion académique" />
+                {isAuthorize && (
+                    <NavMain items={mainNavItemsPersonnel} title="Personnel" />
+                )}
+            </SidebarContent>
 
-        <SidebarFooter className="border-t border-white/5 p-2">
-            <NavFooter items={footerNavItems} className="mt-auto" />
-            <NavUser />
-        </SidebarFooter>
-    </Sidebar>
+            <SidebarFooter className="border-t border-white/5 p-2">
+                <NavFooter items={footerNavItems} className="mt-auto" />
+                <NavUser />
+            </SidebarFooter>
+        </Sidebar>
     );
 }

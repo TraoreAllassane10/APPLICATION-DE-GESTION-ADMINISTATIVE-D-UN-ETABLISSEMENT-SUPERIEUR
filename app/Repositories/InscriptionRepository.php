@@ -61,8 +61,6 @@ class InscriptionRepository
             ->withSum("paiements as total_paiements", "montant")
             ->first();
     }
-
-
     public function create(array $data, $frais_annexe, $scolariteApresReduction, $montantTotalScolarite, $etudiant, $anneeUniversitaire)
     {
         return Inscription::create([
