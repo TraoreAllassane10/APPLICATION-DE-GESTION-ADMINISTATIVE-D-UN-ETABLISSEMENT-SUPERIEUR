@@ -55,6 +55,14 @@ class PaiementController extends Controller
         }
     }
 
+    public function exportPaiements(Request $request)
+    {
+        $periode = $request->query('periode');
+
+        return $this->paiementService->exportPaiements($periode);
+    }
+
+    // Recapitulatif des paiements d'un etudiant
     public function recapitulatifPaiement(Inscription $inscription)
     {
         try {
