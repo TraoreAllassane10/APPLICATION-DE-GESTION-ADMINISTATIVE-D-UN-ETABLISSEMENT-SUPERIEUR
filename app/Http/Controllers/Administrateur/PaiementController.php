@@ -4,18 +4,30 @@ namespace App\Http\Controllers\Administrateur;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\paiement\CreatePaiementRequest;
-use App\Models\Etudiant;
 use App\Models\Inscription;
 use App\Models\Paiement;
 use App\Services\PaiementService;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class PaiementController extends Controller
 {
     public function __construct(
         protected PaiementService $paiementService
     ) {}
+
+    public function index()
+    {
+        $data = $this->paiementService->getPaiements();
+
+        return Inertia::render('paiement/Index', [
+            "total_recette_inscriptions" => $data['total_recette_inscriptions'],
+            "total_encaisse" => $data['total_encaisse'],
+            "total_reste" => $data['total_reste'],
+            "paiements" => $data['paiements']
+        ]);
+    }
 
     public function store(CreatePaiementRequest $request, string $inscriptionId)
     {

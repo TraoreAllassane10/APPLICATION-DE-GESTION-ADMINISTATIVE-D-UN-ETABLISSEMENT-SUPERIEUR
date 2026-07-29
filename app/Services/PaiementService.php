@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Inscription;
 use App\Models\Paiement;
+use App\Repositories\InscriptionRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,8 +14,29 @@ class PaiementService
 {
     public function __construct(
         protected InscriptionService $inscriptionService,
-
+        protected AnneeAcademiqueService $anneeAcademiqueService,
+        protected InscriptionRepository $inscriptionRepository
     ) {}
+
+    public function getPaiements()
+    {
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+
+        $totalRecetteInscriptions = (int) $this->inscriptionRepository->totalRecetteAnneeActive($anneeActive->id);
+        $totalEncaisse = (int) $this->inscriptionRepository->totalEncaisseAnneActive($anneeActive->id);
+        $totalReste = $totalRecetteInscriptions - $totalEncaisse;
+
+        $paiements = Paiement::whereHas('inscription', function ($inscription) use ($anneeActive) {
+            $inscription->where('annee_universitaire_id', $anneeActive->id);
+        })->with('inscription')->latest()->paginate(20);
+
+        return [
+            "total_recette_inscriptions" => $totalRecetteInscriptions,
+            "total_encaisse" => $totalEncaisse,
+            "total_reste" => $totalReste,
+            "paiements" => $paiements
+        ];
+    }
 
     public function createPaiement(string $inscriptionId, array $data)
     {

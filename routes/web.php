@@ -12,9 +12,9 @@ use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\FiliereController;
 use App\Http\Controllers\Pedagogie\NiveauController;
+use App\Http\Controllers\Pedagogie\ProfesseurController;
 use App\Http\Controllers\Pedagogie\SalleController;
 use App\Http\Controllers\Pedagogie\SiteController;
-use App\Http\Controllers\ProfesseurController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -140,6 +140,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Routes Paiement
     Route::middleware("administrateur")->controller(PaiementController::class)->group(function () {
+        Route::get('/paiements', 'index')->name('paiements');
         Route::post("/inscriptions/{inscription}/paiement", "store")->name("paiements.store");
         Route::get('/paiements/{paiement}/recu', "recu")->name('paiements.recu');
         Route::get('/inscriptions/{inscription}/recap-paiements', "recapitulatifPaiement")->name('paiements.recap');
@@ -168,7 +169,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post("personnels", "store")->name("personnels.store");
         Route::get("personnels/{personnel}/show", "show")->name("personnels.show");
         Route::get("personnels/{personnel}/edit", "edit")->name("personnels.edit");
-        
+
         // Post, parce que j'utilise formData coté frontent. FormData ne supporte pas PUT
         Route::put("personnels/{personnel}/update", "update")->name("personnels.update");
         Route::delete("/personnels/{personnel}/delete", "delete")->name("personnels.delete");
