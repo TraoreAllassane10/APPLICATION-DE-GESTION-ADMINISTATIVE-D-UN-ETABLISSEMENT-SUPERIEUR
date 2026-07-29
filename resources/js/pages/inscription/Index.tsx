@@ -132,7 +132,7 @@ export default function Index() {
                             Gestion des inscriptions
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
-                            Gérez les inscriptions des étudiants.
+                            Gérez les inscriptions des étudiants. ({stats.total_inscription_annee} inscrits)
                         </p>
                     </div>
                     <Link href="/inscriptions/create">
@@ -142,8 +142,6 @@ export default function Index() {
                         </Button>
                     </Link>
                 </div>
-
-                <StatCardsInscription stats={stats} isAdmin={isAdmin} />
 
                 {/* Filtres */}
                 <Card className="shadow-sm">

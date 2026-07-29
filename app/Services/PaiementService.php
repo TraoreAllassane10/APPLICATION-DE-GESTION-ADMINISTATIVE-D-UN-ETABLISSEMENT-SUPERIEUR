@@ -18,7 +18,7 @@ class PaiementService
         protected InscriptionRepository $inscriptionRepository
     ) {}
 
-    public function getPaiements()
+    public function getPaiements($request)
     {
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
@@ -26,9 +26,26 @@ class PaiementService
         $totalEncaisse = (int) $this->inscriptionRepository->totalEncaisseAnneActive($anneeActive->id);
         $totalReste = $totalRecetteInscriptions - $totalEncaisse;
 
-        $paiements = Paiement::whereHas('inscription', function ($inscription) use ($anneeActive) {
+
+        $query = Paiement::query()->whereHas('inscription', function ($inscription) use ($anneeActive) {
             $inscription->where('annee_universitaire_id', $anneeActive->id);
-        })->with('inscription')->latest()->paginate(20);
+        })->with('inscription');
+
+        $query->when($request->periode, function ($q) use ($request) {
+            if ($request->periode == 'Hebdomadaire') {
+                $q->whereBetween('date_paiement', [
+                    now()->startOfWeek(),
+                    now()->endOfWeek()
+                ]);
+            } else if ($request->periode == 'Mensuel') {
+                $q->whereMonth('date_paiement', now()->month);
+            }
+        });
+
+        $paiements = $query
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
 
         return [
             "total_recette_inscriptions" => $totalRecetteInscriptions,

@@ -8,6 +8,7 @@ use App\Models\Inscription;
 use App\Models\Paiement;
 use App\Services\PaiementService;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -17,9 +18,10 @@ class PaiementController extends Controller
         protected PaiementService $paiementService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->paiementService->getPaiements();
+
+        $data = $this->paiementService->getPaiements($request);
 
         return Inertia::render('paiement/Index', [
             "total_recette_inscriptions" => $data['total_recette_inscriptions'],

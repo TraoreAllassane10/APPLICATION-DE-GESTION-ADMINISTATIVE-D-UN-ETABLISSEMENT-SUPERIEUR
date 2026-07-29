@@ -1,7 +1,14 @@
 import PaginationLinks from '@/components/Pagination';
 import StatsCardsPaiements from '@/components/paiement/StatsCardsPaiements';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import {
     Table,
     TableBody,
@@ -10,11 +17,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import usePaiement from '@/hooks/usePaiement';
 import AppLayout from '@/layouts/app-layout';
 import { Annee, BreadcrumbItem, Meta, Paiement } from '@/types';
 import { fmt } from '@/utils/util';
-import { usePage } from '@inertiajs/react';
-import { History } from 'lucide-react';
+import { router, usePage } from '@inertiajs/react';
+import { History, Search, Sheet, X } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -30,7 +38,7 @@ interface paiementData {
 interface ActionProps {
     paiements: paiementData;
     anneeActive: Annee;
-        total_recette_inscriptions: number;
+    total_recette_inscriptions: number;
     total_encaisse: number;
     total_reste: number;
     [key: string]: unknown;
@@ -45,22 +53,18 @@ const Index = () => {
         anneeActive,
     } = usePage<ActionProps>().props;
 
-    const [search, setSearch] = useState('');
-    const [filtreAction, setFiltreAction] = useState('all');
-    const [filtreEntite, setFiltreEntite] = useState('all');
-    const [filtreDate, setFiltreDate] = useState('');
+    const [filtrePeriode, setFiltrePeriode] = useState('all');
+    const hasFilters = filtrePeriode !== 'all';
 
-    const hasFilters =
-        search ||
-        filtreAction !== 'all' ||
-        filtreEntite !== 'all' ||
-        filtreDate;
+    const { rechercheEtFiltrage } = usePaiement();
 
     const reset = () => {
-        setSearch('');
-        setFiltreAction('all');
-        setFiltreEntite('all');
-        setFiltreDate('');
+        setFiltrePeriode('all');
+        router.visit('/paiements');
+    };
+
+    const handleSearch = () => {
+        rechercheEtFiltrage(filtrePeriode);
     };
 
     return (
@@ -85,86 +89,67 @@ const Index = () => {
                 />
 
                 {/* Filtres */}
-                {/* <Card className="shadow-sm">
-                    <CardContent className="flex flex-wrap items-center gap-3 p-4">
-                        <div className="relative min-w-[220px] flex-1">
-                            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
-                                placeholder="Nom, Identifiant permanent..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="pl-9"
-                            />
+                <Card className="shadow-sm">
+                    <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
+                        <div className="flex items-center">
+                            <Select
+                                value={filtrePeriode}
+                                onValueChange={setFiltrePeriode}
+                            >
+                                <SelectTrigger className="w-[150px]">
+                                    <SelectValue placeholder="Période" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem
+                                        value="all"
+                                        disabled={filtrePeriode !== 'all'}
+                                    >
+                                        Tout
+                                    </SelectItem>
+                                    <SelectItem value="Hebdomadaire">
+                                        Hebdomadaire
+                                    </SelectItem>
+                                    <SelectItem value="Mensuel">
+                                        Mensuel
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            {hasFilters && (
+                                <>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleSearch}
+                                        className="gap-1.5 text-muted-foreground"
+                                    >
+                                        <Search className="h-3.5 w-3.5" />{' '}
+                                        Rechercher
+                                    </Button>
+
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={reset}
+                                        className="gap-1.5 text-muted-foreground"
+                                    >
+                                        <X className="h-3.5 w-3.5" />{' '}
+                                        Réinitialiser
+                                    </Button>
+                                </>
+                            )}
                         </div>
 
-                        <Select
-                            value={filtreStatut}
-                            onValueChange={setFiltreStatut}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5 text-muted-foreground"
                         >
-                            <SelectTrigger className="w-[150px]">
-                                <SelectValue placeholder="Statut" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">
-                                    Tous statuts
-                                </SelectItem>
-                                <SelectItem value="Affecté">Affecté</SelectItem>
-                                <SelectItem value="Naff">Naff</SelectItem>
-                                <SelectItem value="Réaffecté">
-                                    Réaffecté
-                                </SelectItem>
-                                <SelectItem value="Transfert">
-                                    Transfert
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-
-                        <Select
-                            value={filtreGenre}
-                            onValueChange={setFiltreGenre}
-                        >
-                            <SelectTrigger className="w-[140px]">
-                                <SelectValue placeholder="Genre" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">Tous genres</SelectItem>
-                                <SelectItem value="Masculin">
-                                    Masculin
-                                </SelectItem>
-                                <SelectItem value="Féminin">Féminin</SelectItem>
-                            </SelectContent>
-                        </Select>
-
-                        {hasFilters && (
-                            <>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={handleSearch}
-                                    className="gap-1.5 text-muted-foreground"
-                                >
-                                    <Search className="h-3.5 w-3.5" />{' '}
-                                    Rechercher
-                                </Button>
-
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={reset}
-                                    className="gap-1.5 text-muted-foreground"
-                                >
-                                    <X className="h-3.5 w-3.5" /> Réinitialiser
-                                </Button>
-                            </>
-                        )}
-
-                        <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
-                            <SlidersHorizontal className="h-3.5 w-3.5" />
-                            {etudiants.data.length} résultat
-                            {etudiants.data.length !== 1 ? 's' : ''}
-                        </span>
+                            <Sheet className="h-3.5 w-3.5" /> exporter la liste
+                            des paiements
+                        </Button>
                     </CardContent>
-                </Card> */}
+                </Card>
 
                 {/* Tableau */}
                 <Card className="overflow-hidden shadow-sm">
