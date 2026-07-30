@@ -67,6 +67,10 @@ const Index = () => {
         rechercheEtFiltrage(filtrePeriode);
     };
 
+    const handleExport = () => {
+        window.location.href = `/paiements/export?periode=${filtrePeriode}`
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="space-y-5 p-6">
@@ -140,12 +144,8 @@ const Index = () => {
                             )}
                         </div>
 
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-1.5 text-muted-foreground"
-                        >
-                            <Sheet className="h-3.5 w-3.5" /> exporter la liste
+                        <Button onClick={handleExport} variant="outline" size="sm" className="gap-1.5">
+                            <Sheet className="h-3.5 w-3.5" /> Exporter la liste
                             des paiements
                         </Button>
                     </CardContent>

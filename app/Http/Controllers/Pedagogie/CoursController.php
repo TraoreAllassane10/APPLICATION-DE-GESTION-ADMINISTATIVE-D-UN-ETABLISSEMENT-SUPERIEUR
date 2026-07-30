@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pedagogie;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\cours\CreateCoursRequest;
 use App\Http\Requests\cours\UpdateCoursRequest;
-use Exception;
-use Inertia\Inertia;
-use App\Models\Cours;
-use App\Models\Professeur;
 use App\Http\Resources\CoursResource;
 use App\Http\Resources\ProfesseurResource;
+use App\Models\Cours;
+use App\Models\Professeur;
 use App\Services\CoursService;
+use Exception;
+use Inertia\Inertia;
 
 class CoursController extends Controller
 {

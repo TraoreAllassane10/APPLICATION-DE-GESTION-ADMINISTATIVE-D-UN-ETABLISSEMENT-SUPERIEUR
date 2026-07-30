@@ -283,6 +283,17 @@ export default function Dashboard() {
                                             <BadgeDollarSign className="h-4 w-4 text-emerald-600" />
                                             Derniers paiements
                                         </CardTitle>
+
+                                          <Link href="/paiements">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-7 gap-1 text-xs text-muted-foreground"
+                                            >
+                                                Tout voir{' '}
+                                                <ArrowRight className="h-3 w-3" />
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </CardHeader>
                                 <Table>

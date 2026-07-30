@@ -43,7 +43,8 @@ import {
 } from '@/components/ui/table';
 import useNiveau from '@/hooks/useNiveau';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, FiliereData, Niveau } from '@/types';
+import { Auth, BreadcrumbItem, FiliereData, Niveau } from '@/types';
+import { fmt } from '@/utils/util';
 import { Link, usePage } from '@inertiajs/react';
 import {
     ChevronDown,
@@ -61,15 +62,21 @@ const breadcrumbs: BreadcrumbItem[] = [{ title: 'Niveau', href: '/niveau' }];
 interface NiveauProps {
     niveaux: Niveau;
     filieres: { data: FiliereData[] };
+    auth: Auth;
     [key: string]: unknown;
 }
 
 const Index = () => {
-    const { niveaux, filieres } = usePage<NiveauProps>().props;
+    const { niveaux, filieres, auth } = usePage<NiveauProps>().props;
 
     const [nom, setNom] = useState('');
     const [filiere_id, setFiliereId] = useState('');
     const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    // Verifie si l'utilisateur est possède le rôle de l'administrateur
+    const isAdmin = auth.user?.roles?.some(
+        (role) => role.name == 'Administrateur',
+    );
 
     const { createNiveau, deleteNiveau } = useNiveau();
 
@@ -168,6 +175,16 @@ const Index = () => {
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
                                 <TableHead>Niveau</TableHead>
                                 <TableHead>Filière</TableHead>
+                                <TableHead>Nombre d'etudiant</TableHead>
+                                {isAdmin && (
+                                    <>
+                                        <TableHead>
+                                            Scolarite attendue
+                                        </TableHead>
+                                        <TableHead>Payé</TableHead>
+                                        <TableHead>Reste</TableHead>
+                                    </>
+                                )}
                                 <TableHead className="w-[80px]" />
                             </TableRow>
                         </TableHeader>
@@ -205,6 +222,33 @@ const Index = () => {
                                         <TableCell className="text-sm text-muted-foreground">
                                             {niveau.filiere.nom}
                                         </TableCell>
+
+                                        <TableCell className="text-sm text-muted-foreground">
+                                            {niveau.nombre_etudiant}
+                                        </TableCell>
+
+                                        {isAdmin && (
+                                            <>
+                                                <TableCell className="text-sm text-muted-foreground">
+                                                    {fmt(
+                                                        niveau.scolarite_attendue,
+                                                    )}
+                                                </TableCell>
+
+                                                <TableCell className="text-sm text-muted-foreground">
+                                                    {fmt(
+                                                        niveau.montant_total_paye,
+                                                    )}
+                                                </TableCell>
+
+                                                <TableCell className="text-sm text-muted-foreground">
+                                                    {fmt(
+                                                        niveau.scolarite_attendue -
+                                                            niveau.montant_total_paye,
+                                                    )}
+                                                </TableCell>
+                                            </>
+                                        )}
 
                                         <TableCell>
                                             <DropdownMenu>

@@ -144,6 +144,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post("/inscriptions/{inscription}/paiement", "store")->name("paiements.store");
         Route::get('/paiements/{paiement}/recu', "recu")->name('paiements.recu');
         Route::get('/inscriptions/{inscription}/recap-paiements', "recapitulatifPaiement")->name('paiements.recap');
+        Route::get('/paiements/export', "exportPaiements")->name('paiements.exportPaiements');
     });
 
     // Routes Scolarite

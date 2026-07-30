@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exports\PaiementExport;
 use App\Models\Inscription;
 use App\Models\Paiement;
 use App\Repositories\InscriptionRepository;
@@ -9,6 +10,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PaiementService
 {
@@ -53,6 +55,14 @@ class PaiementService
             "total_reste" => $totalReste,
             "paiements" => $paiements
         ];
+    }
+
+    public function exportPaiements(string $periode)
+    {
+
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+
+        return Excel::download(new PaiementExport($anneeActive->id, $periode), 'Recap_des_paiements_' . $periode . '.xlsx');
     }
 
     public function createPaiement(string $inscriptionId, array $data)

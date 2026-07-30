@@ -5,22 +5,13 @@ namespace App\Http\Controllers\Pedagogie;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\niveau\CreateNiveauRequest;
 use App\Http\Requests\niveau\UpdateNiveauRequest;
-use App\Http\Resources\CoursResource;
 use App\Http\Resources\FiliereResource;
 use App\Http\Resources\NiveauResource;
-use App\Http\Resources\ProfesseurResource;
-use App\Http\Resources\SalleResource;
-use App\Http\Resources\SeanceResource;
-use App\Models\Cours;
 use App\Models\Filiere;
 use App\Models\Niveau;
-use App\Models\Professeur;
-use App\Models\Salle;
-use App\Models\Seance;
 use App\Services\FiliereService;
 use App\Services\NiveauService;
 use Exception;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NiveauController extends Controller
@@ -101,29 +92,6 @@ class NiveauController extends Controller
         }
     }
 
-    public function emploiParNiveau(Request $request, string $niveauId)
-    {
-        try {
-            $salle = $request->query("salle");
-            $professeur = $request->query("professeur");
-            $date = $request->query("date");
-
-            $seances = Seance::where("niveau_id", $niveauId)
-                ->where("semaine_id", 3)
-                ->get();
-
-            return Inertia::render("niveau/EmploiDuTemps", [
-                "seances" => SeanceResource::collection($seances),
-                "professeurs" => ProfesseurResource::collection(Professeur::latest()->get()),
-                "cours" => CoursResource::collection(Cours::latest()->get()),
-                "salles" => SalleResource::collection(Salle::latest()->get()),
-                "niveaux" => NiveauResource::collection(Niveau::latest()->get()),
-            ]);
-        } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
-        }
-    }
-
     public function listeDeClasse(string $niveauId)
     {
 
@@ -138,7 +106,7 @@ class NiveauController extends Controller
     }
 
     public function downloadListeDeClase(string $niveauId)
-    { 
+    {
         return $this->niveauService->getListeDeClasseEnPdf($niveauId);
     }
 }

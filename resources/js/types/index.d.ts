@@ -126,6 +126,9 @@ export interface DataNiveau {
     id: number;
     nom: string;
     filiere: { nom: string };
+    nombre_etudiant: number;
+    scolarite_attendue: number;
+    montant_total_paye: number;
 }
 
 export interface Niveau {
