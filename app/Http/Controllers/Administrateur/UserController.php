@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrateur;
 
 use App\Enums\RoleUser;
 use App\Http\Controllers\Controller;
+use App\Models\AnneeUniversitaire;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
+            "annee_active" => AnneeUniversitaire::latest()->first()->id
         ]);
 
         if ($user) {

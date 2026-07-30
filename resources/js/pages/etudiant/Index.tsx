@@ -85,6 +85,8 @@ export default function Index() {
     const handleDelete = (ip: string) => {
         if (ip) {
             deleteEtudiant(ip);
+
+            router.visit('/etudiants');
         }
     };
 

@@ -12,6 +12,7 @@ use App\Services\InscriptionService;
 use App\Services\NiveauService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -53,7 +54,8 @@ class InscriptionController extends Controller
             $niveaux = $this->niveauService->getAllNiveaux();
 
             // La recuperation de l'annee active MAIS en collection
-            $annees = AnneeUniversitaire::where("estActive", 1)->get();
+            $user = Auth::user();
+            $annees = AnneeUniversitaire::where("id", $user->annee_active)->get();
 
             return Inertia::render('inscription/Create', [
                 "etudiants" => $etudiants,

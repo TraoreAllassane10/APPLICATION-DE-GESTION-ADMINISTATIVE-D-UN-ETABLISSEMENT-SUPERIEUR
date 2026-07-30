@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\AnneeUniversitaire;
 use App\Repositories\AnneeAcademiqueRepository;
+use Illuminate\Support\Facades\Auth;
 
 class AnneeAcademiqueService
 {
@@ -14,7 +15,7 @@ class AnneeAcademiqueService
 
     public function all()
     {
-        return $this->anneeAcademiqueRepository->all(); 
+        return $this->anneeAcademiqueRepository->all();
     }
 
     public function find(string $id)
@@ -39,13 +40,15 @@ class AnneeAcademiqueService
     }
 
     // Recupere l'annee active
-    public function getAnneeActive() {
+    public function getAnneeActive()
+    {
         return $this->anneeAcademiqueRepository->anneeActive();
     }
 
     public function editAnneeActive()
     {
-        $anneeActive = AnneeUniversitaire::where("estActive", 1)->first();
+        $user = Auth::user();
+        $anneeActive = AnneeUniversitaire::where("id", $user->annee_active)->first();
         $touteLesAnnees = AnneeUniversitaire::orderByDesc("date_fin")->get();
 
         return [$anneeActive, $touteLesAnnees];
@@ -55,16 +58,13 @@ class AnneeAcademiqueService
     public function changeAnneeActive(string $id)
     {
 
-        // Desactive l'annee actuelle active
-        $anneeActuellementActive = AnneeUniversitaire::where("estActive", 1)->first();
-
-        if ($anneeActuellementActive) {
-            $anneeActuellementActive->estActive = 0;
-            $anneeActuellementActive->save();
-        }
+        $user = Auth::user();
 
         $annee = AnneeUniversitaire::find($id);
-        $annee->estActive = 1;
-        $annee->save();
+
+        $user->update([
+            "annee_active" => $annee->id
+        ]);
+
     }
 }

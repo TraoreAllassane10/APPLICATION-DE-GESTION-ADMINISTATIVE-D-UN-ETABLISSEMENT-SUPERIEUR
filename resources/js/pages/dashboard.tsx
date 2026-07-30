@@ -90,7 +90,7 @@ export default function Dashboard() {
                 {/* ── Stats globales ───────────────────────────────────────────── */}
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     <StatCard
-                        label="Étudiants"
+                        label="Alumnis"
                         value={stats_globales.totalEtudiants}
                         sub="Fichier général"
                         icon={Users}
