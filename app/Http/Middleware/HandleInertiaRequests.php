@@ -3,12 +3,17 @@
 namespace App\Http\Middleware;
 
 use App\Models\AnneeUniversitaire;
+use App\Models\User;
+use App\Services\AnneeAcademiqueService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    public function __construct(protected AnneeAcademiqueService $anneeAcademiqueService) {}
+
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -39,6 +44,15 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $user = Auth::user();
+        $anneeActive = null;
+
+        if ($user) {
+            $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+        }
+
+
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -46,7 +60,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'anneeActive' => AnneeUniversitaire::where("estActive", 1)->first(),
+            'anneeActive' =>  $anneeActive,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

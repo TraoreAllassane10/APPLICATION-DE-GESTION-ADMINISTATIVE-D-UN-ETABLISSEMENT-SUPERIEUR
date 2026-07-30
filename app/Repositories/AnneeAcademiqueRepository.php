@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\AnneeUniversitaire;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AnneeAcademiqueRepository
 {
@@ -35,7 +36,18 @@ class AnneeAcademiqueRepository
         return $annee->delete();
     }
 
-    public function anneeActive() {
-        return AnneeUniversitaire::where("estActive", 1)->first();
+    public function anneeActive()
+    {
+        $user = Auth::user();
+        $derniereAnneeId = AnneeUniversitaire::latest()->first()->id;
+
+        if($user->annee_active === null)
+        {
+            $user->update([
+                "annee_active" => $derniereAnneeId ?? null
+            ]);
+        }
+
+        return AnneeUniversitaire::where("id", $user->annee_active)->first();
     }
 }
