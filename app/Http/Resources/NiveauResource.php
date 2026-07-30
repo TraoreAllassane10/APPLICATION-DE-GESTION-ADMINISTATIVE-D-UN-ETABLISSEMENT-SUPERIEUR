@@ -17,7 +17,10 @@ class NiveauResource extends JsonResource
         return [
             "id" => $this->id,
             "nom" => $this->nom,
-            "filiere" => $this->whenLoaded("filiere")
+            "filiere" => $this->whenLoaded("filiere"),
+            "nombre_etudiant" => $this->inscriptions_count,
+            "scolarite_attendue" => (int) $this->inscriptions_sum_montant_total,
+            "montant_total_paye" => (int) $this->paiements_sum_montant
         ];
     }
 }
