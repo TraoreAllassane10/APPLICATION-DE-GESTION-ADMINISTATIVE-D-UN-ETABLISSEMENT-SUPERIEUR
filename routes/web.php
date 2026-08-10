@@ -86,33 +86,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("professeur/export", "export")->name("professeur.export");
     });
 
-    //Routes Site
-    Route::controller(SiteController::class)->group(function () {
-        Route::get("site", "index")->name("site");
-        Route::post("site", "store")->name("site.store");
-        Route::get("site/{site}/edit", "edit")->name("site.edit");
-        Route::put("site/{site}/update", "update")->name("site.update");
-        Route::delete("site/{site}/delete", "delete")->name("site.delete");
-    });
-
-
-    //Routes salle
-    Route::controller(SalleController::class)->group(function () {
-        Route::get("salle", "index")->name("salle");
-        Route::post("salle", "store")->name("salle.store");
-        Route::get("salle/{salle}/edit", "edit")->name("salle.edit");
-        Route::put("salle/{salle}/update", "update")->name("salle.update");
-        Route::delete("salle/{salle}/delete", "delete")->name("salle.delete");
-    });
-
-    //Routes cours
-    Route::controller(CoursController::class)->group(function () {
-        Route::get("cours", "index")->name("cours");
-        Route::post("cours", "store")->name("cours.store");
-        Route::get("cours/{cours}/edit", "edit")->name("cours.edit");
-        Route::put("cours/{cours}/update", "update")->name("cours.update");
-        Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
-    });
 
     //Routes Etudiant
     Route::controller(EtudiantController::class)->group(function () {
