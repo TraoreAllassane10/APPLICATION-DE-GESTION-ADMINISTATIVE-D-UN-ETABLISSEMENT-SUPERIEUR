@@ -66,7 +66,7 @@ class EtudiantController extends Controller
 
             //Creation d'un etudiant
             $this->etudiantService->create($data);
-
+  
             return response()->json(["success" => true]);
         } catch (Exception $e) {
             Log::error("Erreur lors de la création d'un etudiant", ["erreur" => $e->getMessage()]);

@@ -23,6 +23,7 @@ class CreateEtudiantRequest extends FormRequest
     {
         return [
             "ip" => "required|string|min:10|unique:etudiants,ip",
+            "photo" => "nullable|image|max:2048",
             "civilite" => "required|string",
             "genre" => "required|string",
             "nom" => "required|string",

@@ -64,6 +64,7 @@ interface EtudiantProps {
 
 export default function Index() {
     const { etudiants, stats, filters } = usePage<EtudiantProps>().props;
+    console.log(etudiants)
 
     const [search, setSearch] = useState(filters.search ?? '');
     const [filtreStatut, setFiltreStatut] = useState(filters.statut ?? 'all');
@@ -253,6 +254,7 @@ export default function Index() {
                                         <TableCell>
                                             <div className="flex items-center gap-2.5">
                                                 <Avatar
+                                                    photo={e.photo as string}
                                                     prenom={e.prenom}
                                                     nom={e.nom}
                                                     genre={e.genre}

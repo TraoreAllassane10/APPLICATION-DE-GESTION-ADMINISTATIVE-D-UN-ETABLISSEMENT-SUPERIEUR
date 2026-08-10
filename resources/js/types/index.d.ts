@@ -77,6 +77,8 @@ export interface Etudiant {
     numero_responsable: string | null;
     profession_responsable: string | null;
 
+    photo: File | string | null;
+
     inscriptions: Inscription[];
 
     created_at: string;
@@ -85,7 +87,7 @@ export interface Etudiant {
 
 export type EtudiantFormData = Omit<
     Etudiant,
-    'created_at' | 'updated_at' | inscriptions
+    'created_at' | 'updated_at'| 'photo' | inscriptions
 >;
 
 export interface StatsEtudiant {

@@ -1,15 +1,3 @@
-import {
-    BookOpen,
-    CheckCircle2,
-    ChevronLeft,
-    ChevronRight,
-    Phone,
-    User,
-    Users,
-} from 'lucide-react';
-import { useState } from 'react';
-
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -18,18 +6,25 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import {
+    BookOpen,
+    CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
+    LucideProps,
+    Phone,
+    User,
+    Users,
+} from 'lucide-react';
+import { ForwardRefExoticComponent, RefAttributes, useState } from 'react';
 
 import { EtudiantFormData } from '@/types';
+import Step1 from './steps/Step1';
+import Step2 from './steps/Step2';
+import Step3 from './steps/Step3';
+import Step4 from './steps/Step4';
+import Stepper from './steps/Stepper';
 
 export const emptyForm = (): EtudiantFormData => ({
     ip: '',
@@ -56,6 +51,7 @@ export const emptyForm = (): EtudiantFormData => ({
     nom_responsable: null,
     numero_responsable: null,
     profession_responsable: null,
+    photo: null
 });
 
 export type Civilite = 'M.' | 'Mme' | 'Mlle';
@@ -145,9 +141,16 @@ export const PAYS = [
     'Autre',
 ];
 
-// ── Stepper ───────────────────────────────────────────────────────────────────
+export interface Step {
+    id: number;
+    label: string;
+    description: string;
+    icon: ForwardRefExoticComponent<
+        Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+    >;
+}
 
-const STEPS = [
+const STEPS: Step[] = [
     {
         id: 1,
         label: 'Identité',
@@ -173,447 +176,6 @@ const STEPS = [
         icon: Users,
     },
 ];
-
-function Stepper({ current }: { current: number }) {
-    return (
-        <div className="mb-8 flex flex-wrap items-center justify-center gap-y-4">
-            {STEPS.map((s, i) => {
-                const done = current > s.id;
-                const active = current === s.id;
-                const Icon = s.icon;
-                return (
-                    <div key={s.id} className="flex items-center">
-                        <div className="flex flex-col items-center gap-1.5">
-                            <div
-                                className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${done ? 'bg-primary text-primary-foreground' : ''} ${active ? 'bg-primary text-primary-foreground ring-4 ring-primary/20' : ''} ${!done && !active ? 'bg-muted text-muted-foreground' : ''} `}
-                            >
-                                {done ? (
-                                    <CheckCircle2 className="h-5 w-5" />
-                                ) : (
-                                    <Icon className="h-4 w-4" />
-                                )}
-                            </div>
-                            <div className="text-center">
-                                <p
-                                    className={`text-xs font-semibold ${active ? 'text-primary' : done ? 'text-foreground' : 'text-muted-foreground'}`}
-                                >
-                                    {s.label}
-                                </p>
-                            </div>
-                        </div>
-                        {i < STEPS.length - 1 && (
-                            <div
-                                className={`mx-2 mb-5 h-px w-12 transition-colors sm:w-20 ${current > s.id ? 'bg-primary' : 'bg-border'}`}
-                            />
-                        )}
-                    </div>
-                );
-            })}
-        </div>
-    );
-}
-
-// ── Champs utilitaires ────────────────────────────────────────────────────────
-
-function Field({
-    label,
-    required,
-    children,
-}: {
-    label: string;
-    required?: boolean;
-    children: React.ReactNode;
-}) {
-    return (
-        <div className="space-y-1.5">
-            <Label className="text-sm">
-                {label}
-                {required && <span className="ml-0.5 text-destructive">*</span>}
-            </Label>
-            {children}
-        </div>
-    );
-}
-
-type StrKey = keyof EtudiantFormData;
-
-function TextInput({
-    field,
-    data,
-    setData,
-    placeholder,
-    type = 'text',
-    disabled,
-}: {
-    field: StrKey;
-    data: EtudiantFormData;
-    setData: (d: EtudiantFormData) => void;
-    placeholder?: string;
-    type?: string;
-    disabled?: boolean;
-}) {
-    return (
-        <Input
-            type={type}
-            placeholder={placeholder}
-            disabled={disabled}
-            value={(data[field] as string) ?? ''}
-            onChange={(e) =>
-                setData({ ...data, [field]: e.target.value || null })
-            }
-        />
-    );
-}
-
-function SelectInput({
-    field,
-    data,
-    setData,
-    options,
-    placeholder,
-}: {
-    field: StrKey;
-    data: EtudiantFormData;
-    setData: (d: EtudiantFormData) => void;
-    options: string[];
-    placeholder?: string;
-}) {
-    return (
-        <Select
-            value={(data[field] as string) ?? ''}
-            onValueChange={(v) => setData({ ...data, [field]: v || null })}
-        >
-            <SelectTrigger>
-                <SelectValue placeholder={placeholder ?? 'Sélectionner…'} />
-            </SelectTrigger>
-            <SelectContent>
-                {options.map((o) => (
-                    <SelectItem key={o} value={o}>
-                        {o}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
-    );
-}
-
-// ── Étape 1 : Identité ────────────────────────────────────────────────────────
-
-function Step1({
-    data,
-    setData,
-    isEdit,
-}: {
-    data: EtudiantFormData;
-    setData: (d: EtudiantFormData) => void;
-    isEdit: boolean;
-}) {
-    return (
-        <div className="space-y-5">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                <Field label="Civilité" required>
-                    <SelectInput
-                        field="civilite"
-                        data={data}
-                        setData={setData}
-                        options={CIVILITES}
-                    />
-                </Field>
-                <Field label="Genre" required>
-                    <SelectInput
-                        field="genre"
-                        data={data}
-                        setData={setData}
-                        options={GENRES}
-                    />
-                </Field>
-                <Field label="Statut" required>
-                    <SelectInput
-                        field="statut"
-                        data={data}
-                        setData={setData}
-                        options={STATUTS}
-                    />
-                </Field>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Nom" required>
-                    <TextInput
-                        field="nom"
-                        data={data}
-                        setData={setData}
-                        placeholder="En majuscules"
-                    />
-                </Field>
-                <Field label="Prénom" required>
-                    <TextInput
-                        field="prenom"
-                        data={data}
-                        setData={setData}
-                        placeholder="Prénom(s)"
-                    />
-                </Field>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Date de naissance" required>
-                    <TextInput
-                        field="date_naissance"
-                        data={data}
-                        setData={setData}
-                        type="date"
-                    />
-                </Field>
-                <Field label="Lieu de naissance" required>
-                    <TextInput
-                        field="lieu_naissance"
-                        data={data}
-                        setData={setData}
-                        placeholder="Ville"
-                    />
-                </Field>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Nationalité" required>
-                    <SelectInput
-                        field="nationnalite"
-                        data={data}
-                        setData={setData}
-                        options={NATIONALITES}
-                    />
-                </Field>
-                <Field label="Pays de résidence">
-                    <SelectInput
-                        field="pays_residence"
-                        data={data}
-                        setData={setData}
-                        options={PAYS}
-                        placeholder="Sélectionner un pays"
-                    />
-                </Field>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="IP (identifiant permanent)" required>
-                    <TextInput
-                        field="ip"
-                        data={data}
-                        setData={setData}
-                        placeholder="ETU-2024-XXX"
-                        disabled={isEdit}
-                    />
-                    {isEdit && (
-                        <p className="mt-1 text-xs text-muted-foreground">
-                            L'identifiant permanent ne peut pas être modifié.
-                        </p>
-                    )}
-                </Field>
-                <Field label="Matricule secondaire">
-                    <TextInput
-                        field="matricule_secondaire"
-                        data={data}
-                        setData={setData}
-                        placeholder="Optionnel"
-                    />
-                </Field>
-            </div>
-        </div>
-    );
-}
-
-// ── Étape 2 : Académique ──────────────────────────────────────────────────────
-
-function Step2({
-    data,
-    setData,
-}: {
-    data: EtudiantFormData;
-    setData: (d: EtudiantFormData) => void;
-}) {
-    return (
-        <div className="space-y-5">
-            <Field label="Établissement d'origine">
-                <TextInput
-                    field="etablissement_origine"
-                    data={data}
-                    setData={setData}
-                    placeholder="Lycée / École de provenance"
-                />
-            </Field>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <Field label="Série du BAC">
-                    <SelectInput
-                        field="serie_bac"
-                        data={data}
-                        setData={setData}
-                        options={SERIES_BAC}
-                        placeholder="Série"
-                    />
-                </Field>
-                <Field label="Année d'obtention">
-                    <TextInput
-                        field="annee_obtention_bac"
-                        data={data}
-                        setData={setData}
-                        placeholder="Ex : 2022"
-                        type="number"
-                    />
-                </Field>
-                <Field label="N° de table BAC">
-                    <TextInput
-                        field="numero_table_bac"
-                        data={data}
-                        setData={setData}
-                        placeholder="Ex : 22-0123-A"
-                    />
-                </Field>
-            </div>
-
-            <Alert className="border-muted bg-muted/40">
-                <BookOpen className="h-4 w-4" />
-                <AlertDescription className="text-sm text-muted-foreground">
-                    Ces informations servent à vérifier l'authenticité du
-                    diplôme et à valider l'admission.
-                </AlertDescription>
-            </Alert>
-        </div>
-    );
-}
-
-// ── Étape 3 : Contact & Pièce ─────────────────────────────────────────────────
-
-function Step3({
-    data,
-    setData,
-}: {
-    data: EtudiantFormData;
-    setData: (d: EtudiantFormData) => void;
-}) {
-    return (
-        <div className="space-y-5">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Email">
-                    <TextInput
-                        field="email"
-                        data={data}
-                        setData={setData}
-                        placeholder="etudiant@example.com"
-                        type="email"
-                    />
-                </Field>
-                <Field label="Contacts (téléphone)">
-                    <TextInput
-                        field="contacts"
-                        data={data}
-                        setData={setData}
-                        placeholder="+225 07 XX XX XX"
-                    />
-                </Field>
-            </div>
-
-            <Field label="Adresse géographique">
-                <TextInput
-                    field="adresse_geographique"
-                    data={data}
-                    setData={setData}
-                    placeholder="Quartier, Ville"
-                />
-            </Field>
-
-            <Separator />
-
-            <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-                Pièce d'identité
-            </p>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Nature de la pièce">
-                    <SelectInput
-                        field="nature_piece"
-                        data={data}
-                        setData={setData}
-                        options={NATURES_PIECE}
-                        placeholder="Type de pièce"
-                    />
-                </Field>
-                <Field label="Numéro de la pièce">
-                    <TextInput
-                        field="numero_piece"
-                        data={data}
-                        setData={setData}
-                        placeholder="Ex : CI-24-XXXXXXX"
-                    />
-                </Field>
-            </div>
-        </div>
-    );
-}
-
-// ── Étape 4 : Responsable ─────────────────────────────────────────────────────
-
-function Step4({
-    data,
-    setData,
-}: {
-    data: EtudiantFormData;
-    setData: (d: EtudiantFormData) => void;
-}) {
-    return (
-        <div className="space-y-5">
-            <Alert className="border-muted bg-muted/40">
-                <Users className="h-4 w-4" />
-                <AlertDescription className="text-sm text-muted-foreground">
-                    Ces informations sont optionnelles mais recommandées pour le
-                    contact d'urgence.
-                </AlertDescription>
-            </Alert>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Type de responsable">
-                    <SelectInput
-                        field="type_responsable"
-                        data={data}
-                        setData={setData}
-                        options={TYPES_RESPONSABLE}
-                        placeholder="Père / Mère / Tuteur…"
-                    />
-                </Field>
-                <Field label="Nom du responsable">
-                    <TextInput
-                        field="nom_responsable"
-                        data={data}
-                        setData={setData}
-                        placeholder="Nom et prénom"
-                    />
-                </Field>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Numéro du responsable">
-                    <TextInput
-                        field="numero_responsable"
-                        data={data}
-                        setData={setData}
-                        placeholder="+225 07 XX XX XX"
-                    />
-                </Field>
-                <Field label="Profession du responsable">
-                    <TextInput
-                        field="profession_responsable"
-                        data={data}
-                        setData={setData}
-                        placeholder="Ex : Ingénieur"
-                    />
-                </Field>
-            </div>
-        </div>
-    );
-}
-
-// ── Composant principal ───────────────────────────────────────────────────────
 
 interface EtudiantFormProps {
     initialData?: EtudiantFormData;
@@ -672,7 +234,7 @@ export function EtudiantForm({
 
     return (
         <div className="space-y-4">
-            <Stepper current={step} />
+            <Stepper current={step} steps={STEPS} />
 
             <Card className="shadow-sm">
                 <CardHeader className="pb-4">

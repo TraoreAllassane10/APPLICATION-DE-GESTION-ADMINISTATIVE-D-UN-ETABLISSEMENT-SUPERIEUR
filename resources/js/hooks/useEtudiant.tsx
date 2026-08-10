@@ -8,7 +8,11 @@ import toast from 'react-hot-toast';
 export default function useEtudiant() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const rechercheEtFiltrage = (search: string, filtreStatut: string, filtreGenre: string) => {
+    const rechercheEtFiltrage = (
+        search: string,
+        filtreStatut: string,
+        filtreGenre: string,
+    ) => {
         try {
             return router.get(
                 `/etudiants`,
@@ -16,7 +20,7 @@ export default function useEtudiant() {
                     search: search,
                     statut: filtreStatut,
                     genre: filtreGenre,
-                    page: 1
+                    page: 1,
                 },
                 {
                     preserveState: true,
@@ -33,8 +37,22 @@ export default function useEtudiant() {
         try {
             setIsLoading(true);
 
+            const formData = new FormData();
+
+            Object.entries(data).map(([key, value]) => {
+                if (value === null || value === undefined) return;
+
+                if (value instanceof File) {
+                    formData.append(key, value);
+                }
+                else
+                {
+                    formData.append(key, value);
+                }
+            });
+
             await axios
-                .post('/etudiants', data)
+                .post('/etudiants', formData)
                 .then((response) => {
                     if (response.data.message) {
                         toast.error(response.data.message);

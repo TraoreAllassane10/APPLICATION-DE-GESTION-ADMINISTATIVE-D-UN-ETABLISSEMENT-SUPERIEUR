@@ -6,7 +6,9 @@ use App\Http\Resources\EtudiantRessource;
 use App\Models\Etudiant;
 use App\Repositories\EtudiantRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
+use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EtudiantService
 {
@@ -32,6 +34,11 @@ class EtudiantService
 
     public function create(array $data)
     {
+        if (isset($data['photo'])) {
+            Log::info('Image existe');
+            $data['photo'] = $data['photo']->store('etudiants', 'public');
+        }
+
         return $this->etudiantRepository->create($data);
     }
 
