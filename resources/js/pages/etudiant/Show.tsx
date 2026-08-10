@@ -72,8 +72,17 @@ export default function Show() {
                             <div
                                 className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-xl font-bold ${etudiant.genre === 'Féminin' ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'} `}
                             >
-                                {etudiant.nom[0]}
-                                {etudiant.prenom[0]}
+                                {etudiant.photo ? (
+                                    <img
+                                        src={`/storage/${etudiant.photo}`}
+                                        className="h-16 w-16 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <p>
+                                        {etudiant.nom[0]}
+                                        {etudiant.prenom[0]}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Infos principales */}
