@@ -56,6 +56,7 @@ class EtudiantRepository
             "lieu_naissance" => $data['lieu_naissance'],
             "nationnalite" => $data['nationnalite'],
             "statut" => $data['statut'],
+            "photo" => $data['photo'] ?? null,
 
             "email" => $data['email'] ?? null,
             "contacts" => $data['contacts'] ?? null,
@@ -89,6 +90,7 @@ class EtudiantRepository
             "lieu_naissance" => $data['lieu_naissance'],
             "nationnalite" => $data['nationnalite'],
             "statut" => $data['statut'],
+            "photo" => $data['photo'] ?? null,
 
             "email" => $data['email'] ?? null,
             "contacts" => $data['contacts'] ?? null,

@@ -93,6 +93,7 @@ const ListeDeClasse = () => {
                                             <TableCell className="space-x-1">
                                                 <div className="flex items-center gap-2">
                                                     <Avatar
+                                                    photo={etudiant.photo as string}
                                                         nom={etudiant.nom}
                                                         prenom={etudiant.prenom}
                                                         genre={etudiant.genre}

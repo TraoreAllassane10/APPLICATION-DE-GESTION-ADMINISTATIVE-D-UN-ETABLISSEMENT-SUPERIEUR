@@ -276,6 +276,7 @@ export default function Index() {
                                         <TableCell>
                                             <div className="flex items-center gap-2.5">
                                                 <Avatar
+                                                photo={ins.etudiant.photo as string}
                                                     prenom={ins.etudiant.prenom}
                                                     nom={ins.etudiant.nom}
                                                     genre={ins.etudiant.genre}

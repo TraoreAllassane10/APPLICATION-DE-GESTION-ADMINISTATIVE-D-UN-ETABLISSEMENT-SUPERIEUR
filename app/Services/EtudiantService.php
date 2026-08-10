@@ -6,7 +6,10 @@ use App\Http\Resources\EtudiantRessource;
 use App\Models\Etudiant;
 use App\Repositories\EtudiantRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
+use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class EtudiantService
 {
@@ -32,12 +35,39 @@ class EtudiantService
 
     public function create(array $data)
     {
+        if (isset($data['photo'])) {
+            $data['photo'] = $data['photo']->store('etudiants', 'public');
+        }
+
         return $this->etudiantRepository->create($data);
     }
 
     public function update(Etudiant $etudiant, array $data)
     {
-        return $this->etudiantRepository->update($etudiant, $data);
+        $anciennePhoto = $etudiant->photo;
+
+        if (isset($data['photo'])) {
+            $nouvellePhoto = $data['photo']->store(
+                'etudiants',
+                'public'
+            );
+
+            $data['photo'] = $nouvellePhoto;
+        } else {
+            unset($data['photo']);
+        }
+
+        $etudiant = $this->etudiantRepository->update($etudiant, $data);
+
+        // Supprimer seulement après la mise à jour réussie
+        if (
+            isset($data['photo']) &&
+            $anciennePhoto
+        ) {
+            Storage::disk('public')->delete($anciennePhoto);
+        }
+
+        return $etudiant;
     }
 
     public function delete(Etudiant $etudiant)

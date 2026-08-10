@@ -60,6 +60,7 @@ export default function Show() {
                     <CardContent className="p-5">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                             <Avatar
+                                photo={inscription.etudiant.photo as string}
                                 nom={inscription.etudiant?.nom}
                                 prenom={inscription.etudiant?.prenom}
                                 genre="ee"
