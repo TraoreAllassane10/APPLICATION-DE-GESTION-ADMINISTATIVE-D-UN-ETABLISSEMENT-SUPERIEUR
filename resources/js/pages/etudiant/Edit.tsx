@@ -8,7 +8,7 @@ import { Etudiant, EtudiantFormData } from '@/types';
 
 export default function Edit() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
-
+   
     const { updateEtudiant } = useEtudiant();
 
     // On exclut created_at / updated_at pour correspondre à EtudiantFormData

@@ -8,6 +8,26 @@ import toast from 'react-hot-toast';
 export default function useEtudiant() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const getEtudiantFormData = (data: EtudiantFormData) => {
+        const formData = new FormData();
+
+        Object.entries(data).map(([key, value]) => {
+            if (value === null || value === undefined) return;
+
+            // Lors de la mise à jour , Laravel attend une image pour le champs photo
+            // Donc on ne l'envoie pas photo lorsque c'est un string
+            if (key === "photo" && typeof value === "string") return;
+
+            if (value instanceof File) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, value);
+            }
+        });
+
+        return formData;
+    };
+
     const rechercheEtFiltrage = (
         search: string,
         filtreStatut: string,
@@ -37,19 +57,7 @@ export default function useEtudiant() {
         try {
             setIsLoading(true);
 
-            const formData = new FormData();
-
-            Object.entries(data).map(([key, value]) => {
-                if (value === null || value === undefined) return;
-
-                if (value instanceof File) {
-                    formData.append(key, value);
-                }
-                else
-                {
-                    formData.append(key, value);
-                }
-            });
+            const formData = getEtudiantFormData(data);
 
             await axios
                 .post('/etudiants', formData)
@@ -83,8 +91,11 @@ export default function useEtudiant() {
         try {
             setIsLoading(true);
 
+            const formData = getEtudiantFormData(data);
+            formData.append('_method', 'PUT');
+
             await axios
-                .put(`/etudiants/${id}/update`, data)
+                .post(`/etudiants/${id}/update`, formData)
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Etudiant modifié avec succès !');

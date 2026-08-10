@@ -20,10 +20,9 @@ function ImageUploader({ data, setData }: ImageUploaderProps) {
             return () => URL.revokeObjectURL(url);
         }
 
-       
-
+    
         if (typeof data.photo === 'string') {
-            setPreview(data.photo);
+            setPreview(`/storage/${data.photo}`);
         } else {
             setPreview(null);
         }

@@ -64,7 +64,6 @@ interface EtudiantProps {
 
 export default function Index() {
     const { etudiants, stats, filters } = usePage<EtudiantProps>().props;
-    console.log(etudiants)
 
     const [search, setSearch] = useState(filters.search ?? '');
     const [filtreStatut, setFiltreStatut] = useState(filters.statut ?? 'all');
