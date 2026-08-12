@@ -1,4 +1,4 @@
-import { cours, niveau } from '@/routes';
+
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -16,7 +16,7 @@ export default function useCours() {
                 .then(() => {
                     toast.success('Cours crée avec succès !');
                     // Redirection vers la page d'affichage des cours
-                    router.visit(cours());
+                    router.visit("/cours");
                 })
                 .catch((error) => {
                     toast.error(

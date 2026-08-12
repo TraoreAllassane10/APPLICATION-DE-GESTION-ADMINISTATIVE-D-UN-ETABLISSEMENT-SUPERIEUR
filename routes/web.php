@@ -9,6 +9,7 @@ use App\Http\Controllers\Administrateur\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\Pedagogie\CoursController;
 use App\Http\Controllers\Pedagogie\FiliereController;
 use App\Http\Controllers\Pedagogie\NiveauController;
 use App\Http\Controllers\Pedagogie\ProfesseurController;
@@ -83,6 +84,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("professeur/export", "export")->name("professeur.export");
     });
 
+    //Routes Cours
+    Route::controller(CoursController::class)->group(function () {
+        Route::get("cours", "index")->name("cours");
+        Route::post("cours", "store")->name("cours.store");
+        Route::get("cours/{cours}/edit", "edit")->name("cours.edit");
+        Route::put("cours/{cours}/update", "update")->name("cours.update");
+        Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
+    });
 
     //Routes Etudiant
     Route::controller(EtudiantController::class)->group(function () {

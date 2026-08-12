@@ -60,6 +60,11 @@ export function AppSidebar() {
             href: professeur(),
             icon: UserCog,
         },
+        {
+            title: 'Cours',
+            href: "cours",
+            icon: UserCog,
+        },
 
         // Onglets disponible que pour les administrateur
         ...(isAuthorize
