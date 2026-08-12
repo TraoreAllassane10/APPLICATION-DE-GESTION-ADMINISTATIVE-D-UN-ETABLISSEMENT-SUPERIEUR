@@ -1,3 +1,4 @@
+import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -31,7 +32,13 @@ import useCours from '@/hooks/useCours';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { ChevronDown, Edit, GraduationCap, Trash2 } from 'lucide-react';
+import {
+    ChevronDown,
+    Edit,
+    GraduationCap,
+    PlusCircle,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -120,6 +127,7 @@ const Index = () => {
                                     variant="outline"
                                     className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
                                 >
+                                    <PlusCircle className="h-4 w-4" />
                                     Ajouter un cours
                                 </Button>
                             </SheetTrigger>
@@ -165,6 +173,7 @@ const Index = () => {
                                     <TableHead className="w-[80px]" />
                                 </TableRow>
                             </TableHeader>
+
                             <TableBody>
                                 {cours.data.length === 0 ? (
                                     <TableRow>
@@ -241,6 +250,8 @@ const Index = () => {
                                     ))
                                 )}
                             </TableBody>
+
+                            <PaginationLinks links={cours.meta.links} />
                         </Table>
                     </Card>
                 </div>
