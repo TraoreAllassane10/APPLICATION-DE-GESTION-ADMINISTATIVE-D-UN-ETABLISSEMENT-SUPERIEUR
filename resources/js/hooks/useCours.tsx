@@ -15,6 +15,7 @@ export default function useCours() {
                 .post('/cours', data)
                 .then(() => {
                     toast.success('Cours crée avec succès !');
+                    
                     // Redirection vers la page d'affichage des cours
                     router.visit("/cours");
                 })

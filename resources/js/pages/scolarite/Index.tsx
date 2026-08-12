@@ -1,6 +1,12 @@
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -27,7 +33,6 @@ import {
 } from '@/components/ui/table';
 import useScolarite from '@/hooks/useScolarite';
 import AppLayout from '@/layouts/app-layout';
-import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
 import {
     Annee,
     Auth,
@@ -36,8 +41,15 @@ import {
     Scolarite,
     TypeScolarite,
 } from '@/types';
+import { fmt } from '@/utils/util';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Edit, Lock, Trash } from 'lucide-react';
+import {
+    ChevronDown,
+    Edit,
+    GraduationCap,
+    PlusCircle,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -126,216 +138,232 @@ const Index = () => {
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
-                <ConfigurationLayout>
-                    {isAdmin ? (
+                <div className="space-y-5 p-6">
+                    {/* Entete et le bouton d'ajout */}
+                    <div className="my-2 flex place-items-center justify-between">
                         <div>
-                            {/* Entete et le bouton d'ajout */}
-                            <div className="my-2 flex place-items-center justify-between">
-                                <h1 className="text-2xl font-bold">
-                                    Gestion des scolarites
-                                </h1>
+                            <h1 className="text-2xl font-bold">
+                                Gestion des scolarites
+                            </h1>
 
-                                <Sheet>
-                                    <SheetTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
+                            <p className="mt-0.5 text-sm text-muted-foreground">
+                                Gérez toutes les scolarités.
+                            </p>
+                        </div>
+
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
+                                >
+                                    <PlusCircle className="h-4 w-4" />
+                                    Nouvelle scolarite
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent>
+                                <SheetHeader>
+                                    <SheetTitle>Nouvelle Scolarite</SheetTitle>
+                                    <SheetDescription>
+                                        Ajouter une scolarite
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div className="grid flex-1 auto-rows-min gap-6 px-4">
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="sheet-demo-name">
+                                            Annee Academique
+                                        </Label>
+                                        <Input value={annee.libelle} disabled />
+                                    </div>
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="sheet-demo-username">
+                                            Type de scolarite
+                                        </Label>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={type}
+                                            onChange={(e) =>
+                                                setType(e.target.value)
+                                            }
                                         >
-                                            Nouvelle scolarite
-                                        </Button>
-                                    </SheetTrigger>
-                                    <SheetContent>
-                                        <SheetHeader>
-                                            <SheetTitle>
-                                                Nouvelle Scolarite
-                                            </SheetTitle>
-                                            <SheetDescription>
-                                                Ajouter une scolarite
-                                            </SheetDescription>
-                                        </SheetHeader>
-                                        <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                                            <div className="grid gap-3">
-                                                <Label htmlFor="sheet-demo-name">
-                                                    Annee Academique
-                                                </Label>
-                                                <Input
-                                                    value={annee.libelle}
-                                                    disabled
-                                                />
-                                            </div>
-                                            <div className="grid gap-3">
-                                                <Label htmlFor="sheet-demo-username">
-                                                    Type de scolarite
-                                                </Label>
-                                                <NativeSelect
-                                                    className="w-full"
+                                            <NativeSelectOption
+                                                value=""
+                                                disabled
+                                            >
+                                                Selectionner le type de
+                                                scolarite
+                                            </NativeSelectOption>
+
+                                            {types.map((type, index) => (
+                                                <NativeSelectOption
+                                                    key={index}
                                                     value={type}
-                                                    onChange={(e) =>
-                                                        setType(e.target.value)
-                                                    }
                                                 >
-                                                    <NativeSelectOption
-                                                        value=""
-                                                        disabled
-                                                    >
-                                                        Selectionner le type de
-                                                        scolarite
-                                                    </NativeSelectOption>
+                                                    {type}
+                                                </NativeSelectOption>
+                                            ))}
+                                        </NativeSelect>
+                                    </div>
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="sheet-demo-username">
+                                            Niveau
+                                        </Label>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={niveau_id}
+                                            onChange={(e) =>
+                                                SetNiveauId(e.target.value)
+                                            }
+                                        >
+                                            <NativeSelectOption
+                                                value=""
+                                                disabled
+                                            >
+                                                Selectionner un niveau
+                                            </NativeSelectOption>
 
-                                                    {types.map(
-                                                        (type, index) => (
-                                                            <NativeSelectOption
-                                                                key={index}
-                                                                value={type}
-                                                            >
-                                                                {type}
-                                                            </NativeSelectOption>
-                                                        ),
-                                                    )}
-                                                </NativeSelect>
+                                            {niveaux.map((niveau) => (
+                                                <NativeSelectOption
+                                                    value={niveau.id}
+                                                >
+                                                    {niveau.nom}
+                                                </NativeSelectOption>
+                                            ))}
+                                        </NativeSelect>
+                                    </div>
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="sheet-demo-username">
+                                            Montant
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            value={montant}
+                                            onChange={(e) =>
+                                                setMontant(e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <SheetFooter>
+                                    <Button onClick={handleSubmit}>
+                                        Enregistrer
+                                    </Button>
+                                    <SheetClose asChild>
+                                        <Button variant="outline">
+                                            Fermer
+                                        </Button>
+                                    </SheetClose>
+                                </SheetFooter>
+                            </SheetContent>
+                        </Sheet>
+                    </div>
+
+                    <Card className="overflow-hidden shadow-sm">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                                    <TableHead>classe</TableHead>
+                                    <TableHead>Montant</TableHead>
+                                    <TableHead>Type</TableHead>
+                                    <TableHead className="w-[80px]" />
+                                </TableRow>
+                            </TableHeader>
+
+                            <TableBody>
+                                {scolarites.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={3}
+                                            className="h-48 text-center"
+                                        >
+                                            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                                <GraduationCap className="h-10 w-10 opacity-20" />
+                                                <p className="text-sm">
+                                                    Aucune scolarité
+                                                    enregistrée.
+                                                </p>
                                             </div>
-                                            <div className="grid gap-3">
-                                                <Label htmlFor="sheet-demo-username">
-                                                    Niveau
-                                                </Label>
-                                                <NativeSelect
-                                                    className="w-full"
-                                                    value={niveau_id}
-                                                    onChange={(e) =>
-                                                        SetNiveauId(
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                >
-                                                    <NativeSelectOption
-                                                        value=""
-                                                        disabled
-                                                    >
-                                                        Selectionner un niveau
-                                                    </NativeSelectOption>
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    scolarites.map((scolarite) => (
+                                        <TableRow
+                                            key={scolarite.id}
+                                            className="group"
+                                        >
+                                            <TableCell className="text-md">
+                                                <div className="flex items-center gap-2.5">
+                                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-xs font-bold text-primary">
+                                                        {scolarite.niveau.nom
+                                                            .slice(0, 2)
+                                                            .toUpperCase()}
+                                                    </div>
+                                                    <span className="text-sm font-medium">
+                                                        {scolarite.niveau.nom}
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="text-md">
+                                                {fmt(scolarite.montant)}
+                                            </TableCell>
+                                            <TableCell className="text-md">
+                                                {typeBadge(scolarite.type)}
+                                            </TableCell>
 
-                                                    {niveaux.map((niveau) => (
-                                                        <NativeSelectOption
-                                                            value={niveau.id}
+                                            <TableCell>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger
+                                                        asChild
+                                                    >
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
                                                         >
-                                                            {niveau.nom}
-                                                        </NativeSelectOption>
-                                                    ))}
-                                                </NativeSelect>
-                                            </div>
-                                            <div className="grid gap-3">
-                                                <Label htmlFor="sheet-demo-username">
-                                                    Montant
-                                                </Label>
-                                                <Input
-                                                    type="number"
-                                                    value={montant}
-                                                    onChange={(e) =>
-                                                        setMontant(
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <SheetFooter>
-                                            <Button onClick={handleSubmit}>
-                                                Enregistrer
-                                            </Button>
-                                            <SheetClose asChild>
-                                                <Button variant="outline">
-                                                    Fermer
-                                                </Button>
-                                            </SheetClose>
-                                        </SheetFooter>
-                                    </SheetContent>
-                                </Sheet>
-                            </div>
+                                                            Actions
+                                                            <ChevronDown className="h-3 w-3" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
 
-                            <Card>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow className="bg-muted">
-                                                <TableHead>Annee</TableHead>
-                                                <TableHead>classe</TableHead>
-                                                <TableHead>Montant</TableHead>
-                                                <TableHead>Type</TableHead>
-                                                <TableHead>Actions</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {scolarites.length == 0 ? (
-                                                <span>
-                                                    Aucune scolarité enregistrée
-                                                </span>
-                                            ) : (
-                                                scolarites.map((scolarite) => (
-                                                    <TableRow
-                                                        key={scolarite.id}
+                                                    <DropdownMenuContent
+                                                        align="end"
+                                                        className="w-48"
                                                     >
-                                                        <TableCell>
-                                                            {
-                                                                scolarite.annee
-                                                                    .libelle
-                                                            }
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {
-                                                                scolarite.niveau
-                                                                    .nom
-                                                            }
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {scolarite.montant}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {typeBadge(
-                                                                scolarite.type,
-                                                            )}
-                                                        </TableCell>
-                                                        <TableCell className="flex gap-2">
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
                                                             <Link
                                                                 href={`scolarite/${scolarite.id}/edit`}
+                                                                className="flex cursor-pointer items-center gap-2"
                                                             >
-                                                                <Edit
-                                                                    size={20}
-                                                                    className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                                                />
+                                                                <Edit className="h-4 w-4" />{' '}
+                                                                Modifier
                                                             </Link>
+                                                        </DropdownMenuItem>
 
-                                                            <Link
-                                                                onClick={() =>
-                                                                    handleDelete(
-                                                                        scolarite.id,
-                                                                    )
-                                                                }
-                                                            >
-                                                                <Trash
-                                                                    size={20}
-                                                                    className="cursor-pointer text-red-600 hover:text-red-800"
-                                                                />
-                                                            </Link>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))
-                                            )}
-                                            {}
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    ) : (
-                        <Alert>
-                            <Lock className="h-8 w-8" />
-                            <AlertDescription className="text-md">
-                                Desolé ! Vous n'êtes pas authoriser à acceder à
-                                cette fonctionnalité
-                            </AlertDescription>
-                        </Alert>
-                    )}
-                </ConfigurationLayout>
+                                                        <DropdownMenuSeparator />
+
+                                                        <DropdownMenuItem
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    scolarite.id,
+                                                                )
+                                                            }
+                                                            className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />{' '}
+                                                            Supprimer
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </Card>
+                </div>
             </AppLayout>
         </div>
     );

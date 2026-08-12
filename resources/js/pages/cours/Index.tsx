@@ -85,7 +85,7 @@ const Index = () => {
     const { createCours, deleteCours } = useCours();
 
     // Enregistrement d'un cours
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Verification des données
         if (nom == '') {
             toast.error('Veuillez remplir tous les champs!');
@@ -93,7 +93,7 @@ const Index = () => {
         }
 
         // Création d'un cours
-        createCours({ nom });
+        await createCours({ nom });
 
         // Nettoyage de l'etat
         setNom('');
@@ -117,7 +117,8 @@ const Index = () => {
                             </h1>
 
                             <p className="mt-0.5 text-sm text-muted-foreground">
-                                Gérez les cours.
+                                Gérez les cours ({cours.data.length} cours
+                                trouvés).
                             </p>
                         </div>
 

@@ -9,18 +9,21 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, historique, niveau, professeur } from '@/routes';
+import { dashboard, filiere, historique, niveau, professeur } from '@/routes';
 import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
-    Banknote,
     ClipboardList,
+    CreditCard,
     GraduationCap,
     History,
+    Layers,
     LayoutDashboard,
+    Presentation,
+    Receipt,
     Settings2,
     User,
-    UserCog,
+    UserCheck,
     Users,
 } from 'lucide-react';
 import AppLogo from './app-logo';
@@ -49,30 +52,39 @@ export function AppSidebar() {
             href: '/inscriptions',
             icon: ClipboardList,
         },
-
+        {
+            title: 'Filières',
+            href: filiere(),
+            icon: Layers,
+        },
         {
             title: 'Classes',
             href: niveau(),
             icon: GraduationCap,
         },
         {
-            title: 'Enseignant',
+            title: 'Enseignants',
             href: professeur(),
-            icon: UserCog,
+            icon: UserCheck,
         },
         {
             title: 'Cours',
-            href: "cours",
-            icon: UserCog,
+            href: 'cours',
+            icon: Presentation,
         },
 
         // Onglets disponible que pour les administrateur
         ...(isAuthorize
             ? [
                   {
+                      title: 'Scolarités',
+                      href: '/scolarite',
+                      icon: Receipt,
+                  },
+                  {
                       title: 'Paiements',
                       href: '/paiements',
-                      icon: Banknote,
+                      icon: CreditCard,
                   },
                   {
                       title: 'Historiques des actions',

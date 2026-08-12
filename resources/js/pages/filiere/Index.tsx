@@ -1,5 +1,12 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -22,11 +29,16 @@ import {
 } from '@/components/ui/table';
 import useFiliere from '@/hooks/useFiliere';
 import AppLayout from '@/layouts/app-layout';
-import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
 import { filiere } from '@/routes';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Edit, Trash } from 'lucide-react';
+import {
+    ChevronDown,
+    Edit,
+    GraduationCap,
+    PlusCircle,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -96,105 +108,153 @@ const Index = () => {
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
-                <ConfigurationLayout>
-                    <div>
-                        {/* Entete et le bouton d'ajout */}
-                        <div className="my-2 flex place-items-center justify-between">
-                            <h1 className="text-2xl font-bold">Gestion des filières</h1>
-
-                            <Sheet>
-                                <SheetTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
-                                    >
-                                        Ajouter une filière
-                                    </Button>
-                                </SheetTrigger>
-                                <SheetContent>
-                                    <SheetHeader>
-                                        <SheetTitle>
-                                            Nouvelle filière
-                                        </SheetTitle>
-                                        <SheetDescription>
-                                            Ajouter une nouvelle filière
-                                        </SheetDescription>
-                                    </SheetHeader>
-                                    <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                                        <div className="grid gap-3">
-                                            <Label htmlFor="sheet-demo-name">
-                                                Nom de la filière
-                                            </Label>
-                                            <Input
-                                                value={nom}
-                                                onChange={(e) =>
-                                                    setNom(e.target.value)
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    <SheetFooter>
-                                        <Button onClick={handleSubmit}>
-                                            Enregistrer
-                                        </Button>
-                                        <SheetClose asChild>
-                                            <Button variant="outline">
-                                                Fermer
-                                            </Button>
-                                        </SheetClose>
-                                    </SheetFooter>
-                                </SheetContent>
-                            </Sheet>
+                <div className="space-y-6 p-6">
+                    {/* Entete et le bouton d'ajout */}
+                    <div className="my-2 flex place-items-center justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold">
+                                Gestion des filières
+                            </h1>
+                            <p className="mt-0.5 text-sm text-muted-foreground">
+                                Gérez les filieres. ({filieres.data.length}{' '}
+                                trouvées)
+                            </p>
                         </div>
 
-                        <Card>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-muted">
-                                            <TableHead>Libellé</TableHead>
-                                            <TableHead>Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {filieres?.data.map((filiere) => (
-                                            <TableRow>
-                                                <TableCell>
-                                                    {filiere.nom}
-                                                </TableCell>
-                                                <TableCell className="flex gap-2">
-                                                    <Link
-                                                        href={`filiere/${filiere.id}/edit`}
-                                                    >
-                                                        <Edit
-                                                            size={20}
-                                                            className="cursor-pointer text-blue-600 hover:text-blue-800"
-                                                        />
-                                                    </Link>
-
-                                                    <Link
-                                                        onClick={() =>
-                                                            handleDelete(
-                                                                filiere.id,
-                                                            )
-                                                        }
-                                                    >
-                                                        <Trash
-                                                            size={20}
-                                                            className="cursor-pointer text-red-600 hover:text-red-800"
-                                                        />
-                                                    </Link>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </CardContent>
-
-                        
-                        </Card>
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground"
+                                >
+                                    <PlusCircle className="h-4 w-4" />
+                                    Ajouter une filière
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent>
+                                <SheetHeader>
+                                    <SheetTitle>Nouvelle filière</SheetTitle>
+                                    <SheetDescription>
+                                        Ajouter une nouvelle filière
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div className="grid flex-1 auto-rows-min gap-6 px-4">
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="sheet-demo-name">
+                                            Nom de la filière
+                                        </Label>
+                                        <Input
+                                            value={nom}
+                                            onChange={(e) =>
+                                                setNom(e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <SheetFooter>
+                                    <Button onClick={handleSubmit}>
+                                        Enregistrer
+                                    </Button>
+                                    <SheetClose asChild>
+                                        <Button variant="outline">
+                                            Fermer
+                                        </Button>
+                                    </SheetClose>
+                                </SheetFooter>
+                            </SheetContent>
+                        </Sheet>
                     </div>
-                </ConfigurationLayout>
+
+                    <Card className="overflow-hidden shadow-sm">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                                    <TableHead>Libellé</TableHead>
+                                    <TableHead className="w-[80px]" />
+                                </TableRow>
+                            </TableHeader>
+
+                            <TableBody>
+                                {filieres.data.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={3}
+                                            className="h-48 text-center"
+                                        >
+                                            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                                <GraduationCap className="h-10 w-10 opacity-20" />
+                                                <p className="text-sm">
+                                                    Aucune filière enregistrée.
+                                                </p>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    filieres.data.map((filiere) => (
+                                        <TableRow
+                                            key={filiere.id}
+                                            className="group"
+                                        >
+                                            <TableCell className="text-md font-medium">
+                                                {filiere.nom}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger
+                                                        asChild
+                                                    >
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                                        >
+                                                            Actions{' '}
+                                                            <ChevronDown className="h-3 w-3" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+
+                                                    <DropdownMenuContent
+                                                        align="end"
+                                                        className="w-48"
+                                                    >
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`filiere/${filiere.id}/edit`}
+                                                                className="flex cursor-pointer items-center gap-2"
+                                                            >
+                                                                <Edit className="h-4 w-4" />{' '}
+                                                                Modifier
+                                                            </Link>
+                                                        </DropdownMenuItem>
+
+                                                        <DropdownMenuSeparator />
+
+                                                        <DropdownMenuItem
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    filiere.id,
+                                                                )
+                                                            }
+                                                            className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />{' '}
+                                                            Supprimer
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+
+                            {/* <PaginationLinks links={cours.meta.links} /> */}
+                        </Table>
+                    </Card>
+                </div>
             </AppLayout>
         </div>
     );

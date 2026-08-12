@@ -8,7 +8,7 @@ class CoursRepository
 {
     public function all()
     {
-        return Cours::latest()->paginate();
+        return Cours::latest()->paginate(10);
     }
 
     public function create(array $data)
