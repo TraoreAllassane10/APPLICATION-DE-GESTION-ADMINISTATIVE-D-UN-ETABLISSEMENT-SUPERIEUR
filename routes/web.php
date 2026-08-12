@@ -12,6 +12,7 @@ use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\CoursController;
 use App\Http\Controllers\Pedagogie\FiliereController;
 use App\Http\Controllers\Pedagogie\NiveauController;
+use App\Http\Controllers\Pedagogie\PeriodeAcdemiqueController;
 use App\Http\Controllers\Pedagogie\ProfesseurController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -48,6 +49,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete("annee/{annee}/delete", "delete")->name("annee.delete");
 
         Route::get("annee/{annee}/change-annee", "changeAnneeActive")->name("annee.change");
+    });
+
+    // Routes Periode académique
+    Route::controller(PeriodeAcdemiqueController::class)->group(function () {
+        Route::get("periodes", "index")->name("periodes");
+        Route::get("periodes/create", "create")->name("periodes.create");
+        Route::post("periodes", "store")->name("periodes.store");
+        Route::get("periodes/{periode}/show", "show")->name("periodes.show");
+        Route::get("periodes/{periode}/edit", "edit")->name("periodes.edit");
+        Route::put("periodes/{periode}/update", "update")->name("periodes.update");
+        Route::delete("periodes/{periode}/delete", "delete")->name("periodes.delete");
     });
 
     //Routes filiere

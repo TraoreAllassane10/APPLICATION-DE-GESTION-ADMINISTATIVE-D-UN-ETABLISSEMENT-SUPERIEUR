@@ -123,6 +123,14 @@ export interface Annees {
     meta: Meta;
 }
 
+// Type Periode Academique
+export interface Periode {
+    id: number;
+    libelle: string;
+    date_debut: string;
+    date_fin: string;
+}
+
 // Types Niveau
 export interface DataNiveau {
     id: number;

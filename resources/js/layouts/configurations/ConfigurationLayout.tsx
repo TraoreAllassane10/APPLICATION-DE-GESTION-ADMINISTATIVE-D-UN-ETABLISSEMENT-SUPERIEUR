@@ -2,7 +2,7 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
-import { annee } from '@/routes';
+import { annee, periodes } from '@/routes';
 import { Auth, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
@@ -24,6 +24,11 @@ const ConfigurationLayout = ({ children }: PropsWithChildren) => {
         {
             title: 'Annne academiques',
             href: annee(),
+            icon: null,
+        },
+        {
+            title: 'Période academiques',
+            href: periodes(),
             icon: null,
         },
 
