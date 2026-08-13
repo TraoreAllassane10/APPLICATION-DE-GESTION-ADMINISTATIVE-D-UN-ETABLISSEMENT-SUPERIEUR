@@ -18,7 +18,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import useProfesseur from '@/hooks/useProfesseur';
+import useProfesseur from '@/features/professeur/hooks/useProfesseur';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Professeur } from '@/types';
 import { Link, usePage } from '@inertiajs/react';

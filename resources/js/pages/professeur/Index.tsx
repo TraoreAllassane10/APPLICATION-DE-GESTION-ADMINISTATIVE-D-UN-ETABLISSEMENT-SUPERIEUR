@@ -27,7 +27,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import useProfesseur from '@/hooks/useProfesseur';
+import useProfesseur from '@/features/professeur/hooks/useProfesseur';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Professeur } from '@/types';
 import { Link, usePage } from '@inertiajs/react';

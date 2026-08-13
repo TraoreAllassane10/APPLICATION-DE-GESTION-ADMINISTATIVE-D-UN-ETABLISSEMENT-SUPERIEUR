@@ -37,6 +37,8 @@ class CreateProfesseurRequest extends FormRequest
             "formation_continue" => ["nullable", "numeric"],
             "nombre_heure_cours_prevue" => ["nullable", "numeric"],
             "nombre_heure_cours_realise" => ["nullable", "numeric"],
+            "cours_enseignes" => ["nullable", "array"],
+            "classes" => ["nullable", "array"]
         ];
     }
 

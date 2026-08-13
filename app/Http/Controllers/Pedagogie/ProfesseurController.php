@@ -7,10 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\professeur\CreateProfesseurRequest;
 use App\Http\Requests\professeur\UpdateProfesseurRequest;
 use App\Http\Resources\ProfesseurResource;
+use App\Models\Cours;
+use App\Models\Niveau;
 use App\Models\Professeur;
 use App\Services\AnneeAcademiqueService;
+use App\Services\CoursService;
 use App\Services\ProfesseurService;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -18,7 +22,8 @@ class ProfesseurController extends Controller
 {
     public function __construct(
         protected ProfesseurService $professeurService,
-        protected AnneeAcademiqueService $anneeAcademiqueService
+        protected AnneeAcademiqueService $anneeAcademiqueService,
+        protected CoursService $coursService
     ) {}
 
     public function index()
@@ -48,7 +53,14 @@ class ProfesseurController extends Controller
     public function create()
     {
         $professeurs = $this->professeurService->getProfesseurNonEnregistreDabord();
-        return Inertia::render('professeur/Create', ["professeurs" => $professeurs]);
+        $cours = Cours::latest()->get();
+        $niveaux = Niveau::latest()->get();
+
+        return Inertia::render('professeur/Create', [
+            "professeurs" => $professeurs,
+            "cours" => $cours,
+            "niveaux" => $niveaux
+        ]);
     }
 
     public function store(CreateProfesseurRequest $request)
@@ -56,13 +68,13 @@ class ProfesseurController extends Controller
         try {
             // Validation des entrées
             $data = $request->validated();
+            Log::info($data);
 
             //Creation d'un professeur
-            $professeurCree = $this->professeurService->createProfesseur($data);
+            $this->professeurService->createProfesseur($data);
 
-            if ($professeurCree) {
-                return response()->json(["success" => true]);
-            }
+
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }

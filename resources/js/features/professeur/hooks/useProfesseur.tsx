@@ -19,6 +19,8 @@ interface Data {
     formation_continue: number;
     nombre_heure_cours_prevue: number;
     nombre_heure_cours_realise: number;
+    cours_enseignes: string[];
+    classes: string[];
 }
 
 export default function useProfesseur() {
@@ -30,6 +32,7 @@ export default function useProfesseur() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Enseignant crée avec succès !');
+                        
                         // Redirection vers la page d'affichage des professeur
                         router.visit(professeur());
                     }
