@@ -22,4 +22,9 @@ class Professeur extends Model
         return $this->belongsToMany(AnneeUniversitaire::class, "annee_professeurs")
             ->withPivot("diplome", "grade", "statut", "annee_prise_fonction", "formation_continue", "nombre_heure_cours_prevue", "nombre_heure_cours_realise");
     }
+
+    public function enseignements()
+    {
+        return $this->hasMany(Enseignement::class);
+    }
 }
