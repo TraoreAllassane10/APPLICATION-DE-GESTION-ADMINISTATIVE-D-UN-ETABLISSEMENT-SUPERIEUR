@@ -1,13 +1,4 @@
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationSuppression';
 import { Button } from '@/components/ui/button';
 import TableProfesseur from '@/features/professeur/components/TableProfesseur';
 
@@ -96,34 +87,15 @@ const Index = () => {
             </div>
 
             {/* Dialog confirmation suppression */}
-            <AlertDialog
-                open={!!selectedId}
-                onOpenChange={(open) => {
-                    if (!open) setSelectedId(null);
-                }}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            Supprimer ce professeur ?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Cette action est irréversible. Les données liées à
+            <ModalConfirmationSuppression
+                title="Supprimer ce professeur ?"
+                content=" Cette action est irréversible. Les données liées à
                             ce professeur (séances, cours, etc.) pourraient
-                            également être affectées.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Annuler</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleDelete}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                            Supprimer
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+                            également être affectées."
+                selectedId={selectedId}
+                handleDelete={handleDelete}
+                setSelectedId={setSelectedId}
+            />
         </AppLayout>
     );
 };

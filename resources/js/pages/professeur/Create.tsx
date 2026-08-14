@@ -291,7 +291,8 @@ function Create() {
                                                 control={control}
                                                 render={({ field }) => (
                                                     <Select
-                                                        {...register('sexe')}
+                                                        onValueChange={field.onChange}
+                                                        value={field.value}
                                                         disabled={
                                                             selectOption == '2'
                                                         }

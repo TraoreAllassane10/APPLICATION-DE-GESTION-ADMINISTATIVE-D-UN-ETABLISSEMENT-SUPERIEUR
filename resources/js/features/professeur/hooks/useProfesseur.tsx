@@ -2,6 +2,7 @@ import { professeur } from '@/routes';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { ProfesseurUpdateData } from '../validations/updateProfesseurSchema';
 
 interface Data {
     option: number;
@@ -22,6 +23,8 @@ interface Data {
     cours_enseignes: string[];
   
 }
+
+type DataUpdate = Omit<Data, "option" | "cours_enseignes">
 
 export default function useProfesseur() {
     // Création d'un professeur
@@ -50,7 +53,7 @@ export default function useProfesseur() {
     };
 
     // Modification d'un professeur
-    const updateProfesseur = async (id: string, data: Data) => {
+    const updateProfesseur = async (id: string, data: DataUpdate) => {
         try {
             await axios
                 .put(`/professeur/${id}/update`, data)
@@ -64,7 +67,7 @@ export default function useProfesseur() {
                 })
                 .catch((error) => {
                     toast.error(
-                        "Erreur survenue lors de la modification d'un Enseignant",
+                        "Erreur survenue lors de la modification d'un enseignant",
                     );
                     console.log(error);
                 });
