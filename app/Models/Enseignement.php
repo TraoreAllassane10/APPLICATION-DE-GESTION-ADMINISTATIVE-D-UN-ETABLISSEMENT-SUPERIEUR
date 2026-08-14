@@ -11,7 +11,7 @@ class Enseignement extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $with = ["cours"];
+    protected $with = ["cours", "niveaux"];
 
     public function professeur()
     {
@@ -30,7 +30,7 @@ class Enseignement extends Model
 
     public function niveaux()
     {
-        return $this->belongsToMany(Niveau::class);
+        return $this->belongsToMany(Niveau::class, "enseignement_classe");
     }
 
     public function evaluations()

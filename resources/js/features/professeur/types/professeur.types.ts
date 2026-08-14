@@ -1,8 +1,9 @@
-import { Cours } from "@/types";
+import { Cours, DataNiveau } from "@/types";
 
 export interface Enseignement {
     id: string;
     cours: Cours;
+    niveaux: DataNiveau[];
 }
 
 export interface Professeur {

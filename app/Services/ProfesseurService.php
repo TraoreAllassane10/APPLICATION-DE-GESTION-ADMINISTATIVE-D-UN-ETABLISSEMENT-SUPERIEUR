@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Enseignement;
 use App\Models\Professeur;
 use App\Repositories\ProfesseurRepository;
 use Exception;
@@ -37,9 +38,7 @@ class ProfesseurService
             $professeur = $this->professeurRepository->create($data);
 
             if (!empty($data['cours_enseignes'])) {
-
                 foreach ($data['cours_enseignes'] as $coursId) {
-                    Log::info($coursId);
                     $professeur->enseignements()->create([
                         "cours_id" => $coursId,
                         "annee_universitaire_id" => $anneeActive->id
@@ -61,5 +60,22 @@ class ProfesseurService
     public function deleteProfesseur(Professeur $professeur)
     {
         return $this->professeurRepository->delete($professeur);
+    }
+
+    public function attribuerClassesProfesseur(array $data)
+    {
+
+        $enseignement = Enseignement::find($data['enseignement']);
+
+        if (!$enseignement) {
+            throw new Exception('Erreur lors de la recuperation de l\'enseignement');
+        }
+
+        foreach ($data['classes'] as $classeId) {
+                  Log::info($classeId);
+            $enseignement->niveaux()->attach($classeId);
+        }
+
+        return $enseignement;
     }
 }

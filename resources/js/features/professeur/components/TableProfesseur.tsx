@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table';
 import { Meta } from '@/types';
 import { Link } from '@inertiajs/react';
-import { ChevronDown, Edit, Folder, Trash2, UserRound } from 'lucide-react';
+import { ChevronDown, Edit, Folder, GraduationCap, Trash2, UserRound } from 'lucide-react';
 import { Professeur } from '../types/professeur.types';
 
 interface TableProfesseurProps {
@@ -114,6 +114,7 @@ const TableProfesseur = ({ professeurs, setSelectedId }: TableProfesseurProps) =
                                                         <ChevronDown className="h-3 w-3" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
+
                                                 <DropdownMenuContent
                                                     align="end"
                                                     className="w-44"
@@ -125,6 +126,16 @@ const TableProfesseur = ({ professeurs, setSelectedId }: TableProfesseurProps) =
                                                         >
                                                             <Folder className="h-4 w-4" />
                                                             Dossier
+                                                        </Link>
+                                                    </DropdownMenuItem>
+
+                                                    <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={`/professeur/${prof.id}/assigner-classe`}
+                                                            className="flex cursor-pointer items-center gap-2"
+                                                        >
+                                                            <GraduationCap className="h-4 w-4" />
+                                                            Attribuer des classes
                                                         </Link>
                                                     </DropdownMenuItem>
 

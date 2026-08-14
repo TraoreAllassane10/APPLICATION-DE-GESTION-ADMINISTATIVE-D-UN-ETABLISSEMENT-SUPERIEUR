@@ -30,6 +30,6 @@ class Niveau extends Model
 
     public function enseignements()
     {
-        return $this->belongsToMany(Enseignement::class);
+        return $this->belongsToMany(Enseignement::class, "enseignement_classe");
     }
 }

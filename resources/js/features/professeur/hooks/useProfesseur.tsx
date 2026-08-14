@@ -2,7 +2,6 @@ import { professeur } from '@/routes';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { ProfesseurUpdateData } from '../validations/updateProfesseurSchema';
 
 interface Data {
     option: number;
@@ -21,10 +20,14 @@ interface Data {
     nombre_heure_cours_prevue: number;
     nombre_heure_cours_realise: number;
     cours_enseignes: string[];
-  
 }
 
-type DataUpdate = Omit<Data, "option" | "cours_enseignes">
+type DataUpdate = Omit<Data, 'option' | 'cours_enseignes'>;
+
+interface DataAssigner {
+    enseignement: string;
+    classes: string[];
+}
 
 export default function useProfesseur() {
     // Création d'un professeur
@@ -35,7 +38,7 @@ export default function useProfesseur() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Enseignant crée avec succès !');
-                        
+
                         // Redirection vers la page d'affichage des professeur
                         router.visit(professeur());
                     }
@@ -95,10 +98,33 @@ export default function useProfesseur() {
                     console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         }
     };
 
-    return { createProfesseur, updateProfesseur, deleteProfesseur };
+    // Assigner des classes à un enseignant
+    const assignerClassesProfesseur = async (id: number, data: DataAssigner) => {
+        try {
+            await axios
+                .post(`/professeur/${id}/assigner-classe`, data)
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Attribution effectée !');
+                        router.visit(professeur());
+                    }
+                })
+                .catch((error) => {
+                    toast.success(
+                        'Erreur survenue lors de l\'attribution',
+                    );
+                    console.log(error);
+                });
+        } catch (error) {
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
+        }
+    };
+
+    return { createProfesseur, updateProfesseur, deleteProfesseur, assignerClassesProfesseur };
 }

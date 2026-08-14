@@ -46,6 +46,8 @@ const InfoLigne = ({
 function Show() {
     const { professeur } = usePage<{ professeur: Professeur }>().props;
 
+
+
     return (
         <AppLayout>
             <Head title="Enseignant" />
@@ -172,15 +174,31 @@ function Show() {
                                         .nombre_heure_cours_realise
                                 }
                             />
-                          {
-                            professeur.enseignements?.map((ens) => (
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="font-semibold text-muted-foreground">
+                            Pedagogie
+                        </CardHeader>
+                        <CardContent>
+                            {professeur.enseignements?.map((ens, index) => (
+                                <InfoLigne
+                                    icon={Presentation}
+                                    label={`Disciple enseignée ${index + 1}`}
+                                    value={ens.cours.nom}
+                                />
+                            ))}
+
+                             {professeur.enseignements?.map((ens, index) => {
+                                return ens.niveaux.map((niveau, index) => (
                                     <InfoLigne
-                                icon={Presentation}
-                                label="Disciple enseignée"
-                                value={ens.cours.nom}
-                            />
-                            ))
-                          }
+                                    icon={GraduationCap}
+                                    label={`Classes enseignée ${index + 1}`}
+                                    value={niveau.nom}
+                                />
+                                ))
+                             })}
                         </CardContent>
                     </Card>
                 </div>

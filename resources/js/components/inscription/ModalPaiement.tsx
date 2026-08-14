@@ -62,28 +62,7 @@ export default function ModalPaiement({
                             {fmt(resteAPayer)}
                         </span>
                     </div>
-
-                    {/* <div className="space-y-2">
-                        <Label>Type de paiement</Label>
-                        <Select value={type} onValueChange={setType}>
-                            <SelectTrigger>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {[
-                                    "Frais d'inscription",
-                                    'Mensualité',
-                                    'Paiement partiel',
-                                    'Solde total',
-                                ].map((t) => (
-                                    <SelectItem key={t} value={t}>
-                                        {t}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div> */}
-
+                    
                     <div className="space-y-2">
                         <Label>Date du paiement</Label>
                         <Input
