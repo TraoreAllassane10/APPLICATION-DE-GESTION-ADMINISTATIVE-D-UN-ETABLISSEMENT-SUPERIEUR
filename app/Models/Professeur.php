@@ -12,11 +12,6 @@ class Professeur extends Model
 
     protected $fillable = ["matricule", "nom_prenom", "sexe", "date_naissance", "pays", "specialite", "telephone"];
 
-    public function cours()
-    {
-        return $this->hasMany(Cours::class);
-    }
-
     public function anneeAcademiques()
     {
         return $this->belongsToMany(AnneeUniversitaire::class, "annee_professeurs")

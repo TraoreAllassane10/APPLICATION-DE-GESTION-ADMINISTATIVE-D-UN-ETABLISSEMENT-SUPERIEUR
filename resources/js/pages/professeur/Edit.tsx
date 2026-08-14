@@ -20,12 +20,13 @@ import {
 import { Separator } from '@/components/ui/separator';
 import useProfesseur from '@/features/professeur/hooks/useProfesseur';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, Professeur } from '@/types';
+import { BreadcrumbItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import { champObligatoire } from './Create';
+import { Professeur } from '@/features/professeur/types/professeur.types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

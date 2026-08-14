@@ -30,12 +30,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import useProfesseur from '@/features/professeur/hooks/useProfesseur';
+import { Professeur } from '@/features/professeur/types/professeur.types';
 import {
     createProfesseurSchema,
     ProfesseurData,
 } from '@/features/professeur/validations/createProfesseurSchema';
 import AppLayout from '@/layouts/app-layout';
-import { Cours, DataNiveau, Professeur } from '@/types';
+import { Cours, DataNiveau } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
@@ -54,11 +55,10 @@ interface ProfesseurProps {
 }
 
 function Create() {
-    const { professeurs, cours, niveaux } = usePage<ProfesseurProps>().props;
+    const { professeurs, cours } = usePage<ProfesseurProps>().props;
 
     // const [option, setOption] = useState('1');
     const [disciplines, setDisciplines] = useState<string[]>([]);
-    const [classes, setClasses] = useState<string[]>([]);
 
     // Gestion du formulaire
     const {
@@ -113,7 +113,6 @@ function Create() {
             nombre_heure_cours_prevue: Number(data.nombre_heure_cours_prevue),
             nombre_heure_cours_realise: Number(data.nombre_heure_cours_realise),
             cours_enseignes: disciplines,
-            classes: classes,
         });
     };
 
@@ -560,52 +559,6 @@ function Create() {
                                         <ComboboxContent>
                                             <ComboboxEmpty>
                                                 Aucune discipline trouvée.
-                                            </ComboboxEmpty>
-                                            <ComboboxList>
-                                                {(item) => (
-                                                    <ComboboxItem
-                                                        key={item.id}
-                                                        value={item.id}
-                                                    >
-                                                        {item.nom}
-                                                    </ComboboxItem>
-                                                )}
-                                            </ComboboxList>
-                                        </ComboboxContent>
-                                    </Combobox>
-
-                                    <Combobox
-                                        items={niveaux}
-                                        multiple
-                                        value={classes}
-                                        onValueChange={setClasses}
-                                    >
-                                        <ComboboxChips>
-                                            <ComboboxValue>
-                                                {classes.map((id) => {
-                                                    const niveauxTrouves =
-                                                        niveaux.find(
-                                                            (niveau) =>
-                                                                String(
-                                                                    niveau.id,
-                                                                ) ===
-                                                                String(id),
-                                                        );
-
-                                                    return (
-                                                        <ComboboxChip key={id}>
-                                                            {niveauxTrouves
-                                                                ? niveauxTrouves.nom
-                                                                : id}
-                                                        </ComboboxChip>
-                                                    );
-                                                })}
-                                            </ComboboxValue>
-                                            <ComboboxChipsInput placeholder="Selectionner les classes" />
-                                        </ComboboxChips>
-                                        <ComboboxContent>
-                                            <ComboboxEmpty>
-                                                Aucune classe trouvée.
                                             </ComboboxEmpty>
                                             <ComboboxList>
                                                 {(item) => (

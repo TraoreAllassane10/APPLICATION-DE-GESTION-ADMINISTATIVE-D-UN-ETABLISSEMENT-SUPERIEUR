@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
-import { Professeur } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
@@ -10,6 +10,7 @@ import {
     GraduationCap,
     Hash,
     Phone,
+    Presentation,
     Timer,
     User,
     User2,
@@ -68,7 +69,9 @@ function Show() {
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <Card>
-                        <CardHeader className='text-muted-foreground font-semibold'>Identité</CardHeader>
+                        <CardHeader className="font-semibold text-muted-foreground">
+                            Identité
+                        </CardHeader>
                         <CardContent>
                             <InfoLigne
                                 icon={Hash}
@@ -111,43 +114,73 @@ function Show() {
                     </Card>
 
                     <Card>
-                        <CardHeader className='text-muted-foreground font-semibold'>Fonction</CardHeader>
+                        <CardHeader className="font-semibold text-muted-foreground">
+                            Fonction
+                        </CardHeader>
                         <CardContent>
                             <InfoLigne
                                 icon={GraduationCap}
                                 label="Dernier diplôme"
-                                value={professeur.annee_academiques[0].pivot.diplome}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .diplome
+                                }
                             />
                             <InfoLigne
                                 icon={GraduationCap}
                                 label="Grade"
-                                value={professeur.annee_academiques[0].pivot.grade}
+                                value={
+                                    professeur.annee_academiques[0].pivot.grade
+                                }
                             />
                             <InfoLigne
                                 icon={Hash}
                                 label="Statut"
-                                value={professeur.annee_academiques[0].pivot.statut}
+                                value={
+                                    professeur.annee_academiques[0].pivot.statut
+                                }
                             />
-                               <InfoLigne
+                            <InfoLigne
                                 icon={Calendar}
                                 label="Année de prise de fonction"
-                                value={professeur.annee_academiques[0].pivot.annee_prise_fonction}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .annee_prise_fonction
+                                }
                             />
                             <InfoLigne
                                 icon={Book}
                                 label="Formation continue"
-                                value={professeur.annee_academiques[0].pivot.formation_continue}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .formation_continue
+                                }
                             />
-                               <InfoLigne
+                            <InfoLigne
                                 icon={Timer}
                                 label="Nombre d'heure de cours prévues"
-                                value={professeur.annee_academiques[0].pivot.nombre_heure_cours_prevue}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .nombre_heure_cours_prevue
+                                }
                             />
-                              <InfoLigne
+                            <InfoLigne
                                 icon={Timer}
                                 label="Nombre d'heure de cours réalisées"
-                                value={professeur.annee_academiques[0].pivot.nombre_heure_cours_realise}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .nombre_heure_cours_realise
+                                }
                             />
+                          {
+                            professeur.enseignements?.map((ens) => (
+                                    <InfoLigne
+                                icon={Presentation}
+                                label="Disciple enseignée"
+                                value={ens.cours.nom}
+                            />
+                            ))
+                          }
                         </CardContent>
                     </Card>
                 </div>

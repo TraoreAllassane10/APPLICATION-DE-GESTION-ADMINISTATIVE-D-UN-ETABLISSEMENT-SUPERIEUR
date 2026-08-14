@@ -10,7 +10,8 @@ class Enseignement extends Model
     /** @use HasFactory<\Database\Factories\EnseignementFactory> */
     use HasFactory;
 
-    protected $fillable = [];
+    protected $guarded = [];
+    protected $with = ["cours"];
 
     public function professeur()
     {

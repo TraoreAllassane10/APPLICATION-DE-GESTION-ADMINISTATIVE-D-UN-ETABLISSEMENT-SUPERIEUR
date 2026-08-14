@@ -20,7 +20,7 @@ interface Data {
     nombre_heure_cours_prevue: number;
     nombre_heure_cours_realise: number;
     cours_enseignes: string[];
-    classes: string[];
+  
 }
 
 export default function useProfesseur() {

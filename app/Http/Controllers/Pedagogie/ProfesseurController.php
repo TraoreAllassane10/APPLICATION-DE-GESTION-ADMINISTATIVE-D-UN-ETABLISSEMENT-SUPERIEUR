@@ -8,7 +8,6 @@ use App\Http\Requests\professeur\CreateProfesseurRequest;
 use App\Http\Requests\professeur\UpdateProfesseurRequest;
 use App\Http\Resources\ProfesseurResource;
 use App\Models\Cours;
-use App\Models\Niveau;
 use App\Models\Professeur;
 use App\Services\AnneeAcademiqueService;
 use App\Services\CoursService;
@@ -45,6 +44,8 @@ class ProfesseurController extends Controller
 
         $professeur->load(['anneeAcademiques' => function ($query) use ($anneeActive) {
             $query->where('annee_universitaire_id', $anneeActive->id);
+        }])->load(["enseignements" => function ($query) use ($anneeActive) {
+             $query->where('annee_universitaire_id', $anneeActive->id);
         }]);
 
         return Inertia::render("professeur/Show", ["professeur" => $professeur]);
@@ -54,12 +55,11 @@ class ProfesseurController extends Controller
     {
         $professeurs = $this->professeurService->getProfesseurNonEnregistreDabord();
         $cours = Cours::latest()->get();
-        $niveaux = Niveau::latest()->get();
 
         return Inertia::render('professeur/Create', [
             "professeurs" => $professeurs,
             "cours" => $cours,
-            "niveaux" => $niveaux
+
         ]);
     }
 
@@ -68,15 +68,14 @@ class ProfesseurController extends Controller
         try {
             // Validation des entrées
             $data = $request->validated();
-            Log::info($data);
 
             //Creation d'un professeur
             $this->professeurService->createProfesseur($data);
 
-
             return response()->json(["success" => true]);
         } catch (Exception $e) {
-            return response()->json(["message" => $e->getMessage()]);
+            Log::info("Erreur survenue lors de la création de l'enseignant", ["erreur" => $e->getMessage()]);
+            return response()->json(["message" => "Erreur survenue lors de l'enregistrement de l'enseignant"]);
         }
     }
 
@@ -99,11 +98,9 @@ class ProfesseurController extends Controller
             // Validation des entrées
             $data = $request->validated();
 
-            $professeurModifie = $this->professeurService->updateProfesseur($professeur, $data);
+            $this->professeurService->updateProfesseur($professeur, $data);
 
-            if ($professeurModifie) {
-                return response()->json(["success" => true]);
-            }
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
@@ -113,11 +110,8 @@ class ProfesseurController extends Controller
     {
         try {
             //Suppression d'un professeur
-            $professeurSupprime = $this->professeurService->deleteProfesseur($professeur);
-
-            if ($professeurSupprime) {
-                return response()->json(["success" => true]);
-            }
+            $this->professeurService->deleteProfesseur($professeur);
+            return response()->json(["success" => true]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
