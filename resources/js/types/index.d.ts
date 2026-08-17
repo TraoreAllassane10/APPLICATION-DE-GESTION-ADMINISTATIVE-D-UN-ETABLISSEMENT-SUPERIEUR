@@ -150,11 +150,6 @@ export interface FiliereData {
     nom: string;
 }
 
-export interface Cours {
-    id: number;
-    nom: string;
-}
-
 // Types Sites
 export interface Site {
     id: number;

@@ -10,12 +10,30 @@ export default function useEnseignement() {
         try {
             setLoading(true);
 
-            const response = await axios.get(`/enseignement/${id}`);
+            const response = await axios.get(`/enseignements/${id}`);
 
             return response.data.data;
         } catch (error) {
             toast.error(
                 "Erreur survenue lors de la recuperation de l'enseignement",
+            );
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Creation d'un enseignement
+    const createEnseignement = async (data: {cours: number, professeurId: number}) => {
+        try {
+            setLoading(true);
+
+            const response = await axios.post(`/enseignements`, data);
+
+            return response.data.data;
+        } catch (error) {
+            toast.error(
+                "Erreur survenue lors de la l'attribution d'un cours",
             );
             console.log(error);
         } finally {
@@ -29,7 +47,7 @@ export default function useEnseignement() {
             setLoading(true);
 
             const response = await axios.put(
-                `/enseignement/${id}/update`,
+                `/enseignements/${id}/update`,
                 data,
             );
 
@@ -43,23 +61,23 @@ export default function useEnseignement() {
     };
 
     // Suppression d'un enseignement
-     const deleteEnseignement = async (id: number) => {
+    const deleteEnseignement = async (id: number) => {
         try {
             setLoading(true);
 
-            const response = await axios.delete(`/enseignement/${id}/delete`);
+            const response = await axios.delete(`/enseignements/${id}/delete`);
 
             return response.data.data;
         } catch (error) {
             toast.error(
                 "Erreur survenue lors de la suppression de l'enseignement",
             );
-            
+
             console.log(error);
         } finally {
             setLoading(false);
         }
     };
 
-    return { getEnseignement, updateEnseignement, deleteEnseignement, loading };
+    return {createEnseignement, getEnseignement, updateEnseignement, deleteEnseignement, loading };
 }

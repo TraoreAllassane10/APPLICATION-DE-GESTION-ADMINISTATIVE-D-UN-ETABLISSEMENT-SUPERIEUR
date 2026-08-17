@@ -101,14 +101,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Routes Enseignement
     Route::controller(EnseignementController::class)->group(function () {
-        Route::get("/enseignement/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
-        Route::put("/enseignement/{enseignement}/update", "update")->name("enseigenement.update");
-        Route::delete("/enseignement/{enseignement}/delete", "destroy")->name("enseigenement.delete");
+        Route::post("/enseignements", "store")->name("enseigenement.store");
+        Route::get("/enseignements/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
+        Route::put("/enseignements/{enseignement}/update", "update")->name("enseigenement.update");
+        Route::delete("/enseignements/{enseignement}/delete", "destroy")->name("enseigenement.delete");
     });
 
     //Routes Cours
     Route::controller(CoursController::class)->group(function () {
         Route::get("cours", "index")->name("cours");
+        Route::get('cours/liste', "getCours")->name('cours.liste');
         Route::post("cours", "store")->name("cours.store");
         Route::get("cours/{cours}/edit", "edit")->name("cours.edit");
         Route::put("cours/{cours}/update", "update")->name("cours.update");

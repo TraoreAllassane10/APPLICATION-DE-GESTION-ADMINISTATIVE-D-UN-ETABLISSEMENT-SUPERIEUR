@@ -1,8 +1,9 @@
 import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationSuppression';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import AddEnseignementModal from '@/features/enseignement/components/AddEnseignementModal';
+import EditEnseignementModal from '@/features/enseignement/components/EditEnseignementModal';
 import useEnseignement from '@/features/enseignement/hooks/useEnseignement';
-import EditEnseignementModal from '@/features/professeur/components/EditEnseignementModal';
 import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
@@ -15,6 +16,7 @@ import {
     GraduationCap,
     Hash,
     Phone,
+    PlusCircle,
     Presentation,
     Timer,
     Trash2,
@@ -56,6 +58,8 @@ function Show() {
     const [openEdit, setOpenEdit] = useState<boolean>(false);
     const [enseignementId, setEnseignementId] = useState<number | null>(null);
     const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    const [openAdd, setOpenAdd] = useState<boolean>(false);
 
     const { deleteEnseignement, loading } = useEnseignement();
 
@@ -203,8 +207,21 @@ function Show() {
                     </Card>
 
                     <Card>
-                        <CardHeader className="font-semibold text-muted-foreground">
-                            Pedagogie
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <h2 className="font-semibold text-muted-foreground">
+                                    Pedagogie
+                                </h2>
+
+                                <Button
+                                    variant={'outline'}
+                                    size={'sm'}
+                                    onClick={() => setOpenAdd(true)}
+                                >
+                                    <PlusCircle />
+                                    Attribuer un cours
+                                </Button>
+                            </div>
                         </CardHeader>
                         <CardContent>
                             {professeur.enseignements.length > 0 ? (
@@ -238,7 +255,7 @@ function Show() {
                                             <div className="space-x-2">
                                                 <Button
                                                     variant={'outline'}
-                                                    size={'sm'}
+                                                    size={'icon'}
                                                     onClick={() =>
                                                         handleModal(ens.id)
                                                     }
@@ -248,7 +265,7 @@ function Show() {
 
                                                 <Button
                                                     variant={'outline'}
-                                                    size={'sm'}
+                                                    size={'icon'}
                                                     disabled={loading}
                                                     onClick={() =>
                                                         setSelectedId(ens.id)
@@ -270,6 +287,13 @@ function Show() {
                             )}
                         </CardContent>
                     </Card>
+
+                    {openAdd && (
+                        <AddEnseignementModal
+                            professeurId={professeur.id}
+                            onClose={() => setOpenAdd(false)}
+                        />
+                    )}
 
                     {openEdit && (
                         <EditEnseignementModal

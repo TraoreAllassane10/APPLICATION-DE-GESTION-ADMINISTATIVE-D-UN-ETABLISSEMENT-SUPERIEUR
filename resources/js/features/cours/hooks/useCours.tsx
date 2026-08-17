@@ -1,6 +1,6 @@
-
 import { router } from '@inertiajs/react';
 import axios from 'axios';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface Data {
@@ -8,6 +8,8 @@ interface Data {
 }
 
 export default function useCours() {
+    const [loading, setLoading] = useState(false);
+
     // Création d'un cours
     const createCours = async (data: Data) => {
         try {
@@ -15,19 +17,32 @@ export default function useCours() {
                 .post('/cours', data)
                 .then(() => {
                     toast.success('Cours crée avec succès !');
-                    
+
                     // Redirection vers la page d'affichage des cours
-                    router.visit("/cours");
+                    router.visit('/cours');
                 })
                 .catch((error) => {
                     toast.error(
                         "Erreur survenue lors de la creation d'un cours",
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
             toast.error('Erreur survenue au cours du serveur');
-            console.log(error)
+            console.log(error);
+        }
+    };
+
+    const getCours = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get('/cours/liste');
+            return response.data.data;
+        } catch (error) {
+            toast.error('Erreur survenue au cours du serveur');
+            console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -46,11 +61,11 @@ export default function useCours() {
                     toast.error(
                         "Erreur survenue lors de la modification d'un cours",
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
             toast.error('Erreur survenue au cours du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 
@@ -66,13 +81,13 @@ export default function useCours() {
                     toast.error(
                         'Erreur survenue lors de la suppression du cours',
                     );
-                    console.log(error)
+                    console.log(error);
                 });
         } catch (error) {
             toast.error('Erreur survenue au cours du serveur');
-            console.log(error)
+            console.log(error);
         }
     };
 
-    return { createCours, updateCours, deleteCours };
+    return { getCours, createCours, updateCours, deleteCours, loading };
 }

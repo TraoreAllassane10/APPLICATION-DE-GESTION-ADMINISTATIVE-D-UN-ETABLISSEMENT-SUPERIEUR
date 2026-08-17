@@ -28,7 +28,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import useCours from '@/hooks/useCours';
+import useCours from '@/features/cours/hooks/useCours';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';

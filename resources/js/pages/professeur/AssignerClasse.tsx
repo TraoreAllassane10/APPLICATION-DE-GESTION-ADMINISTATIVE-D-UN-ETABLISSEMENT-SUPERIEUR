@@ -84,7 +84,7 @@ const AssignerClasse = () => {
                                                 (enseignement) => (
                                                     <SelectItem
                                                         key={enseignement.id}
-                                                        value={enseignement.id}
+                                                        value={enseignement.id.toString()}
                                                     >
                                                         {enseignement.cours.nom}
                                                     </SelectItem>
