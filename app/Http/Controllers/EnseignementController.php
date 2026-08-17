@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Niveau;
 use App\Services\Pedagogie\EnseignementService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -27,16 +28,33 @@ class EnseignementController extends Controller
     }
 
     public function update(Request $request, string $enseignement)
-    {   
+    {
         $data = $request->validate([
             'classes' => 'required|array'
         ]);
 
-        $enseignement = $this->enseignementService->update($enseignement, $data);
+        $enseignement = $this->enseignementService->updateEnseignement($enseignement, $data);
 
         return response()->json([
             "success" => true,
             "data" => $enseignement
         ]);
+    }
+
+    public function destroy(string $enseignement)
+    {
+        try {
+
+            $this->enseignementService->deleteEnseignement($enseignement);
+            return response()->json([
+                "success" => true,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Erreur survenue lors de la suppression d\'un enseignement');
+            return response()->json([
+                "success" => false,
+                "message" => "Erreur survenue lors de la suppression d'un enseignement"
+            ]);
+        }
     }
 }

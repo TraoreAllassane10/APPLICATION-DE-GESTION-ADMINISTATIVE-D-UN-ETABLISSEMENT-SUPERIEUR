@@ -42,5 +42,24 @@ export default function useEnseignement() {
         }
     };
 
-    return { getEnseignement, updateEnseignement, loading };
+    // Suppression d'un enseignement
+     const deleteEnseignement = async (id: number) => {
+        try {
+            setLoading(true);
+
+            const response = await axios.delete(`/enseignement/${id}/delete`);
+
+            return response.data.data;
+        } catch (error) {
+            toast.error(
+                "Erreur survenue lors de la suppression de l'enseignement",
+            );
+            
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { getEnseignement, updateEnseignement, deleteEnseignement, loading };
 }

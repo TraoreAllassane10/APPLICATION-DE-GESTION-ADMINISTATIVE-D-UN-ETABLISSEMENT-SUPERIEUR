@@ -103,6 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(EnseignementController::class)->group(function () {
         Route::get("/enseignement/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
         Route::put("/enseignement/{enseignement}/update", "update")->name("enseigenement.update");
+        Route::delete("/enseignement/{enseignement}/delete", "destroy")->name("enseigenement.delete");
     });
 
     //Routes Cours

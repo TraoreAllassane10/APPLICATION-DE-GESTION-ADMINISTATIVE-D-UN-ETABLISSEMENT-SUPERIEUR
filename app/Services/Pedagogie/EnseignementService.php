@@ -11,9 +11,15 @@ class EnseignementService
         return Enseignement::where("id", $id)->first();
     }
 
-    public function update(string $id, array $data)
+    public function updateEnseignement(string $id, array $data)
     {
         $enseignement = Enseignement::find($id);
         return $enseignement->niveaux()->sync($data['classes']);
+    }
+
+    public function deleteEnseignement(string $id)
+    {
+        $enseignement = Enseignement::find($id);
+        return $enseignement->delete();
     }
 }

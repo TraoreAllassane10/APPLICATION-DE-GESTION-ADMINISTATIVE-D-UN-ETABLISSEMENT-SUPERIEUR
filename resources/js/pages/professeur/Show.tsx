@@ -1,9 +1,11 @@
+import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationSuppression';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import useEnseignement from '@/features/enseignement/hooks/useEnseignement';
 import EditEnseignementModal from '@/features/professeur/components/EditEnseignementModal';
 import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
     Book,
@@ -53,10 +55,22 @@ function Show() {
     const { professeur } = usePage<{ professeur: Professeur }>().props;
     const [openEdit, setOpenEdit] = useState<boolean>(false);
     const [enseignementId, setEnseignementId] = useState<number | null>(null);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    const { deleteEnseignement, loading } = useEnseignement();
 
     const handleModal = (id: number) => {
         setOpenEdit(true);
         setEnseignementId(id);
+    };
+
+    const handleDelete = async () => {
+        if (selectedId) {
+            await deleteEnseignement(selectedId);
+            setSelectedId(null);
+        }
+
+        router.reload();
     };
 
     return (
@@ -235,6 +249,10 @@ function Show() {
                                                 <Button
                                                     variant={'outline'}
                                                     size={'sm'}
+                                                    disabled={loading}
+                                                    onClick={() =>
+                                                        setSelectedId(ens.id)
+                                                    }
                                                 >
                                                     <Trash2 />
                                                 </Button>
@@ -259,6 +277,16 @@ function Show() {
                             onClose={() => setOpenEdit(false)}
                         />
                     )}
+
+                    <ModalConfirmationSuppression
+                        title="Supprimer un enseignement ?"
+                        content=" Cette action est irréversible. Les données liées à
+                            cet enseignements (evaluations, notes, assiduités.) pourraient
+                            également être affectées."
+                        selectedId={selectedId}
+                        handleDelete={handleDelete}
+                        setSelectedId={setSelectedId}
+                    />
                 </div>
             </div>
         </AppLayout>
