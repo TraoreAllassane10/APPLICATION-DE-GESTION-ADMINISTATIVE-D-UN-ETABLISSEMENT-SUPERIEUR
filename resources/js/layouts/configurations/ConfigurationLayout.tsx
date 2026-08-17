@@ -2,7 +2,7 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
-import { annee, filiere } from '@/routes';
+import { annee, periodes } from '@/routes';
 import { Auth, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
@@ -27,19 +27,14 @@ const ConfigurationLayout = ({ children }: PropsWithChildren) => {
             icon: null,
         },
         {
-            title: 'Filières',
-            href: filiere(),
+            title: 'Période academiques',
+            href: periodes(),
             icon: null,
         },
 
         // Onglets disponible que pour les administrateur
         ...(isAuthorize
             ? [
-                  {
-                      title: 'Scolarités',
-                      href: '/scolarite',
-                      icon: null,
-                  },
                   {
                       title: 'Utilisateurs',
                       href: '/utilisateurs',

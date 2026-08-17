@@ -27,4 +27,9 @@ class Niveau extends Model
     {
         return $this->belongsToMany(Inscription::class, "inscription_niveau");
     }
+
+    public function enseignements()
+    {
+        return $this->belongsToMany(Enseignement::class, "enseignement_classe");
+    }
 }

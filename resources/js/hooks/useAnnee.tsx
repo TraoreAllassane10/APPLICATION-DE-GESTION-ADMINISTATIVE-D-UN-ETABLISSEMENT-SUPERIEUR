@@ -37,7 +37,7 @@ export default function useAnnee() {
             await axios
                 .put(`/annee/${id}/update`, data)
                 .then((response) => {
-                    toast.success("L'année scolaire modifiée avec succès !");
+                    toast.success("L'année académique modifiée avec succès !");
 
                     if (response.data.success) {
                         // Redirection sur la page d'affiche
@@ -63,7 +63,7 @@ export default function useAnnee() {
                 .delete(`/annee/${id}/delete`)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success('Année scolaire supprimée !');
+                        toast.success('Année académique supprimée !');
 
                           // Redirection sur la page d'affiche
                         router.visit('/annee');

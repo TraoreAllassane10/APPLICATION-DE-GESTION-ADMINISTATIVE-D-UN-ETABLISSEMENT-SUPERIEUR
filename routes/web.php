@@ -7,10 +7,13 @@ use App\Http\Controllers\Administrateur\PaiementController;
 use App\Http\Controllers\Administrateur\ScolariteController;
 use App\Http\Controllers\Administrateur\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\Pedagogie\CoursController;
 use App\Http\Controllers\Pedagogie\FiliereController;
 use App\Http\Controllers\Pedagogie\NiveauController;
+use App\Http\Controllers\Pedagogie\PeriodeAcdemiqueController;
 use App\Http\Controllers\Pedagogie\ProfesseurController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -49,6 +52,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("annee/{annee}/change-annee", "changeAnneeActive")->name("annee.change");
     });
 
+    // Routes Periode académique
+    Route::controller(PeriodeAcdemiqueController::class)->group(function () {
+        Route::get("periodes", "index")->name("periodes");
+        Route::get("periodes/create", "create")->name("periodes.create");
+        Route::post("periodes", "store")->name("periodes.store");
+        Route::get("periodes/{periode}/show", "show")->name("periodes.show");
+        Route::get("periodes/{periode}/edit", "edit")->name("periodes.edit");
+        Route::put("periodes/{periode}/update", "update")->name("periodes.update");
+        Route::delete("periodes/{periode}/delete", "delete")->name("periodes.delete");
+    });
+
     //Routes filiere
     Route::controller(FiliereController::class)->group(function () {
         Route::get("filiere", "index")->name("filiere");
@@ -81,8 +95,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
         Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
         Route::get("professeur/export", "export")->name("professeur.export");
+        Route::get("professeur/{professeur}/assigner-classe", "createAssigner")->name("professeur.assigner.create");
+        Route::post("professeur/{professeur}/assigner-classe", "assigner")->name("professeur.assigner.store");
     });
 
+    // Routes Enseignement
+    Route::controller(EnseignementController::class)->group(function () {
+        Route::post("/enseignements", "store")->name("enseigenement.store");
+        Route::get("/enseignements/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
+        Route::put("/enseignements/{enseignement}/update", "update")->name("enseigenement.update");
+        Route::delete("/enseignements/{enseignement}/delete", "destroy")->name("enseigenement.delete");
+    });
+
+    //Routes Cours
+    Route::controller(CoursController::class)->group(function () {
+        Route::get("cours", "index")->name("cours");
+        Route::get('cours/liste', "getCours")->name('cours.liste');
+        Route::post("cours", "store")->name("cours.store");
+        Route::get("cours/{cours}/edit", "edit")->name("cours.edit");
+        Route::put("cours/{cours}/update", "update")->name("cours.update");
+        Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
+    });
 
     //Routes Etudiant
     Route::controller(EtudiantController::class)->group(function () {

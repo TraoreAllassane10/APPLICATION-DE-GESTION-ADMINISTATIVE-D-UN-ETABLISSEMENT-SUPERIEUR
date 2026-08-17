@@ -19,6 +19,14 @@ interface Data {
     formation_continue: number;
     nombre_heure_cours_prevue: number;
     nombre_heure_cours_realise: number;
+    cours_enseignes: string[];
+}
+
+type DataUpdate = Omit<Data, 'option' | 'cours_enseignes'>;
+
+interface DataAssigner {
+    enseignement: string;
+    classes: string[];
 }
 
 export default function useProfesseur() {
@@ -30,6 +38,7 @@ export default function useProfesseur() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Enseignant crée avec succès !');
+
                         // Redirection vers la page d'affichage des professeur
                         router.visit(professeur());
                     }
@@ -47,7 +56,7 @@ export default function useProfesseur() {
     };
 
     // Modification d'un professeur
-    const updateProfesseur = async (id: string, data: Data) => {
+    const updateProfesseur = async (id: string, data: DataUpdate) => {
         try {
             await axios
                 .put(`/professeur/${id}/update`, data)
@@ -61,7 +70,7 @@ export default function useProfesseur() {
                 })
                 .catch((error) => {
                     toast.error(
-                        "Erreur survenue lors de la modification d'un Enseignant",
+                        "Erreur survenue lors de la modification d'un enseignant",
                     );
                     console.log(error);
                 });
@@ -89,10 +98,33 @@ export default function useProfesseur() {
                     console.log(error);
                 });
         } catch (error) {
-            toast.success('Erreur survenue au niveau du serveur');
+            toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
         }
     };
 
-    return { createProfesseur, updateProfesseur, deleteProfesseur };
+    // Assigner des classes à un enseignant
+    const assignerClassesProfesseur = async (id: number, data: DataAssigner) => {
+        try {
+            await axios
+                .post(`/professeur/${id}/assigner-classe`, data)
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success('Attribution effectée !');
+                        router.visit(professeur());
+                    }
+                })
+                .catch((error) => {
+                    toast.success(
+                        'Erreur survenue lors de l\'attribution',
+                    );
+                    console.log(error);
+                });
+        } catch (error) {
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
+        }
+    };
+
+    return { createProfesseur, updateProfesseur, deleteProfesseur, assignerClassesProfesseur };
 }

@@ -1,19 +1,29 @@
+import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationSuppression';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import AddEnseignementModal from '@/features/enseignement/components/AddEnseignementModal';
+import EditEnseignementModal from '@/features/enseignement/components/EditEnseignementModal';
+import useEnseignement from '@/features/enseignement/hooks/useEnseignement';
+import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
-import { Professeur } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
     Book,
     Calendar,
+    Edit,
     Globe,
     GraduationCap,
     Hash,
     Phone,
+    PlusCircle,
+    Presentation,
     Timer,
+    Trash2,
     User,
     User2,
 } from 'lucide-react';
+import { useState } from 'react';
 
 const InfoLigne = ({
     icon: Icon,
@@ -25,6 +35,7 @@ const InfoLigne = ({
     value: string | null | undefined;
 }) => {
     if (!value) return null;
+
     return (
         <div className="flex items-start gap-3 border-b py-2.5 last:border-0">
             <div className="mt-0.5 shrink-0 rounded-md bg-muted p-1.5">
@@ -44,6 +55,27 @@ const InfoLigne = ({
 
 function Show() {
     const { professeur } = usePage<{ professeur: Professeur }>().props;
+    const [openEdit, setOpenEdit] = useState<boolean>(false);
+    const [enseignementId, setEnseignementId] = useState<number | null>(null);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    const [openAdd, setOpenAdd] = useState<boolean>(false);
+
+    const { deleteEnseignement, loading } = useEnseignement();
+
+    const handleModal = (id: number) => {
+        setOpenEdit(true);
+        setEnseignementId(id);
+    };
+
+    const handleDelete = async () => {
+        if (selectedId) {
+            await deleteEnseignement(selectedId);
+            setSelectedId(null);
+        }
+
+        router.reload();
+    };
 
     return (
         <AppLayout>
@@ -68,7 +100,9 @@ function Show() {
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <Card>
-                        <CardHeader className='text-muted-foreground font-semibold'>Identité</CardHeader>
+                        <CardHeader className="font-semibold text-muted-foreground">
+                            Identité
+                        </CardHeader>
                         <CardContent>
                             <InfoLigne
                                 icon={Hash}
@@ -111,45 +145,172 @@ function Show() {
                     </Card>
 
                     <Card>
-                        <CardHeader className='text-muted-foreground font-semibold'>Fonction</CardHeader>
+                        <CardHeader className="font-semibold text-muted-foreground">
+                            Fonction
+                        </CardHeader>
                         <CardContent>
                             <InfoLigne
                                 icon={GraduationCap}
                                 label="Dernier diplôme"
-                                value={professeur.annee_academiques[0].pivot.diplome}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .diplome
+                                }
                             />
                             <InfoLigne
                                 icon={GraduationCap}
                                 label="Grade"
-                                value={professeur.annee_academiques[0].pivot.grade}
+                                value={
+                                    professeur.annee_academiques[0].pivot.grade
+                                }
                             />
                             <InfoLigne
                                 icon={Hash}
                                 label="Statut"
-                                value={professeur.annee_academiques[0].pivot.statut}
+                                value={
+                                    professeur.annee_academiques[0].pivot.statut
+                                }
                             />
-                               <InfoLigne
+                            <InfoLigne
                                 icon={Calendar}
                                 label="Année de prise de fonction"
-                                value={professeur.annee_academiques[0].pivot.annee_prise_fonction}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .annee_prise_fonction
+                                }
                             />
                             <InfoLigne
                                 icon={Book}
                                 label="Formation continue"
-                                value={professeur.annee_academiques[0].pivot.formation_continue}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .formation_continue
+                                }
                             />
-                               <InfoLigne
+                            <InfoLigne
                                 icon={Timer}
                                 label="Nombre d'heure de cours prévues"
-                                value={professeur.annee_academiques[0].pivot.nombre_heure_cours_prevue}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .nombre_heure_cours_prevue
+                                }
                             />
-                              <InfoLigne
+                            <InfoLigne
                                 icon={Timer}
                                 label="Nombre d'heure de cours réalisées"
-                                value={professeur.annee_academiques[0].pivot.nombre_heure_cours_realise}
+                                value={
+                                    professeur.annee_academiques[0].pivot
+                                        .nombre_heure_cours_realise
+                                }
                             />
                         </CardContent>
                     </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <h2 className="font-semibold text-muted-foreground">
+                                    Pedagogie
+                                </h2>
+
+                                <Button
+                                    variant={'outline'}
+                                    size={'sm'}
+                                    onClick={() => setOpenAdd(true)}
+                                >
+                                    <PlusCircle />
+                                    Attribuer un cours
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            {professeur.enseignements.length > 0 ? (
+                                professeur.enseignements?.map((ens, index) => {
+                                    const classes = ens.niveaux.map(
+                                        (classe) => classe.nom,
+                                    );
+
+                                    let stringNiveauxEnseignes = '';
+
+                                    classes.forEach((value) => {
+                                        stringNiveauxEnseignes += value + ' ';
+                                    });
+
+                                    return (
+                                        <div className="flex items-start gap-3 border-b py-2.5 last:border-0">
+                                            <div className="mt-0.5 shrink-0 rounded-md bg-muted p-1.5">
+                                                <Presentation className="h-3.5 w-3.5 text-muted-foreground" />
+                                            </div>
+
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+                                                    Enseignement N°{index + 1}
+                                                </p>
+                                                <p className="mt-0.5 text-sm font-medium break-words">
+                                                    {ens.cours.nom} :{' '}
+                                                    {stringNiveauxEnseignes}
+                                                </p>
+                                            </div>
+
+                                            <div className="space-x-2">
+                                                <Button
+                                                    variant={'outline'}
+                                                    size={'icon'}
+                                                    onClick={() =>
+                                                        handleModal(ens.id)
+                                                    }
+                                                >
+                                                    <Edit />
+                                                </Button>
+
+                                                <Button
+                                                    variant={'outline'}
+                                                    size={'icon'}
+                                                    disabled={loading}
+                                                    onClick={() =>
+                                                        setSelectedId(ens.id)
+                                                    }
+                                                >
+                                                    <Trash2 />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="text-sm text-muted-foreground">
+                                    <p>
+                                        Aucun cours n'est attributé à cet
+                                        enseignant
+                                    </p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {openAdd && (
+                        <AddEnseignementModal
+                            professeurId={professeur.id}
+                            onClose={() => setOpenAdd(false)}
+                        />
+                    )}
+
+                    {openEdit && (
+                        <EditEnseignementModal
+                            enseignementId={enseignementId}
+                            onClose={() => setOpenEdit(false)}
+                        />
+                    )}
+
+                    <ModalConfirmationSuppression
+                        title="Supprimer un enseignement ?"
+                        content=" Cette action est irréversible. Les données liées à
+                            cet enseignements (evaluations, notes, assiduités.) pourraient
+                            également être affectées."
+                        selectedId={selectedId}
+                        handleDelete={handleDelete}
+                        setSelectedId={setSelectedId}
+                    />
                 </div>
             </div>
         </AppLayout>

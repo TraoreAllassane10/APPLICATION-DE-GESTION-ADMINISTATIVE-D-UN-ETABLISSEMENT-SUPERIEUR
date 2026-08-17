@@ -21,7 +21,7 @@ class CoursController extends Controller
     public function index()
     {
         try {
-            $cours = CoursResource::collection($this->coursService->getAllCours());
+            $cours = CoursResource::collection($this->coursService->getAllCours()->paginate(10));
 
             return Inertia::render("cours/Index", [
                 "cours" => $cours,
@@ -30,6 +30,12 @@ class CoursController extends Controller
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
         }
+    }
+
+    public function getCours()
+    {
+        $cours = $this->coursService->getAllCours()->get();
+        return response()->json(["success" => true, "data" => $cours]);
     }
 
     public function store(CreateCoursRequest $request)
