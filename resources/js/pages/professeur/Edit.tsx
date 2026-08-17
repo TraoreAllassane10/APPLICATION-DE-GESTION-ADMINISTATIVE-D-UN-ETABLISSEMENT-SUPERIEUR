@@ -159,7 +159,7 @@ const Edit = () => {
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
                         <Card className="shadow-sm">
                             <CardHeader className="pb-4">
                                 <CardTitle>
@@ -326,10 +326,10 @@ const Edit = () => {
                                     </div>
                                 </Field>
                             </CardContent>
+                        </Card>
 
-                            <Separator />
-
-                            {/* Informations sur la fonction */}
+                        {/* Informations sur la fonction */}
+                        <Card>
                             <CardContent>
                                 <Field className="w-full">
                                     <FieldLabel>
@@ -477,7 +477,7 @@ const Edit = () => {
                         </Card>
 
                         {/* Boutons */}
-                        <div className="mt-4 flex justify-between">
+                        <div className=" flex justify-between">
                             <Button variant="outline">
                                 <Link href="/professeur">Retour</Link>
                             </Button>

@@ -1,4 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import EditEnseignementModal from '@/features/professeur/components/EditEnseignementModal';
 import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -6,15 +8,18 @@ import {
     ArrowLeft,
     Book,
     Calendar,
+    Edit,
     Globe,
     GraduationCap,
     Hash,
     Phone,
     Presentation,
     Timer,
+    Trash2,
     User,
     User2,
 } from 'lucide-react';
+import { useState } from 'react';
 
 const InfoLigne = ({
     icon: Icon,
@@ -26,6 +31,7 @@ const InfoLigne = ({
     value: string | null | undefined;
 }) => {
     if (!value) return null;
+
     return (
         <div className="flex items-start gap-3 border-b py-2.5 last:border-0">
             <div className="mt-0.5 shrink-0 rounded-md bg-muted p-1.5">
@@ -45,8 +51,13 @@ const InfoLigne = ({
 
 function Show() {
     const { professeur } = usePage<{ professeur: Professeur }>().props;
+    const [openEdit, setOpenEdit] = useState<boolean>(false);
+    const [enseignementId, setEnseignementId] = useState<number | null>(null);
 
-
+    const handleModal = (id: number) => {
+        setOpenEdit(true);
+        setEnseignementId(id);
+    };
 
     return (
         <AppLayout>
@@ -182,25 +193,72 @@ function Show() {
                             Pedagogie
                         </CardHeader>
                         <CardContent>
-                            {professeur.enseignements?.map((ens, index) => (
-                                <InfoLigne
-                                    icon={Presentation}
-                                    label={`Disciple enseignée ${index + 1}`}
-                                    value={ens.cours.nom}
-                                />
-                            ))}
+                            {professeur.enseignements.length > 0 ? (
+                                professeur.enseignements?.map((ens, index) => {
+                                    const classes = ens.niveaux.map(
+                                        (classe) => classe.nom,
+                                    );
 
-                             {professeur.enseignements?.map((ens, index) => {
-                                return ens.niveaux.map((niveau, index) => (
-                                    <InfoLigne
-                                    icon={GraduationCap}
-                                    label={`Classes enseignée ${index + 1}`}
-                                    value={niveau.nom}
-                                />
-                                ))
-                             })}
+                                    let stringNiveauxEnseignes = '';
+
+                                    classes.forEach((value) => {
+                                        stringNiveauxEnseignes += value + ' ';
+                                    });
+
+                                    return (
+                                        <div className="flex items-start gap-3 border-b py-2.5 last:border-0">
+                                            <div className="mt-0.5 shrink-0 rounded-md bg-muted p-1.5">
+                                                <Presentation className="h-3.5 w-3.5 text-muted-foreground" />
+                                            </div>
+
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+                                                    Enseignement N°{index + 1}
+                                                </p>
+                                                <p className="mt-0.5 text-sm font-medium break-words">
+                                                    {ens.cours.nom} :{' '}
+                                                    {stringNiveauxEnseignes}
+                                                </p>
+                                            </div>
+
+                                            <div className="space-x-2">
+                                                <Button
+                                                    variant={'outline'}
+                                                    size={'sm'}
+                                                    onClick={() =>
+                                                        handleModal(ens.id)
+                                                    }
+                                                >
+                                                    <Edit />
+                                                </Button>
+
+                                                <Button
+                                                    variant={'outline'}
+                                                    size={'sm'}
+                                                >
+                                                    <Trash2 />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="text-sm text-muted-foreground">
+                                    <p>
+                                        Aucun cours n'est attributé à cet
+                                        enseignant
+                                    </p>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
+
+                    {openEdit && (
+                        <EditEnseignementModal
+                            enseignementId={enseignementId}
+                            onClose={() => setOpenEdit(false)}
+                        />
+                    )}
                 </div>
             </div>
         </AppLayout>

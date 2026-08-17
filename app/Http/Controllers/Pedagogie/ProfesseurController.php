@@ -87,6 +87,8 @@ class ProfesseurController extends Controller
 
         $professeur->load(['anneeAcademiques' => function ($query) use ($anneeActive) {
             $query->where('annee_universitaire_id', $anneeActive->id);
+        }])->load(["enseignements" => function ($query) use ($anneeActive) {
+            $query->where('annee_universitaire_id', $anneeActive->id);
         }]);
 
         return Inertia::render("professeur/Edit", [

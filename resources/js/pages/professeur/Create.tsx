@@ -524,7 +524,7 @@ function Create() {
                         <CardContent>
                             <Field className="w-full">
                                 <FieldLabel className="mb-2 text-xl">
-                                    Disciplines enseignées et classes
+                                    Disciplines enseignées
                                 </FieldLabel>
 
                                 <div className="grid grid-cols-2 gap-4">

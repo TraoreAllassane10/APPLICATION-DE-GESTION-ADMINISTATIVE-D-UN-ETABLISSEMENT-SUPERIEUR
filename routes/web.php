@@ -7,6 +7,7 @@ use App\Http\Controllers\Administrateur\PaiementController;
 use App\Http\Controllers\Administrateur\ScolariteController;
 use App\Http\Controllers\Administrateur\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\CoursController;
@@ -96,6 +97,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("professeur/export", "export")->name("professeur.export");
         Route::get("professeur/{professeur}/assigner-classe", "createAssigner")->name("professeur.assigner.create");
         Route::post("professeur/{professeur}/assigner-classe", "assigner")->name("professeur.assigner.store");
+    });
+
+    // Routes Enseignement
+    Route::controller(EnseignementController::class)->group(function () {
+        Route::get("/enseignement/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
+        Route::put("/enseignement/{enseignement}/update", "update")->name("enseigenement.update");
     });
 
     //Routes Cours

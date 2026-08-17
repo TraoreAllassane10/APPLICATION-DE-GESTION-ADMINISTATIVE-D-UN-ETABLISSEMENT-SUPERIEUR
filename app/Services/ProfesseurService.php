@@ -72,7 +72,6 @@ class ProfesseurService
         }
 
         foreach ($data['classes'] as $classeId) {
-                  Log::info($classeId);
             $enseignement->niveaux()->attach($classeId);
         }
 

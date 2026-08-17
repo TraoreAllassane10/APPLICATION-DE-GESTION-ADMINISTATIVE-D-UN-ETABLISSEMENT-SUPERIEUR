@@ -40,8 +40,8 @@ export default function ModalPaiement({
 
     const {createPaiement} = usePaiement();
 
-    const handlePayment = () => {
-        createPaiement(inscriptionId, {date_paiement, methode_paiement, reference, montant: Number(montant)});
+    const handlePayment = async () => {
+       await createPaiement(inscriptionId, {date_paiement, methode_paiement, reference, montant: Number(montant)});
 
         onClose();
     };

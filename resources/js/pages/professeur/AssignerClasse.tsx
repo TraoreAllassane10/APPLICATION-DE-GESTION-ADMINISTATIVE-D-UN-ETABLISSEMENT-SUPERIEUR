@@ -68,8 +68,8 @@ const AssignerClasse = () => {
                     <Separator />
 
                     <CardContent>
-                        <div className="space-y-4 py-2">
-                            <div className="space-y-2">
+                        <div className="space-y-8 py-2">
+                            <div className="space-y-4">
                                 <Label>Discipline enseignée</Label>
                                 <Select
                                     onValueChange={setEnseignement}
@@ -95,7 +95,7 @@ const AssignerClasse = () => {
                                 </Select>
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-4">
                                 <Label>Selectionner les classes</Label>
                                 <Combobox
                                     items={niveaux}
