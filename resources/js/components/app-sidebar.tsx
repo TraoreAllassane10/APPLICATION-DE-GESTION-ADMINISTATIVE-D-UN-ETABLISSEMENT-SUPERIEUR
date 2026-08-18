@@ -9,11 +9,12 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, filiere, historique, niveau, professeur } from '@/routes';
+import { dashboard, evaluations, filiere, historique, niveau, professeur } from '@/routes';
 import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     ClipboardList,
+    ClipboardPen,
     CreditCard,
     GraduationCap,
     History,
@@ -71,6 +72,12 @@ export function AppSidebar() {
             title: 'Cours',
             href: 'cours',
             icon: Presentation,
+        },
+
+         {
+            title: 'Evaluations',
+            href: evaluations(),
+            icon: ClipboardPen,
         },
 
         // Onglets disponible que pour les administrateur

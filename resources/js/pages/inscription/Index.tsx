@@ -40,7 +40,6 @@ import {
 
 import Avatar from '@/components/etudiant/Avatar';
 import ProgressFinanciere from '@/components/inscription/ProgressFinancier';
-import StatCardsInscription from '@/components/inscription/StatCardsInscription';
 import PaginationLinks from '@/components/Pagination';
 import {
     AlertDialog,

@@ -11,6 +11,7 @@ use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\Pedagogie\CoursController;
+use App\Http\Controllers\Pedagogie\EvaluationController;
 use App\Http\Controllers\Pedagogie\FiliereController;
 use App\Http\Controllers\Pedagogie\NiveauController;
 use App\Http\Controllers\Pedagogie\PeriodeAcdemiqueController;
@@ -115,6 +116,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("cours/{cours}/edit", "edit")->name("cours.edit");
         Route::put("cours/{cours}/update", "update")->name("cours.update");
         Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
+    });
+
+    // Routes Evaluations
+    Route::controller(EvaluationController::class)->group(function() {
+        Route::get('evaluations', 'index')->name('evaluations');
+        Route::get("evaluations/create", "create")->name("evaluations.create");
     });
 
     //Routes Etudiant
