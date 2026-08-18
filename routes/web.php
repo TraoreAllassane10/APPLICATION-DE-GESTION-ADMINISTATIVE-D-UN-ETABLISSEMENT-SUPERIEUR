@@ -122,6 +122,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(EvaluationController::class)->group(function() {
         Route::get('evaluations', 'index')->name('evaluations');
         Route::get("evaluations/create", "create")->name("evaluations.create");
+        Route::get("evaluations/saisir-notes", "createSaisirNotes")->name("evaluations.create.saisir-notes");
     });
 
     //Routes Etudiant
