@@ -13,6 +13,10 @@ class EnseignementService
     )
     {}
 
+    public function getEnseignements() {
+        return Enseignement::latest()->get();
+    }
+
     public function getEnseignement(string $id)
     {
         return Enseignement::where("id", $id)->first();

@@ -26,7 +26,7 @@ const EvaluationRecapitulatifSection = ({ values, selectedEnseignement } : any) 
                         </span>
 
                         <span className="text-right font-medium">
-                            {selectedEnseignement?.cours}
+                            {selectedEnseignement?.cours.nom}
                         </span>
                     </div>
 
@@ -38,7 +38,7 @@ const EvaluationRecapitulatifSection = ({ values, selectedEnseignement } : any) 
                         </span>
 
                         <span className="font-medium">
-                            {selectedEnseignement?.professeur}
+                            {selectedEnseignement?.professeur.nom_prenom}
                         </span>
                     </div>
 

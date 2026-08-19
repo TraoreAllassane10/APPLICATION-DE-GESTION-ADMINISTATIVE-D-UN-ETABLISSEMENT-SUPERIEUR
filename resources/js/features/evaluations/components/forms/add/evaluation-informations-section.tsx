@@ -16,25 +16,16 @@ import {
 } from '@/components/ui/select';
 import { createEvaluationData } from '@/features/evaluations/validations/createEvaluationSchema';
 import { GraduationCap } from 'lucide-react';
-import { useState } from 'react';
 import { Control, Controller } from 'react-hook-form';
-
-const typesEvaluation = [
-    'Devoir',
-    'Interrogation',
-    'Examen',
-    'TP',
-    'Projet',
-    'Rattrapage',
-    'Autre',
-];
 
 interface EvaluationInformationsSectionProps {
     control: Control<createEvaluationData>;
+      type_evaluations: string[];
 }
 
 const EvaluationInformationsSection = ({
     control,
+    type_evaluations
 }: EvaluationInformationsSectionProps) => {
 
     return (
@@ -80,10 +71,10 @@ const EvaluationInformationsSection = ({
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {typesEvaluation.map((type) => (
+                                    {type_evaluations.map((type) => (
                                         <SelectItem
                                             key={type}
-                                            value={type.toLowerCase()}
+                                            value={type}
                                         >
                                             {type}
                                         </SelectItem>

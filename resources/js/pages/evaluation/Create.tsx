@@ -1,14 +1,24 @@
+import { Enseignement } from '@/features/enseignement/types/enseignement.types';
 import EvaluationForm from '@/features/evaluations/components/forms/add/evaluation-form';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { BreadcrumbItem, Periode } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Evaluations', href: '/evaluations' },
     { title: "Création d'évaluation", href: '/evaluations/create' },
 ];
 
+interface CreateEvaluationProps {
+    enseignements: Enseignement[];
+    periodes: Periode[];
+    type_evaluations: string[];
+    [key: string]: unknown;
+}
+
 export default function Create() {
+    const { enseignements, periodes, type_evaluations } = usePage<CreateEvaluationProps>().props;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Création d'une evaluation" />
@@ -30,7 +40,11 @@ export default function Create() {
                     </div>
                 </div>
 
-                <EvaluationForm />
+                <EvaluationForm
+                    enseignements={enseignements}
+                    periodes={periodes}
+                    type_evaluations={type_evaluations}
+                />
             </div>
         </AppLayout>
     );

@@ -119,8 +119,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Routes Evaluations
-    Route::controller(EvaluationController::class)->group(function() {
+    Route::controller(EvaluationController::class)->group(function () {
         Route::get('evaluations', 'index')->name('evaluations');
+        Route::post('evaluations', 'store')->name('evaluations.store');
         Route::get("evaluations/create", "create")->name("evaluations.create");
         Route::get("evaluations/saisir-notes", "createSaisirNotes")->name("evaluations.create.saisir-notes");
     });

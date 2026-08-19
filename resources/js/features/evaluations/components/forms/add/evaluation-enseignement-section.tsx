@@ -13,42 +13,21 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Enseignement } from '@/features/enseignement/types/enseignement.types';
 import { createEvaluationData } from '@/features/evaluations/validations/createEvaluationSchema';
-import { BookOpen, UserRound } from 'lucide-react';
-import { useState } from 'react';
+import { BookOpen } from 'lucide-react';
 import { Control, Controller } from 'react-hook-form';
 
 interface EvaluationEnseignementSectionProps {
     control: Control<createEvaluationData>;
+    enseignements: Enseignement[];
 }
-
-const enseignements = [
-    {
-        id: '1',
-        cours: 'Mathématiques financières',
-        professeur: 'M. Kouassi',
-    },
-    {
-        id: '2',
-        cours: 'Statistiques',
-        professeur: 'Mme Yao',
-    },
-    {
-        id: '3',
-        cours: 'Comptabilité générale',
-        professeur: 'M. Konan',
-    },
-];
 
 const EvaluationEnseignementSection = ({
     control,
+    enseignements
 }: EvaluationEnseignementSectionProps) => {
-    const [enseignement, setEnseignement] = useState('');
-
-    const selectedEnseignement = enseignements.find(
-        (item) => item.id === enseignement,
-    );
-
+ 
     return (
         <Card>
             <CardHeader>
@@ -95,14 +74,14 @@ const EvaluationEnseignementSection = ({
                                         {enseignements.map((item) => (
                                             <SelectItem
                                                 key={item.id}
-                                                value={item.id}
+                                                value={item.id.toString()}
                                             >
                                                 <div className="flex items-center gap-2">
                                                     <BookOpen className="h-4 w-4 text-muted-foreground" />
 
                                                     <span>
-                                                        {item.cours} —{' '}
-                                                        {item.professeur}
+                                                        {item.cours.nom} —{' '}
+                                                        {item.professeur.nom_prenom}
                                                     </span>
                                                 </div>
                                             </SelectItem>
@@ -114,19 +93,6 @@ const EvaluationEnseignementSection = ({
                             </Field>
                         )}
                     />
-
-                    {selectedEnseignement && (
-                        <div className="mt-3 flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
-                            <UserRound className="h-4 w-4" />
-
-                            <span>
-                                Enseignant :{' '}
-                                <span className="font-medium text-foreground">
-                                    {selectedEnseignement.professeur}
-                                </span>
-                            </span>
-                        </div>
-                    )}
                 </div>
             </CardContent>
         </Card>

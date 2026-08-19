@@ -10,13 +10,19 @@ class Evaluation extends Model
     /** @use HasFactory<\Database\Factories\EvaluationFactory> */
     use HasFactory;
 
-    protected $fillable = [];
+    protected $guarded = [];
 
-    public function enseignement() {
+    protected $casts = [
+        'date' => 'date:Y-m-d'
+    ];
+
+    public function enseignement()
+    {
         return $this->belongsTo(Enseignement::class);
     }
 
-     public function periode_academique() {
+    public function periode_academique()
+    {
         return $this->belongsTo(PeriodeAcademique::class);
     }
 }

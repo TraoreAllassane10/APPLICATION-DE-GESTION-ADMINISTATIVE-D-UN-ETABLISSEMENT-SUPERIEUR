@@ -14,18 +14,20 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { createEvaluationData } from '@/features/evaluations/validations/createEvaluationSchema';
+import { Periode } from '@/types';
 import { CalendarDays } from 'lucide-react';
 
 import { Control, Controller } from 'react-hook-form';
 
 interface EvaluationPeriodeSectionProps {
     control: Control<createEvaluationData>;
+    periodes: Periode[];
 }
 
 const EvaluationPeriodeSection = ({
     control,
+    periodes,
 }: EvaluationPeriodeSectionProps) => {
-   
     return (
         <Card>
             <CardHeader>
@@ -69,17 +71,19 @@ const EvaluationPeriodeSection = ({
                                         </SelectTrigger>
 
                                         <SelectContent>
-                                            <SelectItem value="semestre_1">
-                                                Semestre 1
-                                            </SelectItem>
-
-                                            <SelectItem value="semestre_2">
-                                                Semestre 2
-                                            </SelectItem>
+                                            {periodes.map((periode) => (
+                                                <SelectItem value={periode.id.toString()}>
+                                                   {periode.libelle}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
 
-                                    {fieldState.invalid && (<FieldError errors={[fieldState.error]} />)}
+                                    {fieldState.invalid && (
+                                        <FieldError
+                                            errors={[fieldState.error]}
+                                        />
+                                    )}
                                 </Field>
                             )}
                         />
