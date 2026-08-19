@@ -22,7 +22,7 @@ class EvaluationController extends Controller
     public function index()
     {
         $evaluations = $this->evaluationService->getEvaluationsPaginate();
-        
+
         return Inertia::render('evaluation/Index', [
             "evaluations" => $evaluations
         ]);
@@ -62,6 +62,26 @@ class EvaluationController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => "La création d'evaluation a echouée !"
+            ]);
+        }
+    }
+
+    public function destroy(string $evaluation)
+    {
+        try {
+
+            $this->evaluationService->deleteEvaluation($evaluation);
+
+            return response()->json([
+                "success" => true,
+                "message" => "Evaluation supprimée avec succès"
+            ]);
+        } catch (Exception $e) {
+            Log::error("La suppression d'evaluation a echoué !", ["erreur" => $e->getMessage()]);
+
+            return response()->json([
+                "success" => false,
+                "message" => "La suppression d'evaluation a echouée !"
             ]);
         }
     }

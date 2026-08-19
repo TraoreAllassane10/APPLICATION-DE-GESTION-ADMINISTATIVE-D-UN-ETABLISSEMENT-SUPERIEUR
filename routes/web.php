@@ -123,6 +123,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('evaluations', 'index')->name('evaluations');
         Route::post('evaluations', 'store')->name('evaluations.store');
         Route::get("evaluations/create", "create")->name("evaluations.create");
+        Route::delete('evaluations/{evaluation}/delete', "destroy")->name('evaluations.destroy');
         Route::get("evaluations/saisir-notes", "createSaisirNotes")->name("evaluations.create.saisir-notes");
     });
 

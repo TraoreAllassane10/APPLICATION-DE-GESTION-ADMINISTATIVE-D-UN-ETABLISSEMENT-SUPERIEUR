@@ -57,28 +57,28 @@ export default function useEvaluation() {
     //     }
     // };
 
-    // Suppression d'un professeur
-    // const deleteProfesseur = async (id: number) => {
-    //     try {
-    //         await axios
-    //             .delete(`/professeur/${id}/delete`)
-    //             .then((response) => {
-    //                 if (response.data.success) {
-    //                     toast.success('Enseignant supprimé !');
-    //                     router.visit(professeur());
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 toast.success(
-    //                     'Erreur survenue lors de la suppression du Enseignant',
-    //                 );
-    //                 console.log(error);
-    //             });
-    //     } catch (error) {
-    //         toast.error('Erreur survenue au niveau du serveur');
-    //         console.log(error);
-    //     }
-    // };
+   
+    const deleteEvaluation = async (id: number) => {
+        try {
+            await axios
+                .delete(`/evaluations/${id}/delete`)
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success(response.data.message ?? 'Evaluation supprimée !');
+                        router.reload();
+                    }
+                })
+                .catch((error) => {
+                    toast.error(
+                        'Erreur survenue lors de la suppression du Enseignant',
+                    );
+                    console.log(error);
+                });
+        } catch (error) {
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
+        }
+    };
 
-    return { createEvaluation, loading };
+    return { createEvaluation, deleteEvaluation, loading };
 }

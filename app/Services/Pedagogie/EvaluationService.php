@@ -3,7 +3,7 @@
 namespace App\Services\Pedagogie;
 
 use App\Repositories\Pedagogie\EvaluationRepository;
-use Carbon\Carbon;
+use Exception;
 
 class EvaluationService
 {
@@ -22,5 +22,15 @@ class EvaluationService
     public function createEvaluation(array $data)
     {
         return $this->evaluationRepository->create($data);
+    }
+
+    public function deleteEvaluation(string $evaluation) {
+        $evaluation = $this->evaluationRepository->find($evaluation);
+
+        if (!$evaluation) {
+            throw new Exception('Evaluation introuvable');
+        }
+
+        return $this->evaluationRepository->delete($evaluation);
     }
 }
