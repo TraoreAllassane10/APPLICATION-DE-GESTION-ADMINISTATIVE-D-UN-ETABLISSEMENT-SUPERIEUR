@@ -11,6 +11,14 @@ export interface EvaluationStoreData {
     note_maximale: number;
 }
 
+export interface EvaluationUpdateData {
+    type: string;
+    titre: string;
+    date: string;
+    coefficient: number;
+    note_maximale: number;
+}
+
 export interface Evaluation {
     id: number;
     enseignement_id: number;

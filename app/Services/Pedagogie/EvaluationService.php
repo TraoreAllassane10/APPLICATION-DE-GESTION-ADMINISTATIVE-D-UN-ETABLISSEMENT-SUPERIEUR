@@ -19,9 +19,19 @@ class EvaluationService
         return $this->evaluationRepository->all();
     }
 
+    public function getEvaluation(string $id) {
+        return $this->evaluationRepository->find($id);
+    }
+
     public function createEvaluation(array $data)
     {
         return $this->evaluationRepository->create($data);
+    }
+
+     public function updateEvaluation(string $id, array $data)
+    {
+        $evaluation = $this->evaluationRepository->find($id);
+        return $this->evaluationRepository->update($evaluation, $data);
     }
 
     public function deleteEvaluation(string $evaluation) {

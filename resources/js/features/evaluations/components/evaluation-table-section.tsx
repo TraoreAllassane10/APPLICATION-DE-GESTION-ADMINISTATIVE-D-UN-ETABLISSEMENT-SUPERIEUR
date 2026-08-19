@@ -1,3 +1,4 @@
+import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -38,6 +39,7 @@ const EvaluationTableSection = ({
             <Table>
                 <TableHeader>
                     <TableRow className="bg-muted/40 hover:bg-muted/40">
+                        <TableHead>Enseignement</TableHead>
                         <TableHead>Titre</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead>Date</TableHead>
@@ -62,19 +64,30 @@ const EvaluationTableSection = ({
                     ) : (
                         evaluations.data.map((evaluation) => (
                             <TableRow key={evaluation.id} className="group">
-                                <TableCell className="text-md font-medium text-muted-foreground">
+                                <TableCell className="text-sm leading-none font-medium">
+                                    {evaluation.enseignement.cours.nom} -{' '}
+                                    {evaluation.enseignement.niveaux.map(
+                                        (niveau) => (
+                                            <span className="mr-2">
+                                                {niveau.nom}
+                                            </span>
+                                        ),
+                                    )}
+                                </TableCell>
+
+                                <TableCell className="text-sm leading-none">
                                     {evaluation.titre}
                                 </TableCell>
 
-                                <TableCell className="text-md text-muted-foreground">
+                                <TableCell className="text-sm leading-none">
                                     {evaluation.type}
                                 </TableCell>
 
-                                <TableCell className="text-md text-muted-foreground">
+                                <TableCell className="text-sm leading-none">
                                     {formatDate(new Date(evaluation.date))}
                                 </TableCell>
 
-                                <TableCell className="text-md text-muted-foreground">
+                                <TableCell className="text-sm leading-none">
                                     {evaluation.coefficient}
                                 </TableCell>
 
@@ -101,7 +114,7 @@ const EvaluationTableSection = ({
                                         >
                                             <DropdownMenuItem asChild>
                                                 <Link
-                                                    // href={`/cours/${cours.id}/edit`}
+                                                    href={`/evaluations/${evaluation.id}/edit`}
                                                     className="flex cursor-pointer items-center gap-2"
                                                 >
                                                     <Edit className="h-4 w-4" />{' '}
@@ -129,7 +142,7 @@ const EvaluationTableSection = ({
                     )}
                 </TableBody>
 
-                {/* <PaginationLinks links={cours.meta.links} /> */}
+                <PaginationLinks links={evaluations.links} />
             </Table>
         </Card>
     );

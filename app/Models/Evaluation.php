@@ -11,6 +11,7 @@ class Evaluation extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $with = ["enseignement", "periode_academique"];
 
     protected $casts = [
         'date' => 'date:Y-m-d'

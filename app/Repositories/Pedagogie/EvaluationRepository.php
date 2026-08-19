@@ -11,17 +11,17 @@ class EvaluationRepository
         return Evaluation::latest()->get();
     }
 
-    public function paginate(mixed $filtreEnseignement, $filtrePeriode)
+    public function paginate(mixed $filtreEnseignement, mixed $filtrePeriode)
     {
         $query = Evaluation::query();
 
-        $query->when($filtreEnseignement, function($q) use($filtreEnseignement) {
+        $query->when($filtreEnseignement, function ($q) use ($filtreEnseignement) {
             if ($filtreEnseignement !== "all") {
                 $q->where('enseignement_id', $filtreEnseignement);
             }
         });
 
-        $query->when($filtrePeriode, function($q) use($filtrePeriode) {
+        $query->when($filtrePeriode, function ($q) use ($filtrePeriode) {
             if ($filtrePeriode !== "all") {
                 $q->where('periode_academique_id', $filtrePeriode);
             }
@@ -38,6 +38,19 @@ class EvaluationRepository
     public function create(array $data)
     {
         return Evaluation::create($data);
+    }
+
+    public function update(Evaluation $evaluation, array $data)
+    {
+        return $evaluation->update([
+            "enseignement_id" => $evaluation->enseignement_id,
+            "periode_academique_id" => $evaluation->periode_academique_id,
+            "titre" => $data['titre'],
+            "type" => $data['type'],
+            "date" => $data['date'],
+            "coefficient" => $data['coefficient'],
+            "note_maximale" => $data['note_maximale'],
+        ]);
     }
 
     public function delete(Evaluation $evaluation)

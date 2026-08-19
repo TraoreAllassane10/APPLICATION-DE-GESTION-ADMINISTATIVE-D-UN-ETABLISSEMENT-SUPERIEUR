@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pedagogie;
 use App\Enums\TypeEvaluationEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\evaluation\CreateEvaluationRequest;
+use App\Http\Requests\evaluation\UpdateEvaluationRequest;
 use App\Services\Pedagogie\EnseignementService;
 use App\Services\Pedagogie\EvaluationService;
 use App\Services\PeriodeAcademiqueService;
@@ -71,6 +72,37 @@ class EvaluationController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => "La création d'evaluation a echouée !"
+            ]);
+        }
+    }
+
+    public function edit(string $evaluation)
+    {
+        $evaluation = $this->evaluationService->getEvaluation($evaluation);
+
+        return Inertia::render("evaluation/Edit", [
+            "evaluation" => $evaluation,
+            "type_evaluations" => TypeEvaluationEnum::cases()
+        ]);
+    }
+
+    public function update(UpdateEvaluationRequest $updateEvaluationRequest, string $evaluation) 
+    {
+        try {
+            $data = $updateEvaluationRequest->validated();
+
+            $this->evaluationService->updateEvaluation($evaluation, $data);
+
+            return response()->json([
+                "success" => true,
+                "message" => "Evaluation modifiée avec succès"
+            ]);
+        } catch (Exception $e) {
+            Log::error("La Modification d'evaluation a echouée !", ["erreur" => $e->getMessage()]);
+
+            return response()->json([
+                "success" => false,
+                "message" => "La Modification d'evaluation a echouée !"
             ]);
         }
     }

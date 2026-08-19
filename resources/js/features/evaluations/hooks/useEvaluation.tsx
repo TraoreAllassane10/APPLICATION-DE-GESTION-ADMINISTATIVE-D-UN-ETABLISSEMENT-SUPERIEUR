@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { EvaluationStoreData } from '../types/evaluation.types';
+import { EvaluationStoreData, EvaluationUpdateData } from '../types/evaluation.types';
 
 export default function useEvaluation() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -54,30 +54,28 @@ export default function useEvaluation() {
         }
     };
 
-    // Modification d'un professeur
-    // const updateProfesseur = async (id: string, data: DataUpdate) => {
-    //     try {
-    //         await axios
-    //             .put(`/professeur/${id}/update`, data)
-    //             .then((response) => {
-    //                 if (response.data.success) {
-    //                     toast.success('Enseignant modifié avec succès !');
 
-    //                     // Redirection sur la page d'affiche
-    //                     router.visit('/professeur');
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 toast.error(
-    //                     "Erreur survenue lors de la modification d'un enseignant",
-    //                 );
-    //                 console.log(error);
-    //             });
-    //     } catch (error) {
-    //         toast.error('Erreur survenue au niveau du serveur');
-    //         console.log(error);
-    //     }
-    // };
+    const updateEvaluation = async (id: number, data: EvaluationUpdateData) => {
+        try {
+            await axios
+                .put(`/evaluations/${id}/update`, data)
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success(response.data.message ?? 'Evaluation modifiée avec succès !');
+                        router.visit('/evaluations');
+                    }
+                })
+                .catch((error) => {
+                    toast.error(
+                        "Erreur survenue lors de la modification de l'evaluation",
+                    );
+                    console.log(error);
+                });
+        } catch (error) {
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
+        }
+    };
 
    
     const deleteEvaluation = async (id: number) => {
@@ -102,5 +100,5 @@ export default function useEvaluation() {
         }
     };
 
-    return { createEvaluation, deleteEvaluation, filterEvaluation, loading };
+    return { createEvaluation, deleteEvaluation, updateEvaluation, filterEvaluation, loading };
 }

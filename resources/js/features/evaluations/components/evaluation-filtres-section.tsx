@@ -10,7 +10,7 @@ import {
 import { Enseignement } from '@/features/enseignement/types/enseignement.types';
 import { Periode } from '@/types';
 import { router } from '@inertiajs/react';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { BookOpen, Calendar, Search, X } from 'lucide-react';
 import { useState } from 'react';
 import useEvaluation from '../hooks/useEvaluation';
 
@@ -26,20 +26,20 @@ const EvaluationFiltresSection = ({
     const [filtreEnseignement, setFiltreEnseignement] = useState('all');
     const [filtrePeriode, setFiltrePeriode] = useState('all');
 
-    const hasFilters = filtreEnseignement !== "all" || filtrePeriode !== "all";
+    const hasFilters = filtreEnseignement !== 'all' || filtrePeriode !== 'all';
 
-    const {filterEvaluation} = useEvaluation();
+    const { filterEvaluation } = useEvaluation();
     const handleSearch = () => {
-        filterEvaluation(filtreEnseignement, filtrePeriode)
-    }
+        filterEvaluation(filtreEnseignement, filtrePeriode);
+    };
 
     const reset = () => {
         setFiltreEnseignement('');
         setFiltrePeriode('');
 
-        router.visit('/evaluations')
-    }
- 
+        router.visit('/evaluations');
+    };
+
     return (
         <Card className="shadow-sm">
             <CardContent className="flex flex-wrap items-center gap-3 p-4">
@@ -56,7 +56,10 @@ const EvaluationFiltresSection = ({
                         </SelectItem>
                         {enseignements.map((ens) => (
                             <SelectItem value={ens.id.toString()}>
-                                {ens.cours.nom}
+                                <BookOpen/>
+                                {ens.niveaux.map((niveau) => (
+                                    <span>{niveau.nom}</span>
+                                ))} / {ens.cours.nom}
                             </SelectItem>
                         ))}
                     </SelectContent>
@@ -72,6 +75,7 @@ const EvaluationFiltresSection = ({
                         </SelectItem>
                         {periodes.map((periode) => (
                             <SelectItem value={periode.id.toString()}>
+                                <Calendar/>
                                 {periode.libelle}
                             </SelectItem>
                         ))}
@@ -99,12 +103,6 @@ const EvaluationFiltresSection = ({
                         </Button>
                     </>
                 )}
-
-                <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
-                    <SlidersHorizontal className="h-3.5 w-3.5" />
-                    {/* {etudiants.data.length} résultat
-                            {etudiants.data.length !== 1 ? 's' : ''} */}
-                </span>
             </CardContent>
         </Card>
     );
