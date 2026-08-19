@@ -50,11 +50,11 @@ const EvaluationTableSection = ({
                 <TableBody>
                     {evaluations.data.length === 0 ? (
                         <TableRow>
-                            <TableCell colSpan={3} className="h-48 text-center">
+                            <TableCell colSpan={6} className="h-48 text-center">
                                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
                                     <ClipboardPen className="h-10 w-10 opacity-20" />
                                     <p className="text-sm">
-                                        Aucune evaluation enregistrée.
+                                        Aucune evaluation touvée.
                                     </p>
                                 </div>
                             </TableCell>

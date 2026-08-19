@@ -11,8 +11,8 @@ class EvaluationService
         protected EvaluationRepository $evaluationRepository
     ) {}
 
-    public function getEvaluationsPaginate() {
-        return $this->evaluationRepository->paginate();
+    public function getEvaluationsPaginate(mixed $filtreEnseignement, mixed $filtrePeriode) {
+        return $this->evaluationRepository->paginate($filtreEnseignement, $filtrePeriode);
     }
 
     public function getEvaluations() {

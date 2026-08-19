@@ -32,6 +32,28 @@ export default function useEvaluation() {
         }
     };
 
+    const filterEvaluation = (
+        filtreEnseignement: string,
+        filtrePeriode: string,
+    ) => {
+        try {
+            return router.get(
+                `/evaluations`,
+                {
+                    enseignement: filtreEnseignement,
+                    periode: filtrePeriode,
+                    page: 1,
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                },
+            );
+        } catch (error) {
+            console.log('Erreur lors du filtarge : ', error);
+        }
+    };
+
     // Modification d'un professeur
     // const updateProfesseur = async (id: string, data: DataUpdate) => {
     //     try {
@@ -80,5 +102,5 @@ export default function useEvaluation() {
         }
     };
 
-    return { createEvaluation, deleteEvaluation, loading };
+    return { createEvaluation, deleteEvaluation, filterEvaluation, loading };
 }

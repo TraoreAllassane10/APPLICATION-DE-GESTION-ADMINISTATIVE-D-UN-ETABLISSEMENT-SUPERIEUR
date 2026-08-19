@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -8,58 +7,83 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Enseignement } from '@/features/enseignement/types/enseignement.types';
+import { Periode } from '@/types';
+import { router } from '@inertiajs/react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { useState } from 'react';
+import useEvaluation from '../hooks/useEvaluation';
 
-const EvaluationFiltresSection = () => {
+interface EvaluationFiltresSectionProps {
+    enseignements: Enseignement[];
+    periodes: Periode[];
+}
+
+const EvaluationFiltresSection = ({
+    enseignements,
+    periodes,
+}: EvaluationFiltresSectionProps) => {
+    const [filtreEnseignement, setFiltreEnseignement] = useState('all');
+    const [filtrePeriode, setFiltrePeriode] = useState('all');
+
+    const hasFilters = filtreEnseignement !== "all" || filtrePeriode !== "all";
+
+    const {filterEvaluation} = useEvaluation();
+    const handleSearch = () => {
+        filterEvaluation(filtreEnseignement, filtrePeriode)
+    }
+
+    const reset = () => {
+        setFiltreEnseignement('');
+        setFiltrePeriode('');
+
+        router.visit('/evaluations')
+    }
+ 
     return (
         <Card className="shadow-sm">
             <CardContent className="flex flex-wrap items-center gap-3 p-4">
-                <div className="relative min-w-[220px] flex-1">
-                    <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                        placeholder="Nom, Identifiant permanent..."
-                        // value={search}
-                        // onChange={(e) => setSearch(e.target.value)}
-                        className="pl-9"
-                    />
-                </div>
-
                 <Select
-                // value={filtreStatut}
-                // onValueChange={setFiltreStatut}
+                    value={filtreEnseignement}
+                    onValueChange={setFiltreEnseignement}
                 >
-                    <SelectTrigger className="w-[150px]">
-                        <SelectValue placeholder="Statut" />
+                    <SelectTrigger className="w-[350px]">
+                        <SelectValue placeholder="Enseignement" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="all">Tous statuts</SelectItem>
-                        <SelectItem value="Affecté">Affecté</SelectItem>
-                        <SelectItem value="Naff">Naff</SelectItem>
-                        <SelectItem value="Réaffecté">Réaffecté</SelectItem>
-                        <SelectItem value="Transfert">Transfert</SelectItem>
+                        <SelectItem value="all">
+                            Tous les enseignements
+                        </SelectItem>
+                        {enseignements.map((ens) => (
+                            <SelectItem value={ens.id.toString()}>
+                                {ens.cours.nom}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
 
-                <Select
-                // value={filtreGenre}
-                // onValueChange={setFiltreGenre}
-                >
-                    <SelectTrigger className="w-[140px]">
-                        <SelectValue placeholder="Genre" />
+                <Select value={filtrePeriode} onValueChange={setFiltrePeriode}>
+                    <SelectTrigger className="w-[350px]">
+                        <SelectValue placeholder="Période académique" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="all">Tous genres</SelectItem>
-                        <SelectItem value="Masculin">Masculin</SelectItem>
-                        <SelectItem value="Féminin">Féminin</SelectItem>
+                        <SelectItem value="all">
+                            Toutes les periodes académiques
+                        </SelectItem>
+                        {periodes.map((periode) => (
+                            <SelectItem value={periode.id.toString()}>
+                                {periode.libelle}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
 
-                {true && (
+                {hasFilters && (
                     <>
                         <Button
                             variant="ghost"
                             size="sm"
-                            // onClick={handleSearch}
+                            onClick={handleSearch}
                             className="gap-1.5 text-muted-foreground"
                         >
                             <Search className="h-3.5 w-3.5" /> Rechercher
@@ -68,7 +92,7 @@ const EvaluationFiltresSection = () => {
                         <Button
                             variant="ghost"
                             size="sm"
-                            // onClick={reset}
+                            onClick={reset}
                             className="gap-1.5 text-muted-foreground"
                         >
                             <X className="h-3.5 w-3.5" /> Réinitialiser

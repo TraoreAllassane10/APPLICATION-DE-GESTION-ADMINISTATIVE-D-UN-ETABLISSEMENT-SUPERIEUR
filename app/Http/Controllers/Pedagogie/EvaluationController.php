@@ -9,6 +9,7 @@ use App\Services\Pedagogie\EnseignementService;
 use App\Services\Pedagogie\EvaluationService;
 use App\Services\PeriodeAcademiqueService;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -19,12 +20,20 @@ class EvaluationController extends Controller
         protected PeriodeAcademiqueService $periodeAcademiqueService,
         protected EvaluationService $evaluationService
     ) {}
-    public function index()
+    public function index(Request $request)
     {
-        $evaluations = $this->evaluationService->getEvaluationsPaginate();
+        $filtreEnseignement = $request->query('enseignement') ?? "all";
+        $filtrePeriode = $request->query('periode') ?? "all";
+
+        $evaluations = $this->evaluationService->getEvaluationsPaginate($filtreEnseignement, $filtrePeriode);
+        $enseignements = $this->enseignementService->getEnseignements();
+        $periodes = $this->periodeAcademiqueService->all();
 
         return Inertia::render('evaluation/Index', [
-            "evaluations" => $evaluations
+            "evaluations" => $evaluations,
+            "enseignements" => $enseignements,
+            "periodes" => $periodes,
+            "filters" => $request->only(["enseignement", "periode"])
         ]);
     }
 
