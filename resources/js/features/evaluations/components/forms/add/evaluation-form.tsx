@@ -51,6 +51,7 @@ const EvaluationForm = ({
     );
 
     const { createEvaluation, loading } = useEvaluation();
+
     const onSubmit = async (data: createEvaluationData) => {
         const formattedDate = daysjs(new Date(data.date)).format('YYYY-MM-DD');
 
@@ -60,7 +61,7 @@ const EvaluationForm = ({
             coefficient: data.coefficient,
             titre: data.titre,
             note_maximale: data.note_maximale,
-            type: data.titre,
+            type: data.type,
             date: formattedDate,
         });
     };

@@ -21,7 +21,11 @@ class EvaluationController extends Controller
     ) {}
     public function index()
     {
-        return Inertia::render('evaluation/Index');
+        $evaluations = $this->evaluationService->getEvaluationsPaginate();
+        
+        return Inertia::render('evaluation/Index', [
+            "evaluations" => $evaluations
+        ]);
     }
 
     public function create()

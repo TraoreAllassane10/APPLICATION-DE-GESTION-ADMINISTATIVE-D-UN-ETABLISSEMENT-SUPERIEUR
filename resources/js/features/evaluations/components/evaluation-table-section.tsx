@@ -1,13 +1,24 @@
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import {
     Table,
     TableBody,
+    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { EvaluationData } from '@/pages/evaluation/Index';
+import { formatDate } from '@/utils/date';
+import { Link } from '@inertiajs/react';
+import { ChevronDown, ClipboardPen, Edit, Trash2 } from 'lucide-react';
 
-const EvaluationTableSection = () => {
+interface EvaluationTableSectionProps {
+    evaluations: EvaluationData;
+}
+
+const EvaluationTableSection = ({evaluations} : EvaluationTableSectionProps) => {
     return (
         <Card className="overflow-hidden shadow-sm">
             <Table>
@@ -23,28 +34,44 @@ const EvaluationTableSection = () => {
                 </TableHeader>
 
                 <TableBody>
-                    {/* {cours.data.length === 0 ? (
+                    {evaluations.data.length === 0 ? (
                                     <TableRow>
                                         <TableCell
                                             colSpan={3}
                                             className="h-48 text-center"
                                         >
                                             <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                                                <GraduationCap className="h-10 w-10 opacity-20" />
+                                                <ClipboardPen className="h-10 w-10 opacity-20" />
                                                 <p className="text-sm">
-                                                    Aucun cours enregistré.
+                                                    Aucune evaluation enregistrée.
                                                 </p>
                                             </div>
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    cours.data.map((cours) => (
+                                    evaluations.data.map((evaluation) => (
                                         <TableRow
-                                            key={cours.id}
+                                            key={evaluation.id}
                                             className="group"
                                         >
-                                            <TableCell className="text-md font-medium">
-                                                {cours.nom}
+                                            <TableCell className="text-md text-muted-foreground font-medium">
+                                                {evaluation.titre}
+                                            </TableCell>
+
+                                            <TableCell className="text-md text-muted-foreground">
+                                                {evaluation.type}
+                                            </TableCell>
+
+                                            <TableCell className="text-md text-muted-foreground">
+                                                {formatDate(new Date(evaluation.date))}
+                                            </TableCell>
+
+                                            <TableCell className="text-md text-muted-foreground">
+                                                {evaluation.coefficient}
+                                            </TableCell>
+
+                                            <TableCell className="text-md text-muted-foreground">
+                                                {/* {evaluation.titre} */}
                                             </TableCell>
 
                                             <TableCell>
@@ -96,7 +123,7 @@ const EvaluationTableSection = () => {
                                             </TableCell>
                                         </TableRow>
                                     ))
-                                )} */}
+                                )}
                 </TableBody>
 
                 {/* <PaginationLinks links={cours.meta.links} /> */}

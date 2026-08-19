@@ -11,6 +11,14 @@ class EvaluationService
         protected EvaluationRepository $evaluationRepository
     ) {}
 
+    public function getEvaluationsPaginate() {
+        return $this->evaluationRepository->paginate();
+    }
+
+    public function getEvaluations() {
+        return $this->evaluationRepository->all();
+    }
+
     public function createEvaluation(array $data)
     {
         return $this->evaluationRepository->create($data);
