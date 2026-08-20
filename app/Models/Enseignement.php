@@ -11,7 +11,7 @@ class Enseignement extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $with = ["cours", "niveaux"];
+    protected $with = ["cours", "niveaux", "professeur"];
 
     public function professeur()
     {

@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->integer("note");
 
-            $table->foreignId('inscription_id')->constrained()->onDelete("cascade");
-            $table->foreignId("evaluation_id")->constrained()->onDelete("cascade");
+            $table->foreignId('inscription_id')->constrained('inscriptions')->onDelete("cascade");
+            $table->foreignId("evaluation_id")->constrained('evaluations')->onDelete("cascade");
+            $table->decimal('valeur', 5, 2)->nullable();
+            $table->boolean('est_absent')->default(0);
+            $table->string('appreciation')->nullable();
 
-            $table->index(['inscription_id', 'evaluation_id']);
+            $table->unique(['inscription_id', 'evaluation_id']);
 
             $table->timestamps();
         });
