@@ -139,6 +139,8 @@ export interface DataNiveau {
     nombre_etudiant: number;
     scolarite_attendue: number;
     montant_total_paye: number;
+
+    inscriptions?: Inscription[]
 }
 
 export interface Niveau {

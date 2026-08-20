@@ -26,4 +26,8 @@ class Evaluation extends Model
     {
         return $this->belongsTo(PeriodeAcademique::class);
     }
+
+    public function notes() {
+        return $this->hasMany(Note::class);
+    }
 }

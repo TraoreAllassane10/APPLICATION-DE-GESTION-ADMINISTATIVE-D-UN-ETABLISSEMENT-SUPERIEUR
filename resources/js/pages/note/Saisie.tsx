@@ -1,4 +1,4 @@
-import { Check, ClipboardList, Save, Users } from 'lucide-react';
+import { Check, Save, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -20,57 +20,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Evaluation } from '@/features/evaluations/types/evaluation.types';
 import AppLayout from '@/layouts/app-layout';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
+import { EtudiantNote } from '@/features/note/types/note.types';
+import useNote from '@/features/note/hooks/useNote';
 
-type Student = {
-    id: string;
-    nom: string;
-    note: number | null;
-    absent: boolean;
-};
-
-const initialStudents: Student[] = [
-    {
-        id: '1',
-        nom: 'Jean Kouassi',
-        note: 14,
-        absent: false,
-    },
-    {
-        id: '2',
-        nom: 'Marie Yao',
-        note: 16,
-        absent: true,
-    },
-    {
-        id: '3',
-        nom: 'Koffi Traoré',
-        note: 12,
-        absent: false,
-    },
-    {
-        id: '4',
-        nom: 'Aya Konan',
-        note: 9,
-        absent: false,
-    },
-];
-
-const classes = [
-    {
-        id: 'all',
-        label: 'Toutes',
-    },
-    {
-        id: 'ida1',
-        label: 'IDA 1',
-    },
-    {
-        id: 'fc1',
-        label: 'FC 1',
-    },
-];
 
 function getAppreciation(note: number | null, absent: boolean) {
     if (absent) return 'Absent';
@@ -90,13 +45,37 @@ function getAppreciation(note: number | null, absent: boolean) {
     return 'Excellent';
 }
 
-export default function SaisirNotes() {
-    const [students, setStudents] = useState<Student[]>(initialStudents);
+interface SaisieProps {
+    evaluation: Evaluation;
+    [key: string]: unknown;
+}
+
+export default function Saisie() {
+    const { evaluation } = usePage<SaisieProps>().props;
+    // console.log(evaluation);
+
+    let initialEtudiant: EtudiantNote[] = [];
+
+    evaluation.enseignement.niveaux.map((niveau) => {
+        niveau.inscriptions?.forEach((inscription) => {
+            initialEtudiant.push({
+                id: inscription.id,
+                nom:
+                    inscription.etudiant.nom +
+                    ' ' +
+                    inscription.etudiant.prenom,
+                note: 0,
+                absent: false,
+            });
+        });
+    });
+
+    const [etudiants, setEtudiants] = useState<EtudiantNote[]>(initialEtudiant);
 
     const [selectedClass, setSelectedClass] = useState('all');
 
-    const updateNote = (studentId: string, value: string) => {
-        setStudents((current) =>
+    const updateNote = (studentId: number, value: string) => {
+        setEtudiants((current) =>
             current.map((student) => {
                 if (student.id !== studentId) {
                     return student;
@@ -123,9 +102,9 @@ export default function SaisirNotes() {
         );
     };
 
-    const updateAbsence = (studentId: string, absent: boolean) => {
-        setStudents((current) =>
-            current.map((student) =>
+    const updateAbsence = (studentId: number, absent: boolean) => {
+        setEtudiants((current) =>
+            current.map((student: any) =>
                 student.id === studentId
                     ? {
                           ...student,
@@ -138,7 +117,7 @@ export default function SaisirNotes() {
     };
 
     const statistics = useMemo(() => {
-        const presentStudents = students.filter(
+        const presentStudents = etudiants.filter(
             (student) => !student.absent && student.note !== null,
         );
 
@@ -152,21 +131,24 @@ export default function SaisirNotes() {
 
         return {
             moyenne: moyenne.toFixed(2),
-            total: students.length,
-            absents: students.filter((student) => student.absent).length,
+            total: etudiants.length,
+            absents: etudiants.filter((student) => student.absent).length,
         };
-    }, [students]);
+    }, [etudiants]);
 
-    const handleSave = () => {
-        const payload = students.map((student) => ({
-            student_id: student.id,
-            note: student.absent ? null : student.note,
-            absent: student.absent,
+    const {updateNotes, loading} = useNote();
+
+    const handleSave = async () => {
+        const payload = etudiants.map((etudiant) => ({
+            inscription_id: etudiant.id,
+            valeur: etudiant.absent ? null : etudiant.note,
+            est_absent: etudiant.absent,
         }));
 
         console.log(payload);
 
-        // mutation.mutate(payload)
+        await updateNotes({evaluation_id: evaluation.id, notes: payload})
+
     };
 
     return (
@@ -226,14 +208,19 @@ export default function SaisirNotes() {
                             </SelectTrigger>
 
                             <SelectContent>
-                                {classes.map((classe) => (
-                                    <SelectItem
-                                        key={classe.id}
-                                        value={classe.id}
-                                    >
-                                        {classe.label}
-                                    </SelectItem>
-                                ))}
+                                <SelectItem value="all">
+                                    Toutes les classe
+                                </SelectItem>
+                                {evaluation.enseignement.niveaux.map(
+                                    (classe) => (
+                                        <SelectItem
+                                            key={classe.id}
+                                            value={classe.id.toString()}
+                                        >
+                                            {classe.nom}
+                                        </SelectItem>
+                                    ),
+                                )}
                             </SelectContent>
                         </Select>
                     </CardContent>
@@ -300,7 +287,7 @@ export default function SaisirNotes() {
                                 </TableHeader>
 
                                 <TableBody>
-                                    {students.map((student, index) => {
+                                    {etudiants.map((student, index) => {
                                         const appreciation = getAppreciation(
                                             student.note,
                                             student.absent,

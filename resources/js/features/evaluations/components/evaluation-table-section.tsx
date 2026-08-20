@@ -19,7 +19,7 @@ import {
 import { EvaluationData } from '@/pages/evaluation/Index';
 import { formatDate } from '@/utils/date';
 import { Link } from '@inertiajs/react';
-import { ChevronDown, ClipboardPen, Edit, Trash2 } from 'lucide-react';
+import { ChevronDown, ClipboardList, ClipboardPen, Edit, Trash2 } from 'lucide-react';
 import useEvaluation from '../hooks/useEvaluation';
 
 interface EvaluationTableSectionProps {
@@ -112,6 +112,16 @@ const EvaluationTableSection = ({
                                             align="end"
                                             className="w-48"
                                         >
+                                            <DropdownMenuItem asChild>
+                                                <Link
+                                                    href={`/notes/${evaluation.id}/create-note`}
+                                                    className="flex cursor-pointer items-center gap-2"
+                                                >
+                                                    <ClipboardList className="h-4 w-4" />{' '}
+                                                    Saisir notes
+                                                </Link>
+                                            </DropdownMenuItem>
+
                                             <DropdownMenuItem asChild>
                                                 <Link
                                                     href={`/evaluations/${evaluation.id}/edit`}

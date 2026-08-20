@@ -49,12 +49,7 @@ class EvaluationController extends Controller
             "type_evaluations" => TypeEvaluationEnum::cases()
         ]);
     }
-
-    public function createSaisirNotes()
-    {
-        return Inertia::render('evaluation/SaisirNotes');
-    }
-
+    
     public function store(CreateEvaluationRequest $createEvaluationRequest)
     {
         try {

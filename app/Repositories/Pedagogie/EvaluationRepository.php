@@ -3,9 +3,13 @@
 namespace App\Repositories\Pedagogie;
 
 use App\Models\Evaluation;
+use App\Repositories\AnneeAcademiqueRepository;
 
 class EvaluationRepository
 {
+    public function __construct(
+        protected AnneeAcademiqueRepository $anneeAcademiqueRepository
+    ) {}
     public function all()
     {
         return Evaluation::latest()->get();
@@ -32,7 +36,19 @@ class EvaluationRepository
 
     public function find(string $id)
     {
-        return Evaluation::find($id);
+        $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        return Evaluation::where('id', $id)
+            ->with('notes')
+            ->with(['enseignement' => function ($q) use ($anneeActive) {
+                $q->with(["niveaux" => function ($q) use ($anneeActive) {
+                    $q->with(["inscriptions" => function ($q) use ($anneeActive) {
+                        $q->where('annee_universitaire_id', $anneeActive->id);
+                    }]);
+                }]);
+            }])
+            ->first()
+        ;
     }
 
     public function create(array $data)
