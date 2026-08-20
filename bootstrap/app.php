@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             "administrateur" => AdministrateurMiddleware::class,
-            "pedagodique" => InspecteurPedagogiqueMiddleware::class,
+            "inspecteur_pedagogique" => InspecteurPedagogiqueMiddleware::class,
             "service_scolarite" => ServiceScolariteMiddleware::class,
             "enseignant" => EnseignantMiddleware::class
         ]);

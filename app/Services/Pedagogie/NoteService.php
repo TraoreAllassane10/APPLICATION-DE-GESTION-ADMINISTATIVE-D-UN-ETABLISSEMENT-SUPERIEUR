@@ -26,7 +26,7 @@ class NoteService
                     "inscription_id" => $note['inscription_id'],
                 ],
                 [
-                    "valeur" => $note['est_absent'] ? null : $note['valeur'],
+                    "valeur" => $note['est_absent'] ? null : $note['valeur'] * $evaluation->coefficient,
                     "est_absent" => $note['est_absent']
                 ]
             );

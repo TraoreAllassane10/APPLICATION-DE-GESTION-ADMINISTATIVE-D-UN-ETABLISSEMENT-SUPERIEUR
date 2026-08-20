@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignId('inscription_id')->constrained('inscriptions')->onDelete("cascade");
             $table->foreignId("evaluation_id")->constrained('evaluations')->onDelete("cascade");
-            $table->decimal("valeur")->nullable();
+            $table->decimal('valeur', 5, 2)->nullable();
             $table->boolean('est_absent')->default(0);
             $table->string('appreciation')->nullable();
 

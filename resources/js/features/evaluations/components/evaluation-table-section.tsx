@@ -19,7 +19,14 @@ import {
 import { EvaluationData } from '@/pages/evaluation/Index';
 import { formatDate } from '@/utils/date';
 import { Link } from '@inertiajs/react';
-import { ChevronDown, ClipboardList, ClipboardPen, Edit, Trash2 } from 'lucide-react';
+import {
+    BookOpen,
+    ChevronDown,
+    ClipboardList,
+    ClipboardPen,
+    Edit,
+    Trash2,
+} from 'lucide-react';
 import useEvaluation from '../hooks/useEvaluation';
 
 interface EvaluationTableSectionProps {
@@ -44,7 +51,6 @@ const EvaluationTableSection = ({
                         <TableHead>Type</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead>Coefficient</TableHead>
-                        <TableHead>Statut Saisie</TableHead>
                         <TableHead className="w-[80px]" />
                     </TableRow>
                 </TableHeader>
@@ -64,15 +70,18 @@ const EvaluationTableSection = ({
                     ) : (
                         evaluations.data.map((evaluation) => (
                             <TableRow key={evaluation.id} className="group">
-                                <TableCell className="text-sm leading-none font-medium">
-                                    {evaluation.enseignement.cours.nom} -{' '}
-                                    {evaluation.enseignement.niveaux.map(
-                                        (niveau) => (
-                                            <span className="mr-2">
-                                                {niveau.nom}
-                                            </span>
-                                        ),
-                                    )}
+                                <TableCell className="flex items-center gap-2 text-sm leading-none font-medium">
+                                    <BookOpen className="h-4 w-4 text-muted-foreground" />
+                                    <p>
+                                        {evaluation.enseignement.cours.nom} -{' '}
+                                        {evaluation.enseignement.niveaux.map(
+                                            (niveau) => (
+                                                <span className="mr-2">
+                                                    {niveau.nom}
+                                                </span>
+                                            ),
+                                        )}
+                                    </p>
                                 </TableCell>
 
                                 <TableCell className="text-sm leading-none">
@@ -89,10 +98,6 @@ const EvaluationTableSection = ({
 
                                 <TableCell className="text-sm leading-none">
                                     {evaluation.coefficient}
-                                </TableCell>
-
-                                <TableCell className="text-md text-muted-foreground">
-                                    {/* {evaluation.titre} */}
                                 </TableCell>
 
                                 <TableCell>

@@ -18,7 +18,7 @@ class InspecteurPedagogiqueMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !$user->hasRole(RoleUser::INSPECTEUR_PEDAGOGIQUE->value))
+        if (!$user || (!$user->hasRole(RoleUser::INSPECTEUR_PEDAGOGIQUE->value) && !$user->hasRole(RoleUser::ADMINISTRATEUR->value)))
         {
             abort(403);
         }

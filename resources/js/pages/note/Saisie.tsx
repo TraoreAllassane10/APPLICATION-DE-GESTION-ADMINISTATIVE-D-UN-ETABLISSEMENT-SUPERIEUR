@@ -1,4 +1,4 @@
-import { Check, Save, Users } from 'lucide-react';
+import { Save, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -24,8 +24,8 @@ import { Evaluation } from '@/features/evaluations/types/evaluation.types';
 import useNote from '@/features/note/hooks/useNote';
 import { EtudiantNote } from '@/features/note/types/note.types';
 import AppLayout from '@/layouts/app-layout';
-import { Head, usePage } from '@inertiajs/react';
 import { BreadcrumbItem } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,7 +37,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '#',
     },
 ];
-
 
 function getAppreciation(note: number | null, absent: boolean) {
     if (absent) return 'Absent';
@@ -64,14 +63,15 @@ interface SaisieProps {
 
 export default function Saisie() {
     const { evaluation } = usePage<SaisieProps>().props;
-    console.log(evaluation);
 
     let initialEtudiant: EtudiantNote[] = [];
 
     evaluation.enseignement.niveaux.map((niveau) => {
         niveau.inscriptions?.forEach((inscription) => {
             // Recuperer la note de l'etudiant pour cette evaluation s'elle existe
-            const noteEtudiant = evaluation.notes.find((note) => note.inscription_id === inscription.id);
+            const noteEtudiant = evaluation.notes.find(
+                (note) => note.inscription_id === inscription.id,
+            );
 
             initialEtudiant.push({
                 id: inscription.id,
@@ -79,7 +79,10 @@ export default function Saisie() {
                     inscription.etudiant.nom +
                     ' ' +
                     inscription.etudiant.prenom,
-                note: noteEtudiant ? noteEtudiant.valeur : 0,
+                note:
+                    noteEtudiant && noteEtudiant.valeur
+                        ? noteEtudiant.valeur / evaluation.coefficient
+                        : null,
                 absent: noteEtudiant ? noteEtudiant.est_absent : false,
             });
         });
@@ -88,6 +91,26 @@ export default function Saisie() {
     const [etudiants, setEtudiants] = useState<EtudiantNote[]>(initialEtudiant);
 
     const [selectedClass, setSelectedClass] = useState('all');
+
+    const handleChange = (event: any, student: any) => {
+        const inputValue = event.target.value;
+
+        if (inputValue === '') {
+            updateNote(student.id, '');
+            return;
+        }
+
+        const numericValue = parseFloat(inputValue);
+
+        if (isNaN(numericValue)) return;
+
+        const clampedValue = Math.min(
+            evaluation.note_maximale,
+            Math.max(0, numericValue),
+        );
+
+        updateNote(student.id, String(clampedValue));
+    };
 
     const updateNote = (studentId: number, value: string) => {
         setEtudiants((current) =>
@@ -246,13 +269,13 @@ export default function Saisie() {
                 <Card>
                     <CardHeader className="border-b">
                         <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
-                            <div>
+                            <div className='mb-4'>
                                 <h2 className="font-semibold">
                                     Liste des étudiants
                                 </h2>
 
                                 <p className="text-sm text-muted-foreground">
-                                    Saisissez les notes sur 20 et indiquez les
+                                    Saisissez les notes sur {evaluation.note_maximale} et indiquez les
                                     absences.
                                 </p>
                             </div>
@@ -329,8 +352,10 @@ export default function Saisie() {
                                                         <Input
                                                             type="number"
                                                             min={0}
-                                                            max={20}
-                                                            step={0.5}
+                                                            max={
+                                                                evaluation.note_maximale
+                                                            }
+                                                            step={0.25}
                                                             value={
                                                                 student.note ??
                                                                 ''
@@ -338,19 +363,16 @@ export default function Saisie() {
                                                             disabled={
                                                                 student.absent
                                                             }
-                                                            onChange={(event) =>
-                                                                updateNote(
-                                                                    student.id,
-                                                                    event.target
-                                                                        .value,
-                                                                )
-                                                            }
+                                                            onChange={(event) => {handleChange(event, student)}}
                                                             className="pr-8 text-center"
                                                             placeholder="—"
                                                         />
 
                                                         <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-xs text-muted-foreground">
-                                                            /20
+                                                            /
+                                                            {
+                                                                evaluation.note_maximale
+                                                            }
                                                         </span>
                                                     </div>
                                                 </TableCell>
@@ -413,10 +435,15 @@ export default function Saisie() {
                         </span>
                     </div>
 
-                    <Button onClick={handleSave} disabled={loading} className="w-full md:w-auto">
+                    <Button
+                        onClick={handleSave}
+                        disabled={loading}
+                        className="w-full md:w-auto"
+                    >
                         <Save className="mr-2 h-4 w-4" />
-                        {loading ? "Enregistrement..." : "Enregistrer les notes"}
-                        
+                        {loading
+                            ? 'Enregistrement...'
+                            : 'Enregistrer les notes'}
                     </Button>
                 </div>
             </div>
