@@ -21,10 +21,22 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Evaluation } from '@/features/evaluations/types/evaluation.types';
+import useNote from '@/features/note/hooks/useNote';
+import { EtudiantNote } from '@/features/note/types/note.types';
 import AppLayout from '@/layouts/app-layout';
 import { Head, usePage } from '@inertiajs/react';
-import { EtudiantNote } from '@/features/note/types/note.types';
-import useNote from '@/features/note/hooks/useNote';
+import { BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Evaluations',
+        href: '/evaluations',
+    },
+    {
+        title: 'Saisie des notes',
+        href: '#',
+    },
+];
 
 
 function getAppreciation(note: number | null, absent: boolean) {
@@ -52,20 +64,23 @@ interface SaisieProps {
 
 export default function Saisie() {
     const { evaluation } = usePage<SaisieProps>().props;
-    // console.log(evaluation);
+    console.log(evaluation);
 
     let initialEtudiant: EtudiantNote[] = [];
 
     evaluation.enseignement.niveaux.map((niveau) => {
         niveau.inscriptions?.forEach((inscription) => {
+            // Recuperer la note de l'etudiant pour cette evaluation s'elle existe
+            const noteEtudiant = evaluation.notes.find((note) => note.inscription_id === inscription.id);
+
             initialEtudiant.push({
                 id: inscription.id,
                 nom:
                     inscription.etudiant.nom +
                     ' ' +
                     inscription.etudiant.prenom,
-                note: 0,
-                absent: false,
+                note: noteEtudiant ? noteEtudiant.valeur : 0,
+                absent: noteEtudiant ? noteEtudiant.est_absent : false,
             });
         });
     });
@@ -136,7 +151,7 @@ export default function Saisie() {
         };
     }, [etudiants]);
 
-    const {updateNotes, loading} = useNote();
+    const { updateNotes, loading } = useNote();
 
     const handleSave = async () => {
         const payload = etudiants.map((etudiant) => ({
@@ -145,14 +160,11 @@ export default function Saisie() {
             est_absent: etudiant.absent,
         }));
 
-        console.log(payload);
-
-        await updateNotes({evaluation_id: evaluation.id, notes: payload})
-
+        await updateNotes({ evaluation_id: evaluation.id, notes: payload });
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Saisir de notes" />
 
             <div className="mx-auto w-full max-w-7xl space-y-6 p-6">
@@ -178,9 +190,13 @@ export default function Saisie() {
                         </div>
                     </div>
 
-                    <Button onClick={handleSave} className="w-full md:w-auto">
+                    <Button
+                        onClick={handleSave}
+                        disabled={loading}
+                        className="w-full md:w-auto"
+                    >
                         <Save className="mr-2 h-4 w-4" />
-                        Enregistrer
+                        {loading ? 'Enregistrement...' : 'Enregistrer'}
                     </Button>
                 </div>
 
@@ -397,9 +413,10 @@ export default function Saisie() {
                         </span>
                     </div>
 
-                    <Button onClick={handleSave} className="w-full md:w-auto">
-                        <Check className="mr-2 h-4 w-4" />
-                        Enregistrer les notes
+                    <Button onClick={handleSave} disabled={loading} className="w-full md:w-auto">
+                        <Save className="mr-2 h-4 w-4" />
+                        {loading ? "Enregistrement..." : "Enregistrer les notes"}
+                        
                     </Button>
                 </div>
             </div>

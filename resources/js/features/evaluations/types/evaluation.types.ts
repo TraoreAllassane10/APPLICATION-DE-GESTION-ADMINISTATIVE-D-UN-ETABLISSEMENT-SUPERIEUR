@@ -1,4 +1,5 @@
 import { Enseignement } from '@/features/enseignement/types/enseignement.types';
+import { Note } from '@/features/note/types/note.types';
 import { Periode } from '@/types';
 
 export interface EvaluationStoreData {
@@ -31,4 +32,5 @@ export interface Evaluation {
 
     enseignement: Enseignement;
     periode_academique: Periode;
+    notes: Note[];
 }
