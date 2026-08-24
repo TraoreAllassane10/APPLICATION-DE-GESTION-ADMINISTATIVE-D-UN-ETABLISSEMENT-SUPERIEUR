@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\Entreprise\PersonnelController;
 use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\Pedagogie\BulletinController;
 use App\Http\Controllers\Pedagogie\CoursController;
 use App\Http\Controllers\Pedagogie\EvaluationController;
 use App\Http\Controllers\Pedagogie\FiliereController;
@@ -200,6 +201,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(NoteController::class)->group(function () {
             Route::get("notes/{evaluation}/create-note", "create")->name("notes.create");
             Route::put('notes/update', "update")->name('notes.update');
+        });
+
+        // Routes Bulletin
+          Route::controller(BulletinController::class)->group(function () {
+            Route::get("bulletins", "index")->name("bulletins");
         });
     });
 });

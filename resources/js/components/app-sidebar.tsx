@@ -9,7 +9,15 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, evaluations, filiere, historique, niveau, professeur } from '@/routes';
+import {
+    bulletins,
+    dashboard,
+    evaluations,
+    filiere,
+    historique,
+    niveau,
+    professeur,
+} from '@/routes';
 import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
@@ -23,6 +31,7 @@ import {
     Presentation,
     Receipt,
     Settings2,
+    Sheet,
     User,
     UserCheck,
     Users,
@@ -74,10 +83,16 @@ export function AppSidebar() {
             icon: Presentation,
         },
 
-         {
+        {
             title: 'Evaluations',
             href: evaluations(),
             icon: ClipboardPen,
+        },
+
+        {
+            title: 'Bulletins',
+            href: bulletins(),
+            icon: Sheet,
         },
 
         // Onglets disponible que pour les administrateur
