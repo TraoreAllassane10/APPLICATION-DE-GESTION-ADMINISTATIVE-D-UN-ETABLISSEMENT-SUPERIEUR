@@ -74,13 +74,7 @@ const EvaluationTableSection = ({
                                     <BookOpen className="h-4 w-4 text-muted-foreground" />
                                     <p>
                                         {evaluation.enseignement.cours.nom} -{' '}
-                                        {evaluation.enseignement.niveaux.map(
-                                            (niveau) => (
-                                                <span className="mr-2">
-                                                    {niveau.nom}
-                                                </span>
-                                            ),
-                                        )}
+                                        {evaluation.enseignement.niveaux.map((niveau) => niveau.nom,).join(', ')}
                                     </p>
                                 </TableCell>
 

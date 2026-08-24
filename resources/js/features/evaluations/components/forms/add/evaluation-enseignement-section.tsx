@@ -80,7 +80,7 @@ const EvaluationEnseignementSection = ({
                                                     <BookOpen className="h-4 w-4 text-muted-foreground" />
 
                                                     <span>
-                                                        {item.cours.nom} —{' '}
+                                                        {item.cours.nom} ({item.niveaux.map((niveau) => niveau.nom).join(', ')})  —{' '}
                                                         {item.professeur.nom_prenom}
                                                     </span>
                                                 </div>
