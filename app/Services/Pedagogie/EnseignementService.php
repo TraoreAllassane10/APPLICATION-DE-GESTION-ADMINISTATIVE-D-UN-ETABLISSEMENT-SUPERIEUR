@@ -26,14 +26,6 @@ class EnseignementService
     {
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
-        $coursExiste = Enseignement::where("professeur_id", $professeurId)
-                ->where('cours_id', $coursId)
-                ->exists();
-        
-        if ($coursExiste){
-            throw new Exception("Ce cours lui est déjà attribué !");
-        }
-
         return Enseignement::create([
             "professeur_id" => $professeurId,
             "cours_id" => $coursId,

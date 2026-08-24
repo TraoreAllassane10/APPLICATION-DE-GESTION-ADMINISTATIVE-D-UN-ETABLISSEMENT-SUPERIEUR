@@ -51,7 +51,7 @@ export default function useEnseignement() {
                 data,
             );
 
-            response.data.data;
+           return response.data.data;
         } catch (error) {
             toast.error('Erreur survenue lors de la mise à jour');
             console.log(error);
