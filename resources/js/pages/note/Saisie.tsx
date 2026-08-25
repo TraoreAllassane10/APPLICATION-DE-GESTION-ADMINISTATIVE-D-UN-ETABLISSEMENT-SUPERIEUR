@@ -26,6 +26,7 @@ import { EtudiantNote } from '@/features/note/types/note.types';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { formatDate } from '@/utils/date';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -204,11 +205,11 @@ export default function Saisie() {
                             </h1>
 
                             <p className="mt-1 text-sm text-muted-foreground">
-                                Examen final — Mathématiques financières
+                                {evaluation.titre} — {evaluation.enseignement.cours.nom}
                             </p>
 
                             <p className="text-sm text-muted-foreground">
-                                15 janvier 2026
+                                {formatDate(new Date(evaluation.date))}
                             </p>
                         </div>
                     </div>

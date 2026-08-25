@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bullettin_lignes', function (Blueprint $table) {
+        Schema::create('bulletin_lignes', function (Blueprint $table) {
             $table->id();
-            $table->integer('moyenne_generale_matiere');
-            $table->integer('coefficient');
+            $table->decimal('moyenne_generale_matiere', 5, 2);
+            $table->integer('coefficient')->nullable();
             $table->string('appreciation_professeur')->nullable();
 
             $table->foreignId('enseignement_id')->constrained('enseignements')->cascadeOnDelete();

@@ -2,6 +2,7 @@
 
 namespace App\Services\Pedagogie;
 
+use App\Events\EvaluationNoteUpdated;
 use App\Repositories\Pedagogie\NoteRepository;
 use Exception;
 
@@ -31,6 +32,8 @@ class NoteService
                 ]
             );
         }
+
+        EvaluationNoteUpdated::dispatch($evaluation);
 
         return $evaluation;
     }

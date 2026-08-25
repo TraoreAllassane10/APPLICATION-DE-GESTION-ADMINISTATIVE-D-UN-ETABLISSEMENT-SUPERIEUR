@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Enums\RoleUser;
+use App\Events\EvaluationNoteUpdated;
+use App\Listeners\UpdateMoyenneEnseignement;
 use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
 use App\Models\Filiere;
@@ -17,6 +19,7 @@ use App\Observers\InscriptionObserver;
 use App\Observers\NiveauObserver;
 use App\Observers\PaiementObserver;
 use App\Observers\ScolariteObserver;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function($user, $ability) {
+        Gate::before(function ($user, $ability) {
             return $user->hasRole(RoleUser::ADMINISTRATEUR->value) ? true : null;
         });
 
@@ -46,5 +49,10 @@ class AppServiceProvider extends ServiceProvider
         Scolarite::observe(ScolariteObserver::class);
         Filiere::observe(FiliereObserver::class);
         Niveau::observe(NiveauObserver::class);
+
+        Event::listen(
+            EvaluationNoteUpdated::class,
+            UpdateMoyenneEnseignement::class
+        );
     }
 }

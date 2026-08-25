@@ -37,4 +37,10 @@ class Enseignement extends Model
     {
         return $this->hasMany(Evaluation::class);
     }
+
+    public function bulletins()
+    {
+        return $this->belongsToMany(Bulletin::class, 'bulletin_lignes')
+            ->withPivot(["moyenne_generale_matiere", "coefficient", "appreciation_professeur"]);
+    }
 }
