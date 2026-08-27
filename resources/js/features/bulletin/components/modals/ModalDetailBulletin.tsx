@@ -88,9 +88,9 @@ function ModalDetailBulletin({
                             <DialogTitle className="text-base font-semibold">
                                 Détail du Bulletin —{' '}
                                 <span className="uppercase">
-                                    {bulletin.inscription.etudiant.nom}
+                                    {bulletin.nom}
                                 </span>{' '}
-                                {bulletin.inscription.etudiant.prenom}
+                                {bulletin.prenom}
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
                                     (1ère Année Finance)
                                 </span>

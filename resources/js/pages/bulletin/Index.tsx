@@ -3,13 +3,13 @@ import HeaderSection from '@/features/bulletin/components/HeaderSection';
 import ModalDetailBulletin from '@/features/bulletin/components/modals/ModalDetailBulletin';
 import StatistiqueSection from '@/features/bulletin/components/StatistiqueSection';
 import TableBulletin from '@/features/bulletin/components/TableBulletin';
+import useBulletin from '@/features/bulletin/hooks/useBulletin';
 import { Bulletin } from '@/features/bulletin/types/bulletin.types';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, DataNiveau, Periode } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { BookOpen, Loader } from 'lucide-react';
 import { useState } from 'react';
-
-
 
 // ─── Breadcrumbs ──────────────────────────────────────────────────────────────
 const breadcrumbs: BreadcrumbItem[] = [
@@ -17,21 +17,22 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface BulletinPageProps {
-    bulletins: Bulletin[];
-    [key: string] : unknown;
+    niveaux: DataNiveau[];
+    periodes: Periode[];
+    [key: string]: unknown;
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const Index = () => {
-    const {bulletins} = usePage<BulletinPageProps>().props;
+    const {niveaux, periodes } = usePage<BulletinPageProps>().props;
 
-    const [selectedPeriode, setSelectedPeriode] = useState<string>('1');
-    const [selectedClasse, setSelectedClasse] = useState<string>('1');
-    const [isRecalculating, setIsRecalculating] = useState(false);
+    const [selectedPeriode, setSelectedPeriode] = useState<string>('');
+    const [selectedClasse, setSelectedClasse] = useState<string>('');
 
     // Modal détail
-    const [selectedBulletin, setSelectedBulletin] =
-        useState<Bulletin | null>(null);
+    const [selectedBulletin, setSelectedBulletin] = useState<Bulletin | null>(
+        null,
+    );
     const [appreciationEditable, setAppreciationEditable] =
         useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,24 +43,27 @@ const Index = () => {
     //     bulletins.reduce((acc, b) => acc + b.moyenneGenerale, 0) /
     //     bulletins.length;
 
-    const handleRecalculer = () => {
-        setIsRecalculating(true);
-        setTimeout(() => setIsRecalculating(false), 1500);
+    const { getBulletins, bulletins, loading } = useBulletin();
+
+    const handleRecalculer = async () => {
+        await getBulletins(
+            Number(selectedClasse),
+            Number(selectedPeriode),
+        );
     };
 
     const handleOpenDetail = (bulletin: Bulletin) => {
         setSelectedBulletin(bulletin);
-        
+
         // setAppreciationEditable(detail?.appreciationGenerale ?? '');
         setIsModalOpen(true);
     };
 
-    const handleTelechargerPDF = (
-        bulletin: Bulletin,
-        e: React.MouseEvent,
-    ) => {
+    const handleTelechargerPDF = (bulletin: Bulletin, e: React.MouseEvent) => {
         e.stopPropagation();
-        alert(`Téléchargement du PDF de ${bulletin.inscription.etudiant.prenom} ${bulletin.inscription.etudiant.nom}`);
+        alert(
+            `Téléchargement du PDF de ${bulletin.prenom} ${bulletin.nom}`,
+        );
     };
 
     const handleTelechargerTous = () => {
@@ -74,12 +78,12 @@ const Index = () => {
     const handleImprimerPDF = () => {
         if (selectedBulletin) {
             alert(
-                `Impression PDF du bulletin de ${selectedBulletin.inscription.etudiant.prenom} ${selectedBulletin.inscription.etudiant.nom}`,
+                `Impression PDF du bulletin de ${selectedBulletin.prenom} ${selectedBulletin.nom}`,
             );
         }
     };
 
-    const detailActif = selectedBulletin ? selectedBulletin.id : null
+    const detailActif = selectedBulletin ? selectedBulletin.id : null;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -89,22 +93,41 @@ const Index = () => {
                 <HeaderSection />
 
                 <FilterSection
+                    niveaux={niveaux}
+                    periodes={periodes}
                     selectedPeriode={selectedPeriode}
                     onSelectedPeriode={setSelectedPeriode}
                     selectedClasse={selectedClasse}
                     onSelectedClasse={setSelectedClasse}
                     onRecalculer={handleRecalculer}
-                    isRecalculating={isRecalculating}
+                    isRecalculating={loading}
                 />
 
                 <StatistiqueSection />
 
-                <TableBulletin
-                    bulletins={bulletins}
-                    onTelechargerTous={handleTelechargerTous}
-                    onOpenDetail={handleOpenDetail}
-                    onTelechargerPDF={handleTelechargerPDF}
-                />
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center text-muted-foreground">
+                        <Loader className="h-10 w-10 animate-spin" />
+                    </div>
+                ) : bulletins?.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center text-muted-foreground">
+                        <BookOpen className="mb-3 h-12 w-12 opacity-20" />
+                        <p className="text-sm font-medium">
+                            Sélectionnez une classe et une période
+                        </p>
+                        <p className="mt-1 text-xs">
+                            Les etudiants et leur moyenne générale s'afficheront
+                            ici.
+                        </p>
+                    </div>
+                ) : (
+                    <TableBulletin
+                        bulletins={bulletins}
+                        onTelechargerTous={handleTelechargerTous}
+                        onOpenDetail={handleOpenDetail}
+                        onTelechargerPDF={handleTelechargerPDF}
+                    />
+                )}
             </div>
 
             {/* ── Modal Détail Bulletin ── */}

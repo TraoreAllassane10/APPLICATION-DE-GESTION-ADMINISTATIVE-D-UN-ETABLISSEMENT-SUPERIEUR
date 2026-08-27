@@ -16,7 +16,9 @@ export type LigneBulletin = {
 
 export interface Bulletin {
     id: number;
-    inscription: Inscription;
+    etudiant_ip: string;
+    nom: string;
+    prenom: string;
     periode_academique: Periode;
     enseignements: LigneBulletin[];
     moyenne_generale: number | null;

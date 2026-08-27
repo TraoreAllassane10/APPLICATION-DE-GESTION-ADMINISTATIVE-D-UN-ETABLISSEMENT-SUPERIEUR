@@ -7,23 +7,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { DataNiveau, Periode } from '@/types';
 import { RefreshCw } from 'lucide-react';
 
-const PERIODES_MOCK = [
-    { id: '1', libelle: 'Semestre 1' },
-    { id: '2', libelle: 'Semestre 2' },
-    { id: '3', libelle: 'Année complète' },
-];
-
-const CLASSES_MOCK = [
-    { id: '1', libelle: '1ère Année Finance' },
-    { id: '2', libelle: '1ère Année Informatique' },
-    { id: '3', libelle: '2ème Année Finance' },
-    { id: '4', libelle: '2ème Année Marketing' },
-    { id: '5', libelle: '3ème Année Comptabilité' },
-];
 
 interface FilterSectionProps {
+    niveaux: DataNiveau[];
+    periodes: Periode[];
     selectedPeriode: string;
     onSelectedPeriode: (value: string) => void;
     selectedClasse: string;
@@ -33,6 +23,8 @@ interface FilterSectionProps {
 }
 
 function FilterSection({
+    niveaux,
+    periodes,
     selectedPeriode,
     onSelectedPeriode,
     selectedClasse,
@@ -44,6 +36,28 @@ function FilterSection({
         <Card>
             <CardContent className="pt-4 pb-4">
                 <div className="flex flex-wrap items-center gap-3">
+                       {/* Classe */}
+                    <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium text-muted-foreground">
+                            Classe
+                        </label>
+                        <Select
+                            value={selectedClasse}
+                            onValueChange={onSelectedClasse}
+                        >
+                            <SelectTrigger className="w-56" id="select-classe">
+                                <SelectValue placeholder="Sélectionner une classe" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {niveaux.map((c) => (
+                                    <SelectItem key={c.id} value={c.id.toString()}>
+                                        {c.nom}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
                     {/* Période */}
                     <div className="flex flex-col gap-1">
                         <label className="text-xs font-medium text-muted-foreground">
@@ -57,31 +71,9 @@ function FilterSection({
                                 <SelectValue placeholder="Sélectionner une période" />
                             </SelectTrigger>
                             <SelectContent>
-                                {PERIODES_MOCK.map((p) => (
-                                    <SelectItem key={p.id} value={p.id}>
+                                {periodes.map((p) => (
+                                    <SelectItem key={p.id} value={p.id.toString()}>
                                         {p.libelle}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Classe */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-xs font-medium text-muted-foreground">
-                            Classe
-                        </label>
-                        <Select
-                            value={selectedClasse}
-                            onValueChange={onSelectedClasse}
-                        >
-                            <SelectTrigger className="w-56" id="select-classe">
-                                <SelectValue placeholder="Sélectionner une classe" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {CLASSES_MOCK.map((c) => (
-                                    <SelectItem key={c.id} value={c.id}>
-                                        {c.libelle}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -96,13 +88,13 @@ function FilterSection({
                         <Button
                             id="btn-recalculer"
                             onClick={onRecalculer}
-                            disabled={isRecalculating}
+                            disabled={isRecalculating || !selectedClasse || !selectedPeriode}
                             className="gap-2"
                         >
                             <RefreshCw
                                 className={`size-4 ${isRecalculating ? 'animate-spin' : ''}`}
                             />
-                            {isRecalculating ? 'Recalcul...' : 'Recalculer'}
+                            {isRecalculating ? 'Génération...' : 'Générer'}
                         </Button>
                     </div>
                 </div>

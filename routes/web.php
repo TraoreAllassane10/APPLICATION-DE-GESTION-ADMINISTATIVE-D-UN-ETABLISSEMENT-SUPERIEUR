@@ -205,14 +205,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // Routes Moyenne
-        Route::controller(MoyenneController::class)->group(function() {
+        Route::controller(MoyenneController::class)->group(function () {
             Route::get('moyennes', 'index')->name('moyennes');
             Route::get('moyennes/search', "getMoyennes")->name('moyennes.getMoyennes');
         });
 
         // Routes Bulletin
-          Route::controller(BulletinController::class)->group(function () {
+        Route::controller(BulletinController::class)->group(function () {
             Route::get("bulletins", "index")->name("bulletins");
+            Route::get('bulletins/search', "getBulletins")->name('bulletins.getBulletins');
         });
     });
 });

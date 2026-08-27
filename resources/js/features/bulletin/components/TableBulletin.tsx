@@ -20,17 +20,6 @@ const getRangIcon = (rang: number) => {
     return null;
 };
 
-type Mention = 'Très Bien' | 'Bien' | 'Assez Bien' | 'Passable' | 'Ajourné';
-
-interface BulletinEtudiant {
-    id: number;
-    rang: number;
-    matricule: string;
-    nom: string;
-    prenom: string;
-    moyenneGenerale: number;
-    mention: Mention;
-}
 
 interface TableBulletinProps {
     bulletins: Bulletin[];
@@ -101,9 +90,9 @@ const TableBulletin = ({
                     </TableHeader>
                     <TableBody>
                         {bulletins.map((bulletin) => {
-                            const mentionConfig = getMentionConfig(
-                                bulletin.mention?? "Passable",
-                            );
+                            // const mentionConfig = getMentionConfig(
+                            //     bulletin.mention?? "Passable",
+                            // );
                             return (
                                 <TableRow
                                     key={bulletin.id}
@@ -129,7 +118,7 @@ const TableBulletin = ({
                                     {/* Matricule */}
                                     <TableCell>
                                         <span className="font-mono text-sm text-muted-foreground">
-                                            {bulletin.inscription.etudiant.ip}
+                                            {bulletin.etudiant_ip}
                                         </span>
                                     </TableCell>
 
@@ -137,30 +126,28 @@ const TableBulletin = ({
                                     <TableCell>
                                         <div className="font-medium">
                                             <span className="uppercase">
-                                                {bulletin.inscription.etudiant.nom}
+                                                {bulletin.nom}
                                             </span>{' '}
                                             <span className="text-muted-foreground">
-                                                {bulletin.inscription.etudiant.prenom}
+                                                {bulletin.prenom}
                                             </span>
                                         </div>
                                     </TableCell>
 
                                     {/* Moyenne */}
-                                    {/* <TableCell className="text-center">
+                                    <TableCell className="text-center">
                                         <span
                                             className={getMoyenneColor(
-                                                etudiant.moyenneGenerale,
+                                                bulletin.moyenne_generale!,
                                             )}
                                         >
-                                            {etudiant.moyenneGenerale.toFixed(
-                                                2,
-                                            )}
+                                            {bulletin.moyenne_generale}
                                         </span>
                                         <span className="text-xs text-muted-foreground">
                                             {' '}
                                             / 20
                                         </span>
-                                    </TableCell> */}
+                                    </TableCell>
 
                                     {/* Mention */}
                                     {/* <TableCell className="text-center">
