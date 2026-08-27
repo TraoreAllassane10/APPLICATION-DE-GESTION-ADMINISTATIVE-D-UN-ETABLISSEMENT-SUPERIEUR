@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Link } from "@inertiajs/react";
-import { PlusCircle } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Link } from '@inertiajs/react';
+import { PlusCircle } from 'lucide-react';
 
 export const HeaderSection = () => {
     return (

@@ -59,7 +59,7 @@ const EvaluationFiltresSection = ({
                                 <BookOpen/>
                                 {ens.niveaux.map((niveau) => (
                                     <span>{niveau.nom}</span>
-                                ))} / {ens.cours.nom}
+                                ))} / {ens.cours.nom} - {ens.professeur.nom_prenom}
                             </SelectItem>
                         ))}
                     </SelectContent>
