@@ -64,31 +64,39 @@ class UpdateMoyenneEnseignement
 
                 // Calcule de la note total de l'etudiant
                 $totalGenerale = 0;
+                $diviseur = 0;
                 foreach ($toutesEvaluationsEnseignement as $evaluation) {
                     $noteEtudiant = $evaluation->notes()
                         ->where('inscription_id', $inscrit->id)
                         ->first();
 
                     $totalGenerale += $noteEtudiant->valeur ?? 0;
-                }
 
-                // Total des coefficient des evaluations de l'enseignement
-                $totalCoefficient = $toutesEvaluationsEnseignement->sum('coefficient');
+                    // Calculer le diviseur
+                    if ($evaluation->note_maximale === 10) {
+                        if ($evaluation->coefficient === 1) {
+                            $diviseur += 0.5;
+                        } else {
+                            $diviseur += 0.5 * $evaluation->coefficient;
+                        }
+                    } else {
+                        $diviseur += $evaluation->coefficient;
+                    }
+                }
 
                 // Calcule de la moyenne
-                $moyenne = $totalGenerale / $totalCoefficient;
+                $moyenne = $diviseur > 0 ? $totalGenerale / $diviseur : null;
 
                 // Enregistrement de la moyenne de l'etudiant pour l'enseignement
-                $ancienneMoyenneExiste = $bulletin->enseigenments()->where('enseignement_id', $enseignementId)->exists();
+                $ancienneMoyenneExiste = $bulletin->enseignements()->where('enseignement_id', $enseignementId)->exists();
 
                 if ($ancienneMoyenneExiste) {
-                    $bulletin->enseigenments()->detach($enseignementId);
+                    $bulletin->enseignements()->detach($enseignementId);
                 }
 
-                $bulletin->enseigenments()->attach($enseignementId, [
+                $bulletin->enseignements()->attach($enseignementId, [
                     "moyenne_generale_matiere" => $moyenne,
                 ]);
-
             }
         }
     }

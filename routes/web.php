@@ -14,6 +14,7 @@ use App\Http\Controllers\Pedagogie\BulletinController;
 use App\Http\Controllers\Pedagogie\CoursController;
 use App\Http\Controllers\Pedagogie\EvaluationController;
 use App\Http\Controllers\Pedagogie\FiliereController;
+use App\Http\Controllers\Pedagogie\MoyenneController;
 use App\Http\Controllers\Pedagogie\NiveauController;
 use App\Http\Controllers\Pedagogie\NoteController;
 use App\Http\Controllers\Pedagogie\PeriodeAcdemiqueController;
@@ -201,6 +202,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(NoteController::class)->group(function () {
             Route::get("notes/{evaluation}/create-note", "create")->name("notes.create");
             Route::put('notes/update', "update")->name('notes.update');
+        });
+
+        // Routes Moyenne
+        Route::controller(MoyenneController::class)->group(function() {
+            Route::get('moyennes', 'index')->name('moyennes');
+            Route::get('moyennes/search', "getMoyennes")->name('moyennes.getMoyennes');
         });
 
         // Routes Bulletin

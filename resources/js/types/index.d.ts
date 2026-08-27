@@ -1,3 +1,4 @@
+import { Enseignement } from '@/features/enseignement/types/enseignement.types';
 import { InertiaLinkProps } from '@inertiajs/react';
 import { LucideIcon } from 'lucide-react';
 
@@ -140,7 +141,8 @@ export interface DataNiveau {
     scolarite_attendue: number;
     montant_total_paye: number;
 
-    inscriptions?: Inscription[]
+    inscriptions?: Inscription[];
+    enseignements?: Enseignement[];
 }
 
 export interface Niveau {

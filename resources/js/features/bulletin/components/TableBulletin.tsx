@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
 import { formatRang, getMentionConfig, getMoyenneColor } from '../helpers';
+import { Bulletin } from '../types/bulletin.types';
 
 const getRangIcon = (rang: number) => {
     if (rang === 1) return <Trophy className="size-4 text-yellow-500" />;
@@ -32,10 +33,10 @@ interface BulletinEtudiant {
 }
 
 interface TableBulletinProps {
-    bulletins: BulletinEtudiant[];
+    bulletins: Bulletin[];
     onTelechargerTous: () => void;
-    onOpenDetail: (etudiant: BulletinEtudiant) => void;
-    onTelechargerPDF: (etudiant: BulletinEtudiant, e: React.MouseEvent) => void;
+    onOpenDetail: (bulletin: Bulletin) => void;
+    onTelechargerPDF: (etudiant: Bulletin, e: React.MouseEvent) => void;
 }
 
 const TableBulletin = ({
@@ -99,28 +100,28 @@ const TableBulletin = ({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {bulletins.map((etudiant) => {
+                        {bulletins.map((bulletin) => {
                             const mentionConfig = getMentionConfig(
-                                etudiant.mention,
+                                bulletin.mention?? "Passable",
                             );
                             return (
                                 <TableRow
-                                    key={etudiant.id}
+                                    key={bulletin.id}
                                     className="group cursor-pointer transition-colors hover:bg-muted/60"
-                                    onClick={() => onOpenDetail(etudiant)}
+                                    onClick={() => onOpenDetail(bulletin)}
                                 >
                                     {/* Rang */}
                                     <TableCell className="text-center">
                                         <div className="flex items-center justify-center gap-1">
-                                            {getRangIcon(etudiant.rang)}
+                                            {/* {getRangIcon(bulletin.rang!)} */}
                                             <span
-                                                className={`text-sm font-bold ${
-                                                    etudiant.rang <= 3
-                                                        ? 'text-amber-600 dark:text-amber-400'
-                                                        : 'text-muted-foreground'
-                                                }`}
+                                                // className={`text-sm font-bold ${
+                                                //     bulletin.rang <= 3
+                                                //         ? 'text-amber-600 dark:text-amber-400'
+                                                //         : 'text-muted-foreground'
+                                                // }`}
                                             >
-                                                {formatRang(etudiant.rang)}
+                                                {/* {formatRang(etudiant.rang)} */} 1
                                             </span>
                                         </div>
                                     </TableCell>
@@ -128,7 +129,7 @@ const TableBulletin = ({
                                     {/* Matricule */}
                                     <TableCell>
                                         <span className="font-mono text-sm text-muted-foreground">
-                                            {etudiant.matricule}
+                                            {bulletin.inscription.etudiant.ip}
                                         </span>
                                     </TableCell>
 
@@ -136,16 +137,16 @@ const TableBulletin = ({
                                     <TableCell>
                                         <div className="font-medium">
                                             <span className="uppercase">
-                                                {etudiant.nom}
+                                                {bulletin.inscription.etudiant.nom}
                                             </span>{' '}
                                             <span className="text-muted-foreground">
-                                                {etudiant.prenom}
+                                                {bulletin.inscription.etudiant.prenom}
                                             </span>
                                         </div>
                                     </TableCell>
 
                                     {/* Moyenne */}
-                                    <TableCell className="text-center">
+                                    {/* <TableCell className="text-center">
                                         <span
                                             className={getMoyenneColor(
                                                 etudiant.moyenneGenerale,
@@ -159,19 +160,19 @@ const TableBulletin = ({
                                             {' '}
                                             / 20
                                         </span>
-                                    </TableCell>
+                                    </TableCell> */}
 
                                     {/* Mention */}
-                                    <TableCell className="text-center">
+                                    {/* <TableCell className="text-center">
                                         <Badge
                                             className={mentionConfig.className}
                                         >
                                             {mentionConfig.label}
                                         </Badge>
-                                    </TableCell>
+                                    </TableCell> */}
 
                                     {/* Actions */}
-                                    <TableCell
+                                    {/* <TableCell
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <div className="flex items-center justify-center gap-2">
@@ -203,7 +204,7 @@ const TableBulletin = ({
                                                 PDF
                                             </Button>
                                         </div>
-                                    </TableCell>
+                                    </TableCell> */}
                                 </TableRow>
                             );
                         })}

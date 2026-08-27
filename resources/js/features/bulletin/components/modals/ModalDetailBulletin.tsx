@@ -21,6 +21,7 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Printer, Save, Trophy } from 'lucide-react';
 import { formatRang, getMentionConfig, getMoyenneColor } from '../../helpers';
+import { Bulletin } from '../../types/bulletin.types';
 
 type Mention = 'Très Bien' | 'Bien' | 'Assez Bien' | 'Passable' | 'Ajourné';
 
@@ -52,8 +53,8 @@ interface DetailBulletin {
 interface ModalDetailBulletinProps {
     isModalOpen: boolean;
     onOpenChange: (open: boolean) => void;
-    selectedEtudiant: BulletinEtudiant | null;
-    detailActif: DetailBulletin | null;
+    bulletin: Bulletin | null;
+    detailActif: number | null;
     onImprimerPDF: () => void;
     onEnregistrer: () => void;
     appreciationEditable: string;
@@ -70,25 +71,26 @@ const getRangIcon = (rang: number) => {
 function ModalDetailBulletin({
     isModalOpen,
     onOpenChange,
-    selectedEtudiant,
+    bulletin,
     detailActif,
     onImprimerPDF,
     onEnregistrer,
     appreciationEditable,
     onAppreciationEditable,
 }: ModalDetailBulletinProps) {
+    console.log(bulletin)
     return (
         <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
             <DialogContent className="min-w-[90vw]">
-                {selectedEtudiant && detailActif && (
+                {bulletin && detailActif && (
                     <>
                         <DialogHeader>
                             <DialogTitle className="text-base font-semibold">
                                 Détail du Bulletin —{' '}
                                 <span className="uppercase">
-                                    {selectedEtudiant.nom}
+                                    {bulletin.inscription.etudiant.nom}
                                 </span>{' '}
-                                {selectedEtudiant.prenom}
+                                {bulletin.inscription.etudiant.prenom}
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
                                     (1ère Année Finance)
                                 </span>
@@ -96,7 +98,7 @@ function ModalDetailBulletin({
                         </DialogHeader>
 
                         {/* Résumé en-tête */}
-                        <div className="flex flex-wrap items-center gap-4 rounded-lg border bg-muted/40 px-4 py-3">
+                        {/* <div className="flex flex-wrap items-center gap-4 rounded-lg border bg-muted/40 px-4 py-3">
                             <div className="flex flex-col">
                                 <span className="text-xs text-muted-foreground">
                                     Moyenne Générale
@@ -147,7 +149,7 @@ function ModalDetailBulletin({
                                     }
                                 </Badge>
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Tableau des matières */}
                         <div className="overflow-hidden rounded-lg border">
@@ -172,29 +174,29 @@ function ModalDetailBulletin({
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {detailActif.matieres.map((ligne, idx) => (
-                                        <TableRow key={idx}>
+                                    {bulletin.enseignements?.map((ligne) => (
+                                        <TableRow key={ligne.id}>
                                             <TableCell className="font-medium">
-                                                {ligne.matiere}
+                                                {ligne.cours.nom}
                                             </TableCell>
                                             <TableCell className="text-center text-muted-foreground">
-                                                {ligne.coefficient.toFixed(1)}
+                                                {ligne.pivot.coefficient ?? 1}
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <span
-                                                    className={getMoyenneColor(
-                                                        ligne.moyenne,
-                                                    )}
+                                                    // className={getMoyenneColor(
+                                                    //     ligne.moyenne,
+                                                    // )}
                                                 >
-                                                    {ligne.moyenne.toFixed(2)}
+                                                    {ligne.pivot.moyenne_generale_matiere?? "aucune"}
                                                 </span>
                                             </TableCell>
-                                            <TableCell className="text-center font-mono text-sm">
+                                            {/* <TableCell className="text-center font-mono text-sm">
                                                 {ligne.totalPoints.toFixed(2)}
                                             </TableCell>
                                             <TableCell className="text-sm text-muted-foreground italic">
                                                 {ligne.appreciation}
-                                            </TableCell>
+                                            </TableCell> */}
                                         </TableRow>
                                     ))}
                                 </TableBody>

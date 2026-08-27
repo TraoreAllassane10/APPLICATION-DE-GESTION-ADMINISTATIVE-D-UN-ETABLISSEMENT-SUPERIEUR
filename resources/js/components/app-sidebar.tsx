@@ -32,6 +32,7 @@ import {
     Receipt,
     Settings2,
     Sheet,
+    TrendingUp,
     User,
     UserCheck,
     Users,
@@ -87,6 +88,11 @@ export function AppSidebar() {
             title: 'Evaluations',
             href: evaluations(),
             icon: ClipboardPen,
+        },
+        {
+            title: 'Moyennes',
+            href: '/moyennes',
+            icon: TrendingUp,
         },
 
         {

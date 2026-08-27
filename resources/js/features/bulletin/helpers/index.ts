@@ -2,8 +2,8 @@
 type Mention = 'Très Bien' | 'Bien' | 'Assez Bien' | 'Passable' | 'Ajourné';
 
 export const getMentionConfig = (
-    mention: Mention,
-): { label: string; className: string } => {
+    mention: string,
+) => {
     switch (mention) {
         case 'Très Bien':
             return {

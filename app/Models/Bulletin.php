@@ -12,7 +12,9 @@ class Bulletin extends Model
 
     protected $guarded = [];
 
-    public function inscrit()
+    protected $with = ["inscription", "periodeAcademique", "enseignements"];
+
+    public function inscription()
     {
         return $this->belongsTo(Inscription::class);
     }
@@ -22,7 +24,7 @@ class Bulletin extends Model
         return $this->belongsTo(PeriodeAcademique::class);
     }
 
-    public function enseigenments()
+    public function enseignements()
     {
         return $this->belongsToMany(Enseignement::class, 'bulletin_lignes')
             ->withPivot(["moyenne_generale_matiere", "coefficient", "appreciation_professeur"]);
