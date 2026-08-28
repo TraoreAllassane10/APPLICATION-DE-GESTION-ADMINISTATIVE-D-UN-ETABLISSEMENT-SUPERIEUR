@@ -29,7 +29,6 @@ export default function Index() {
     const [selectedPeriodeId, setSelectedPeriodeId] = useState<string>('');
     const [enseignements, setEnseignements] = useState<Enseignement[]>([]);
     const [moyennes, setMoyennes] = useState<Moyenne[] | []>([]);
-    console.log(moyennes);
 
     const { getMoyennes, loading } = useMoyenne();
 

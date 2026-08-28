@@ -11,3 +11,8 @@ export const fmtCompact = (n: number) => {
     if (n >= 1_000) return `${(n / 1_000).toFixed(0)}k`;
     return n.toString();
 };
+
+export const formatRang = (rang: number): string => {
+    if (rang === 1) return '1er';
+    return `${rang}e`;
+};

@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Moyenne } from '../types/moyennes.types';
 import { Link } from '@inertiajs/react';
 import { formatNote } from '../utils';
+import { formatRang } from '@/utils/util';
 
 interface MoyenneTableauSectionProps {
     moyennes: Moyenne[];
@@ -155,10 +156,7 @@ const MoyenneTableauSection = ({ moyennes }: MoyenneTableauSectionProps) => {
                                             </TableCell>
 
                                             <TableCell className="text-center">
-                                                {moyenne.moyenne && moyenne.rang}
-                                                {moyenne.moyenne ? moyenne.rang == '1'
-                                                    ? 'er'
-                                                    : 'ème' : "—"}
+                                                {moyenne.moyenne && formatRang(Number(moyenne.rang))}
                                             </TableCell>
 
                                             {/* Mention */}

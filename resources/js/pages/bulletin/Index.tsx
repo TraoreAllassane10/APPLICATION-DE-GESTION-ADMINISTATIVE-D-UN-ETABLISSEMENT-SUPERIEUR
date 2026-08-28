@@ -11,7 +11,6 @@ import { Head, usePage } from '@inertiajs/react';
 import { BookOpen, Loader } from 'lucide-react';
 import { useState } from 'react';
 
-// ─── Breadcrumbs ──────────────────────────────────────────────────────────────
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Bulletins', href: '/bulletins' },
 ];
@@ -22,9 +21,8 @@ interface BulletinPageProps {
     [key: string]: unknown;
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
 const Index = () => {
-    const {niveaux, periodes } = usePage<BulletinPageProps>().props;
+    const { niveaux, periodes } = usePage<BulletinPageProps>().props;
 
     const [selectedPeriode, setSelectedPeriode] = useState<string>('');
     const [selectedClasse, setSelectedClasse] = useState<string>('');
@@ -37,19 +35,16 @@ const Index = () => {
         useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // const admis = bulletins.filter((b) => b.moyenneGenerale >= 10).length;
+    const { getBulletins, bulletins, stats, loading } = useBulletin();
+
+    // const admis = bulletins.length !== 0 ? bulletins.filter((b) => b.moyenne_generale >= 10).length : 0;
     // const ajourne = bulletins.filter((b) => b.moyenneGenerale < 10).length;
     // const moyenneClasse =
     //     bulletins.reduce((acc, b) => acc + b.moyenneGenerale, 0) /
     //     bulletins.length;
 
-    const { getBulletins, bulletins, loading } = useBulletin();
-
     const handleRecalculer = async () => {
-        await getBulletins(
-            Number(selectedClasse),
-            Number(selectedPeriode),
-        );
+        await getBulletins(Number(selectedClasse), Number(selectedPeriode));
     };
 
     const handleOpenDetail = (bulletin: Bulletin) => {
@@ -61,9 +56,7 @@ const Index = () => {
 
     const handleTelechargerPDF = (bulletin: Bulletin, e: React.MouseEvent) => {
         e.stopPropagation();
-        alert(
-            `Téléchargement du PDF de ${bulletin.prenom} ${bulletin.nom}`,
-        );
+        alert(`Téléchargement du PDF de ${bulletin.prenom} ${bulletin.nom}`);
     };
 
     const handleTelechargerTous = () => {
@@ -103,7 +96,14 @@ const Index = () => {
                     isRecalculating={loading}
                 />
 
-                <StatistiqueSection />
+                {stats && (
+                    <StatistiqueSection
+                        total_etudiant={stats.total_etudiants}
+                        total_admis={stats.total_admis}
+                        total_ajourne={stats.total_ajourne}
+                        moyenne_classe={stats.moyenne_classe}
+                    />
+                )}
 
                 {loading ? (
                     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center text-muted-foreground">

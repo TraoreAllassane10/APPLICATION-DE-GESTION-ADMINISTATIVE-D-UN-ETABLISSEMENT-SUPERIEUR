@@ -12,4 +12,8 @@ class BulletinRepository
             ->where('inscription_id', $inscriptionId)
             ->first();
     }
+
+    public function findById(int $bulletinId) {
+        return Bulletin::find($bulletinId);
+    }
 }

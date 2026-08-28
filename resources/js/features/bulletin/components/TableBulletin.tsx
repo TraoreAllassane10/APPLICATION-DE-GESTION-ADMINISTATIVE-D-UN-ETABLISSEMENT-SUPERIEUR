@@ -10,8 +10,9 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
-import { formatRang, getMentionConfig, getMoyenneColor } from '../helpers';
+import {  getMentionConfig, getMoyenneColor } from '../helpers';
 import { Bulletin } from '../types/bulletin.types';
+import { formatRang } from '@/utils/util';
 
 const getRangIcon = (rang: number) => {
     if (rang === 1) return <Trophy className="size-4 text-yellow-500" />;
@@ -90,9 +91,9 @@ const TableBulletin = ({
                     </TableHeader>
                     <TableBody>
                         {bulletins.map((bulletin) => {
-                            // const mentionConfig = getMentionConfig(
-                            //     bulletin.mention?? "Passable",
-                            // );
+                            const mentionConfig = getMentionConfig(
+                                bulletin.mention?? "Passable",
+                            );
                             return (
                                 <TableRow
                                     key={bulletin.id}
@@ -102,15 +103,15 @@ const TableBulletin = ({
                                     {/* Rang */}
                                     <TableCell className="text-center">
                                         <div className="flex items-center justify-center gap-1">
-                                            {/* {getRangIcon(bulletin.rang!)} */}
+                                            {getRangIcon(bulletin.rang!)}
                                             <span
-                                                // className={`text-sm font-bold ${
-                                                //     bulletin.rang <= 3
-                                                //         ? 'text-amber-600 dark:text-amber-400'
-                                                //         : 'text-muted-foreground'
-                                                // }`}
+                                                className={`text-sm font-bold ${
+                                                  bulletin.rang &&  bulletin.rang <= 3
+                                                        ? 'text-amber-600 dark:text-amber-400'
+                                                        : 'text-muted-foreground'
+                                                }`}
                                             >
-                                                {/* {formatRang(etudiant.rang)} */} 1
+                                                {formatRang(bulletin.rang!)}
                                             </span>
                                         </div>
                                     </TableCell>
@@ -150,25 +151,25 @@ const TableBulletin = ({
                                     </TableCell>
 
                                     {/* Mention */}
-                                    {/* <TableCell className="text-center">
+                                    <TableCell className="text-center">
                                         <Badge
-                                            className={mentionConfig.className}
+                                            className={mentionConfig?.className}
                                         >
-                                            {mentionConfig.label}
+                                            {mentionConfig?.label}
                                         </Badge>
-                                    </TableCell> */}
+                                    </TableCell>
 
                                     {/* Actions */}
-                                    {/* <TableCell
+                                    <TableCell
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <div className="flex items-center justify-center gap-2">
                                             <Button
-                                                id={`btn-apercu-${etudiant.id}`}
+                                                id={`btn-apercu-${bulletin.id}`}
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() =>
-                                                    onOpenDetail(etudiant)
+                                                    onOpenDetail(bulletin)
                                                 }
                                                 className="h-7 gap-1.5 text-xs"
                                             >
@@ -176,12 +177,12 @@ const TableBulletin = ({
                                                 Aperçu
                                             </Button>
                                             <Button
-                                                id={`btn-pdf-${etudiant.id}`}
+                                                id={`btn-pdf-${bulletin.id}`}
                                                 variant="default"
                                                 size="sm"
                                                 onClick={(e) =>
                                                     onTelechargerPDF(
-                                                        etudiant,
+                                                        bulletin,
                                                         e,
                                                     )
                                                 }
@@ -191,7 +192,7 @@ const TableBulletin = ({
                                                 PDF
                                             </Button>
                                         </div>
-                                    </TableCell> */}
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}

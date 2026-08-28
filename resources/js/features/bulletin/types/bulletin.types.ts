@@ -1,6 +1,13 @@
 import { Cours } from '@/features/cours/types/cours.types';
 import { Professeur } from '@/features/professeur/types/professeur.types';
-import { DataNiveau, Inscription, Periode } from '@/types';
+import { DataNiveau, Periode } from '@/types';
+
+export interface BulletinStats {
+    total_etudiants: number;
+    total_admis: number;
+    total_ajourne: number;
+    moyenne_classe: number;
+}
 
 export type LigneBulletin = {
     id: number;
