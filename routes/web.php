@@ -186,7 +186,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get("/enseignements/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
             Route::put("/enseignements/{enseignement}/update", "update")->name("enseigenement.update");
             Route::delete("/enseignements/{enseignement}/delete", "destroy")->name("enseigenement.delete");
-        });
+            Route::put('/enseignement/{enseignement}/update-coefficient-in-classe', 'updateCoefficentInClasse');
+            });
 
         // Routes Evaluations
         Route::controller(EvaluationController::class)->group(function () {

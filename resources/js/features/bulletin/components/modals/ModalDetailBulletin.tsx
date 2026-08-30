@@ -16,11 +16,12 @@ import {
 } from '@/components/ui/table';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { formatRang } from '@/utils/util';
 import { Printer, Save, Trophy } from 'lucide-react';
 import { getMoyenneColor } from '../../helpers';
 import { Bulletin } from '../../types/bulletin.types';
-import { formatRang } from '@/utils/util';
 
 type Mention = 'Très Bien' | 'Bien' | 'Assez Bien' | 'Passable' | 'Ajourné';
 
@@ -90,7 +91,8 @@ function ModalDetailBulletin({
                                 </span>{' '}
                                 {bulletin.prenom}
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
-                                    {bulletin.moyenne_generale} - {formatRang(bulletin.rang!)}
+                                    {bulletin.moyenne_generale} -{' '}
+                                    {formatRang(bulletin.rang!)}
                                 </span>
                             </DialogTitle>
                         </DialogHeader>
@@ -178,15 +180,18 @@ function ModalDetailBulletin({
                                                 {ligne.cours.nom}
                                             </TableCell>
                                             <TableCell className="text-center text-muted-foreground">
-                                                {ligne.pivot.coefficient ?? 1}
+                                                {ligne.coefficient}
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <span
                                                     className={getMoyenneColor(
-                                                        ligne.pivot.moyenne_generale_matiere!,
+                                                        ligne.pivot
+                                                            .moyenne_generale_matiere!,
                                                     )}
                                                 >
-                                                    {ligne.pivot.moyenne_generale_matiere?? "—"}
+                                                    {ligne.pivot
+                                                        .moyenne_generale_matiere ??
+                                                        '—'}
                                                 </span>
                                             </TableCell>
                                             {/* <TableCell className="text-center font-mono text-sm">

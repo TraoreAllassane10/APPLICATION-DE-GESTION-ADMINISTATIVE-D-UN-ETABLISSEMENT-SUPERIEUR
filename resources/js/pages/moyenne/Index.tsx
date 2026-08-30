@@ -1,3 +1,4 @@
+import useEnseignement from '@/features/enseignement/hooks/useEnseignement';
 import { Enseignement } from '@/features/enseignement/types/enseignement.types';
 import MoyenneFilterSection from '@/features/moyenne/components/MoyenneFilterSection';
 import MoyenneHeaderSection from '@/features/moyenne/components/MoyenneHeaderSection';
@@ -29,8 +30,10 @@ export default function Index() {
     const [selectedPeriodeId, setSelectedPeriodeId] = useState<string>('');
     const [enseignements, setEnseignements] = useState<Enseignement[]>([]);
     const [moyennes, setMoyennes] = useState<Moyenne[] | []>([]);
+    const [coefficient, setCoefficient] = useState('');
 
     const { getMoyennes, loading } = useMoyenne();
+    const { updateCoefficientEnseignementInclasse } = useEnseignement();
 
     // Recupere l'enseignement de la classe selectionnée
     useEffect(() => {
@@ -56,12 +59,23 @@ export default function Index() {
                     Number(selectedPeriodeId),
                 );
 
-                setMoyennes(result);
+                setMoyennes(result.data);
+                setCoefficient(result.coefficient);
             }
 
             loadMoyennes();
         }
     }, [selectedClasseId, selectedEnseignementId, selectedPeriodeId]);
+
+    const handleUpdateCoefficient = async () => {
+        console.log(selectedClasseId);
+
+        await updateCoefficientEnseignementInclasse(
+            Number(selectedEnseignementId),
+            Number(selectedClasseId),
+            Number(coefficient),
+        );
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -100,7 +114,12 @@ export default function Index() {
                         </p>
                     </div>
                 ) : (
-                    <MoyenneTableauSection moyennes={moyennes} />
+                    <MoyenneTableauSection
+                        moyennes={moyennes}
+                        coefficient={coefficient}
+                        onChangeCoefficient={setCoefficient}
+                        onUpdateCoefficient={handleUpdateCoefficient}
+                    />
                 )}
             </div>
         </AppLayout>

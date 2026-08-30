@@ -4,6 +4,7 @@ namespace App\Services\Pedagogie;
 
 use App\Models\Niveau;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class MoyenneService
 {
@@ -108,7 +109,7 @@ class MoyenneService
 
 
         // Tri final de la liste par Ordre Alphabétique (Nom, puis Prénom)
-        usort($data, function($a, $b) {
+        usort($data, function ($a, $b) {
             // Comparaison des noms sans tenir compte de la casse
             $compareNom = strcasecmp($a['nom'], $b['nom']);
             if ($compareNom !== 0) {
@@ -119,6 +120,13 @@ class MoyenneService
             return strcasecmp($a['prenom'], $b['prenom']);
         });
 
-        return $data;
+        
+        // Coefficient de l'enseignement dans la classe selectionnée
+        $coefficient = $enseignement->pivot->coefficient;
+
+        return [
+            "data" => $data,
+            "coefficient" => $coefficient
+        ];
     }
 }

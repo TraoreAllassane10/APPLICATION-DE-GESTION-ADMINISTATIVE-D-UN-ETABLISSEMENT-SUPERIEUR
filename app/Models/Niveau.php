@@ -19,7 +19,8 @@ class Niveau extends Model
         return $this->belongsTo(Filiere::class);
     }
 
-    public function scolarites() {
+    public function scolarites()
+    {
         return $this->hasMany(Scolarite::class);
     }
 
@@ -30,6 +31,7 @@ class Niveau extends Model
 
     public function enseignements()
     {
-        return $this->belongsToMany(Enseignement::class, "enseignement_classe");
+        return $this->belongsToMany(Enseignement::class, "enseignement_classe")
+            ->withPivot('coefficient');
     }
 }

@@ -3,10 +3,9 @@
 namespace App\Services\Pedagogie;
 
 use App\Models\Niveau;
-use App\Models\PeriodeAcademique;
 use App\Repositories\Pedagogie\BulletinRepository;
 use Exception;
-use Illuminate\Support\Facades\Log;
+
 
 class BulletinService
 {

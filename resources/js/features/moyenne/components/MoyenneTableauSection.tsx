@@ -7,19 +7,74 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Moyenne } from '../types/moyennes.types';
-import { Link } from '@inertiajs/react';
-import { formatNote } from '../utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { formatRang } from '@/utils/util';
+import { Link } from '@inertiajs/react';
+import { Check, Edit2, X } from 'lucide-react';
+import { useState } from 'react';
+import { Moyenne } from '../types/moyennes.types';
+import { formatNote } from '../utils';
 
 interface MoyenneTableauSectionProps {
     moyennes: Moyenne[];
+    coefficient: string;
+    onChangeCoefficient: React.Dispatch<React.SetStateAction<string>>;
+    onUpdateCoefficient: () => Promise<void>;
 }
 
-const MoyenneTableauSection = ({ moyennes }: MoyenneTableauSectionProps) => {
+const MoyenneTableauSection = ({
+    moyennes,
+    coefficient,
+    onChangeCoefficient,
+    onUpdateCoefficient,
+}: MoyenneTableauSectionProps) => {
+    const [isEditCoefficient, setIsEditCoefficient] = useState(false);
+
     return (
         <Card>
+            <CardHeader>
+                <div className="flex items-center gap-2">
+                    <h1 className="text-md font-medium tracking-wide">
+                        Coefficient dans le bulletin :{' '}
+                    </h1>
+                    <Input
+                        type="number"
+                        value={coefficient}
+                        onChange={(e) =>  onChangeCoefficient(e.target.value)}
+                        disabled={!isEditCoefficient}
+                        className="w-[100px]"
+                    />
+                    {!isEditCoefficient ? (
+                        <Button
+                            variant={'outline'}
+                            onClick={() => setIsEditCoefficient(true)}
+                        >
+                            <Edit2 />
+                        </Button>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant={'outline'}
+                                onClick={async () => {
+                                    await onUpdateCoefficient();
+                                    setIsEditCoefficient(false);
+                                }}
+                            >
+                                <Check />
+                            </Button>
+                            <Button
+                                variant={'outline'}
+                                onClick={() => setIsEditCoefficient(false)}
+                            >
+                                <X />
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            </CardHeader>
+
             <CardContent className="p-0">
                 <div className="overflow-x-auto">
                     <Table>
@@ -156,7 +211,10 @@ const MoyenneTableauSection = ({ moyennes }: MoyenneTableauSectionProps) => {
                                             </TableCell>
 
                                             <TableCell className="text-center">
-                                                {moyenne.moyenne && formatRang(Number(moyenne.rang))}
+                                                {moyenne.moyenne &&
+                                                    formatRang(
+                                                        Number(moyenne.rang),
+                                                    )}
                                             </TableCell>
 
                                             {/* Mention */}

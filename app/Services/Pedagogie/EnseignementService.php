@@ -10,10 +10,10 @@ class EnseignementService
 {
     public function __construct(
         protected AnneeAcademiqueService $anneeAcademiqueService
-    )
-    {}
+    ) {}
 
-    public function getEnseignements() {
+    public function getEnseignements()
+    {
         return Enseignement::latest()->get();
     }
 
@@ -43,5 +43,14 @@ class EnseignementService
     {
         $enseignement = Enseignement::find($id);
         return $enseignement->delete();
+    }
+
+    public function updateCoefficentInClasse(string $id, array $data)
+    {
+        $enseignement = Enseignement::find($id);
+
+        return $enseignement->niveaux()->syncWithPivotValues($data['classeId'], [
+            "coefficient" => $data['coefficient']
+        ]);
     }
 }
