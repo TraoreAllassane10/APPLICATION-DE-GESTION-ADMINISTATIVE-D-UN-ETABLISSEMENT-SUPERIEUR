@@ -37,11 +37,8 @@ const Index = () => {
 
     const { getBulletins, bulletins, stats, loading } = useBulletin();
 
-    // const admis = bulletins.length !== 0 ? bulletins.filter((b) => b.moyenne_generale >= 10).length : 0;
-    // const ajourne = bulletins.filter((b) => b.moyenneGenerale < 10).length;
-    // const moyenneClasse =
-    //     bulletins.reduce((acc, b) => acc + b.moyenneGenerale, 0) /
-    //     bulletins.length;
+    console.log(bulletins);
+    
 
     const handleRecalculer = async () => {
         await getBulletins(Number(selectedClasse), Number(selectedPeriode));

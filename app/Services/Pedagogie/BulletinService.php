@@ -6,7 +6,6 @@ use App\Models\Niveau;
 use App\Repositories\Pedagogie\BulletinRepository;
 use Exception;
 
-
 class BulletinService
 {
 
@@ -32,15 +31,14 @@ class BulletinService
 
             // Calculer le total des moyennes en multipliant la moyenne obtenue dans le cours et le coefficient du cours
             $totalMoyenne = 0;
-            foreach($bulletin->enseignements as $enseignement) {
+            $diviseur = 0;
+            foreach ($bulletin->enseignements as $enseignement) {
                 $moyenneMatiere = (float) $enseignement->pivot->moyenne_generale_matiere;
-                $coefficient = (float) $enseignement->coefficient;
+                $coefficient = (float) $enseignement->niveaux()->where('niveau_id', $classeId)->first()->pivot->coefficient;
 
                 $totalMoyenne += $moyenneMatiere * $coefficient;
+                $diviseur += $coefficient;
             }
-
-            // Calcul du denominateur
-            $diviseur = $bulletin->enseignements()->sum("enseignements.coefficient");
 
             // Calcul de la moyenne
             $moyenne_generale = $diviseur > 0 ? round($totalMoyenne / $diviseur, 2) : null;
@@ -65,7 +63,10 @@ class BulletinService
                 "rang" => $bulletin->rang,
                 "mention" => $bulletin->mention,
                 "decision_jury" => $bulletin->decision_jury,
-                "enseignements" => $bulletin->enseignements()->get(),
+                "enseignements" => $bulletin->enseignements()
+                ->with(["niveaux" => function($q) use ($classeId) {
+                    $q->where('niveau_id', $classeId);
+                }])->get(),
             ];
         }
 
@@ -130,8 +131,8 @@ class BulletinService
         $tableau_ajourne = array_filter($data, fn($item) => $item['moyenne_generale'] !== null && $item['moyenne_generale'] < 10);
 
         $totalValide = count(array_filter($data, fn($item) => $item['moyenne_generale'] !== null));
-        $moyenne_classe = $totalValide > 0 
-            ? round(array_sum(array_column($data, 'moyenne_generale')) / $totalValide, 2) 
+        $moyenne_classe = $totalValide > 0
+            ? round(array_sum(array_column($data, 'moyenne_generale')) / $totalValide, 2)
             : 0;
 
         return [

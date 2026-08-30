@@ -165,9 +165,7 @@ function ModalDetailBulletin({
                                         <TableHead className="w-28 text-center font-semibold">
                                             Moyenne / 20
                                         </TableHead>
-                                        <TableHead className="w-28 text-center font-semibold">
-                                            Total Points
-                                        </TableHead>
+                                     
                                         <TableHead className="font-semibold">
                                             Appréciation
                                         </TableHead>
@@ -180,7 +178,7 @@ function ModalDetailBulletin({
                                                 {ligne.cours.nom}
                                             </TableCell>
                                             <TableCell className="text-center text-muted-foreground">
-                                                {ligne.coefficient}
+                                                {ligne.niveaux[0].pivot.coefficient}
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <span
@@ -194,12 +192,9 @@ function ModalDetailBulletin({
                                                         '—'}
                                                 </span>
                                             </TableCell>
-                                            {/* <TableCell className="text-center font-mono text-sm">
-                                                {ligne.totalPoints.toFixed(2)}
-                                            </TableCell>
-                                            <TableCell className="text-sm text-muted-foreground italic">
+                                            {/* <TableCell className="text-sm text-muted-foreground italic">
                                                 {ligne.appreciation}
-                                            </TableCell> */}
+                                            </TableCell>  */}
                                         </TableRow>
                                     ))}
                                 </TableBody>
