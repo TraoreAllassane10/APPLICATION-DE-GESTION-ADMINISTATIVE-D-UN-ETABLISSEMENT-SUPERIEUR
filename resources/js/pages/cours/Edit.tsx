@@ -2,7 +2,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import useCours from '@/features/cours/hooks/useCours';
+import { Cours } from '@/features/cours/types/cours.types';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -20,12 +22,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface Cours {
-    id: string;
-    nom: string;
-    professeur_id: string;
-}
-
 // Type des données du professeur
 interface Professeur {
     id: number;
@@ -35,6 +31,7 @@ interface Professeur {
 
 interface ProfesseurProps {
     cours: Cours;
+    types_enseignement: string[];
     professeurs: {
         data: Professeur[];
     };
@@ -42,9 +39,10 @@ interface ProfesseurProps {
 }
 
 const Edit = () => {
-    const { cours } = usePage<ProfesseurProps>().props;
+    const { cours, types_enseignement } = usePage<ProfesseurProps>().props;
 
     const [nom, setNom] = useState(cours.nom);
+    const [type_enseignement, setTypeEnseignement] = useState(cours.type_enseignement);
 
     const { updateCours } = useCours();
 
@@ -60,7 +58,8 @@ const Edit = () => {
 
         // modification d'un cours
         updateCours(cours.id, {
-            nom
+            nom,
+            type_enseignement
         });
 
         // Nettoye de l'etat du composant
@@ -87,6 +86,29 @@ const Edit = () => {
                                 />
                             </div>
                             
+                             <div className="grid gap-3">
+                                        <Label>Type d'enseigenement</Label>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={type_enseignement}
+                                            onChange={(e) =>
+                                                setTypeEnseignement(
+                                                    e.target.value,
+                                                )
+                                            }
+                                        >
+                                            <NativeSelectOption value="" />
+                                            {types_enseignement.map((type) => (
+                                                <NativeSelectOption
+                                                    key={type}
+                                                    value={type}
+                                                >
+                                                    {type}
+                                                </NativeSelectOption>
+                                            ))}
+                                        </NativeSelect>
+                                    </div>
+
                             <Button
                                 onClick={handleUpdate}
                                 className="float-right cursor-pointer hover:bg-primary/80"

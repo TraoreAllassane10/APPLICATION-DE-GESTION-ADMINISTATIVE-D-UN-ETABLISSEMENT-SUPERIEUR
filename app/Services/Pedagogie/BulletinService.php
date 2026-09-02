@@ -4,7 +4,9 @@ namespace App\Services\Pedagogie;
 
 use App\Models\Niveau;
 use App\Repositories\Pedagogie\BulletinRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class BulletinService
 {
@@ -64,9 +66,9 @@ class BulletinService
                 "mention" => $bulletin->mention,
                 "decision_jury" => $bulletin->decision_jury,
                 "enseignements" => $bulletin->enseignements()
-                ->with(["niveaux" => function($q) use ($classeId) {
-                    $q->where('niveau_id', $classeId);
-                }])->get(),
+                    ->with(["niveaux" => function ($q) use ($classeId) {
+                        $q->where('niveau_id', $classeId);
+                    }])->get(),
             ];
         }
 
@@ -160,5 +162,17 @@ class BulletinService
             $moyenne >= 8.0  => 'Insuffisant',
             default          => 'Médiocre',
         };
+    }
+
+    public function telechargerBulletinPdf(int $bulletinId)
+    {
+        $bulletin = $this->bulletinRepository->findById($bulletinId);
+        Log::info($bulletin);
+        
+        $pdf = Pdf::loadView("bulletin.bulletin", [
+            "bulletin" => $bulletin
+        ]);
+
+        return $pdf->stream("bulletin.pdf");
     }
 }

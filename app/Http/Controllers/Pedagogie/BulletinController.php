@@ -37,4 +37,8 @@ class BulletinController extends Controller
 
         return response()->json(["sucess" => true, "data" => $data]);
     }
+
+    public function telechargerBulletin(string $bulletin) {
+        return $this->bulletinService->telechargerBulletinPdf($bulletin);
+    }
 }

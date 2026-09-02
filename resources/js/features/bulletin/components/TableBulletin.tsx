@@ -9,10 +9,11 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
-import {  getMentionConfig, getMoyenneColor } from '../helpers';
-import { Bulletin } from '../types/bulletin.types';
 import { formatRang } from '@/utils/util';
+import { Link } from '@inertiajs/react';
+import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
+import { getMentionConfig, getMoyenneColor } from '../helpers';
+import { Bulletin } from '../types/bulletin.types';
 
 const getRangIcon = (rang: number) => {
     if (rang === 1) return <Trophy className="size-4 text-yellow-500" />;
@@ -20,7 +21,6 @@ const getRangIcon = (rang: number) => {
     if (rang === 3) return <Trophy className="size-4 text-amber-600" />;
     return null;
 };
-
 
 interface TableBulletinProps {
     bulletins: Bulletin[];
@@ -92,7 +92,7 @@ const TableBulletin = ({
                     <TableBody>
                         {bulletins.map((bulletin) => {
                             const mentionConfig = getMentionConfig(
-                                bulletin.mention?? "Passable",
+                                bulletin.mention ?? 'Passable',
                             );
                             return (
                                 <TableRow
@@ -106,7 +106,8 @@ const TableBulletin = ({
                                             {getRangIcon(bulletin.rang!)}
                                             <span
                                                 className={`text-sm font-bold ${
-                                                  bulletin.rang &&  bulletin.rang <= 3
+                                                    bulletin.rang &&
+                                                    bulletin.rang <= 3
                                                         ? 'text-amber-600 dark:text-amber-400'
                                                         : 'text-muted-foreground'
                                                 }`}
@@ -176,21 +177,18 @@ const TableBulletin = ({
                                                 <Eye className="size-3" />
                                                 Aperçu
                                             </Button>
-                                            <Button
-                                                id={`btn-pdf-${bulletin.id}`}
-                                                variant="default"
-                                                size="sm"
-                                                onClick={(e) =>
-                                                    onTelechargerPDF(
-                                                        bulletin,
-                                                        e,
-                                                    )
-                                                }
-                                                className="h-7 gap-1.5 text-xs"
-                                            >
-                                                <FileText className="size-3" />
-                                                PDF
-                                            </Button>
+
+                                            <a href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`} target='_blank'>
+                                                <Button
+                                                    id={`btn-pdf-${bulletin.id}`}
+                                                    variant="default"
+                                                    size="sm"
+                                                    className="h-7 gap-1.5 text-xs"
+                                                >
+                                                    <FileText className="size-3" />
+                                                    PDF
+                                                </Button>
+                                            </a>
                                         </div>
                                     </TableCell>
                                 </TableRow>

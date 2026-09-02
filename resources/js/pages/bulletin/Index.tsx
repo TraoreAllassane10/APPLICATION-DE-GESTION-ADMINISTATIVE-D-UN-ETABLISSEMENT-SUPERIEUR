@@ -36,10 +36,7 @@ const Index = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { getBulletins, bulletins, stats, loading } = useBulletin();
-
-    console.log(bulletins);
     
-
     const handleRecalculer = async () => {
         await getBulletins(Number(selectedClasse), Number(selectedPeriode));
     };
@@ -53,7 +50,8 @@ const Index = () => {
 
     const handleTelechargerPDF = (bulletin: Bulletin, e: React.MouseEvent) => {
         e.stopPropagation();
-        alert(`Téléchargement du PDF de ${bulletin.prenom} ${bulletin.nom}`);
+        window.location.href = `bulletins/${bulletin.id}/telecharger-bulletin-pdf`
+        // alert(`Téléchargement du PDF de ${bulletin.prenom} ${bulletin.nom}`);
     };
 
     const handleTelechargerTous = () => {

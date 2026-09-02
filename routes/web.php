@@ -215,6 +215,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(BulletinController::class)->group(function () {
             Route::get("bulletins", "index")->name("bulletins");
             Route::get('bulletins/search', "getBulletins")->name('bulletins.getBulletins');
+            Route::get('bulletins/{bulletin}/telecharger-bulletin-pdf', "telechargerBulletin")->name('bulletins.telechargerBulletinPdf');
         });
     });
 });

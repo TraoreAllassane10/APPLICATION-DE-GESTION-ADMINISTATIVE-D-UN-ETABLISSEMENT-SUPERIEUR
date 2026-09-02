@@ -19,10 +19,11 @@ class UpdateCoursRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-   public function rules(): array
+    public function rules(): array
     {
         return [
             "nom" => "required",
+            "type_enseignement" => "required"
         ];
     }
 
@@ -30,6 +31,7 @@ class UpdateCoursRequest extends FormRequest
     {
         return [
             "nom.required" => "Le nom du cours est requis",
+            "type_enseignement.required" => "Le type de l'enseignement est requis"
         ];
     }
 }
