@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\EvaluationNoteUpdated;
+use App\Events\EvaluationUpdated;
 use App\Models\Bulletin;
 use App\Models\Enseignement;
 use App\Models\Niveau;
@@ -23,7 +24,7 @@ class UpdateMoyenneEnseignement
     /**
      * Handle the event.
      */
-    public function handle(EvaluationNoteUpdated $event): void
+    public function handle(EvaluationUpdated|EvaluationNoteUpdated $event): void
     {
 
         // Recuperer Ids de l'enseignement et de l'evaluation
@@ -72,15 +73,19 @@ class UpdateMoyenneEnseignement
 
                     $totalGenerale += $noteEtudiant->valeur ?? 0;
 
-                    // Calculer le diviseur
-                    if ($evaluation->note_maximale === 10) {
-                        if ($evaluation->coefficient === 1) {
-                            $diviseur += 0.5;
+                    if ($noteEtudiant->valeur) {
+                        // Calculer le diviseur
+                        if ($evaluation->note_maximale === 10) {
+                            // Si la note porte sur 10 , il faut ajouter 0.5 au diviseur car c'est la note qui porte sur 
+                            // 20 qui est divisée par 1
+                            if ($evaluation->coefficient === 1) {
+                                $diviseur += 0.5;
+                            } else {
+                                $diviseur += 0.5 * $evaluation->coefficient;
+                            }
                         } else {
-                            $diviseur += 0.5 * $evaluation->coefficient;
+                            $diviseur += $evaluation->coefficient;
                         }
-                    } else {
-                        $diviseur += $evaluation->coefficient;
                     }
                 }
 
@@ -95,7 +100,7 @@ class UpdateMoyenneEnseignement
                 }
 
                 $bulletin->enseignements()->attach($enseignementId, [
-                    "moyenne_generale_matiere" => $moyenne,
+                    "moyenne_generale_matiere" => $moyenne ?? null,
                 ]);
             }
         }

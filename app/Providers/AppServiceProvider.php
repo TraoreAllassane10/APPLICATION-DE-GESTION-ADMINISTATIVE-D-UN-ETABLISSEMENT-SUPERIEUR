@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Enums\RoleUser;
 use App\Events\EvaluationNoteUpdated;
+use App\Events\EvaluationUpdated;
 use App\Listeners\UpdateMoyenneEnseignement;
 use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
@@ -52,6 +53,11 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(
             EvaluationNoteUpdated::class,
+            UpdateMoyenneEnseignement::class
+        );
+
+         Event::listen(
+            EvaluationUpdated::class,
             UpdateMoyenneEnseignement::class
         );
     }

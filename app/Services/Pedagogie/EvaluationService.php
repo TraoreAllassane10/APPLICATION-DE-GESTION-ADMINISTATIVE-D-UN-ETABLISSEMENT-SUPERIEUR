@@ -2,6 +2,7 @@
 
 namespace App\Services\Pedagogie;
 
+use App\Events\EvaluationUpdated;
 use App\Repositories\Pedagogie\EvaluationRepository;
 use Exception;
 
@@ -30,8 +31,13 @@ class EvaluationService
 
      public function updateEvaluation(string $id, array $data)
     {
-        $evaluation = $this->evaluationRepository->find($id);
-        return $this->evaluationRepository->update($evaluation, $data);
+        $evaluation = $this->evaluationRepository->find($id);  
+
+        $evaluationUpdated = $this->evaluationRepository->update($evaluation, $data);
+
+        // EvaluationUpdated::dispatch($evaluationUpdated);
+        
+        return $evaluationUpdated;
     }
 
     public function deleteEvaluation(string $evaluation) {

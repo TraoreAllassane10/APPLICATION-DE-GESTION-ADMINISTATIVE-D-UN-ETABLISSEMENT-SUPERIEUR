@@ -39,7 +39,10 @@ class BulletinService
                 $coefficient = (float) $enseignement->niveaux()->where('niveau_id', $classeId)->first()->pivot->coefficient;
 
                 $totalMoyenne += $moyenneMatiere * $coefficient;
-                $diviseur += $coefficient;
+
+                if ($enseignement->pivot->moyenne_generale_matiere) {
+                    $diviseur += $coefficient;
+                }
             }
 
             // Calcul de la moyenne

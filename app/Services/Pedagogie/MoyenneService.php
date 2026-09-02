@@ -35,24 +35,34 @@ class MoyenneService
 
             foreach ($enseignement->evaluations as $evaluation) {
                 $noteObj = $evaluation->notes->firstWhere('inscription_id', $inscrit->id);
-                $valeurNote = $noteObj ? (float) $noteObj->valeur : 0;
+                $valeurNote = $noteObj->valeur ? (float) $noteObj->valeur : null;
+
+                $note = null;
+                if ($valeurNote) {
+                    if ($evaluation->coefficient > 0) {
+                        $note = $valeurNote / $evaluation->coefficient;
+                    }
+                }
 
                 $evaluations[] = [
                     "id" => $evaluation->id,
-                    "note" => $evaluation->coefficient > 0 ? $valeurNote / $evaluation->coefficient : 0,
+                    "note" => $note,
                     "note_maximale" => $evaluation->note_maximale,
                     "coefficient" => $evaluation->coefficient
                 ];
 
 
                 // Calculer le total des notes d'un etudiant (note x coefficient de l'evaluation)
-                $totalNote += $valeurNote;
+                // La valeur enregistrée dans la bd est déjà multipliée par le coefficient
+                $totalNote += $valeurNote ?? 0;
 
-                // Calculer le diviseur
-                if ($evaluation->note_maximale === 10) {
-                    $diviseur += ($evaluation->coefficient === 1) ? 0.5 : 0.5 * $evaluation->coefficient;
-                } else {
-                    $diviseur += $evaluation->coefficient;
+                if ($valeurNote) {
+                    // Calculer le diviseur
+                    if ($evaluation->note_maximale === 10) {
+                        $diviseur += ($evaluation->coefficient === 1) ? 0.5 : 0.5 * $evaluation->coefficient;
+                    } else {
+                        $diviseur += $evaluation->coefficient;
+                    }
                 }
             }
 
@@ -120,7 +130,7 @@ class MoyenneService
             return strcasecmp($a['prenom'], $b['prenom']);
         });
 
-        
+
         // Coefficient de l'enseignement dans la classe selectionnée
         $coefficient = $enseignement->pivot->coefficient;
 

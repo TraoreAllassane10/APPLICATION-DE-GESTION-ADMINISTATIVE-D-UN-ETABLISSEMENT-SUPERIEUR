@@ -189,7 +189,7 @@ function ModalDetailBulletin({
                                                 >
                                                     {ligne.pivot
                                                         .moyenne_generale_matiere ??
-                                                        '—'}
+                                                        'NC'}
                                                 </span>
                                             </TableCell>
                                             {/* <TableCell className="text-sm text-muted-foreground italic">

@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('bulletin_lignes', function (Blueprint $table) {
             $table->id();
-            $table->decimal('moyenne_generale_matiere', 5, 2);
-            $table->integer('coefficient')->nullable();
+            $table->decimal('moyenne_generale_matiere', 5, 2)->nullable();
             $table->string('appreciation_professeur')->nullable();
 
             $table->foreignId('enseignement_id')->constrained('enseignements')->cascadeOnDelete();

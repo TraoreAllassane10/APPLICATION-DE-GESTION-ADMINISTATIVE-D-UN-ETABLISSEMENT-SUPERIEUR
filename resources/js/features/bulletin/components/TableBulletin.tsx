@@ -10,7 +10,6 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatRang } from '@/utils/util';
-import { Link } from '@inertiajs/react';
 import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
 import { getMentionConfig, getMoyenneColor } from '../helpers';
 import { Bulletin } from '../types/bulletin.types';
@@ -143,12 +142,14 @@ const TableBulletin = ({
                                                 bulletin.moyenne_generale!,
                                             )}
                                         >
-                                            {bulletin.moyenne_generale}
+                                            {bulletin.moyenne_generale ?? 'NC'}
                                         </span>
-                                        <span className="text-xs text-muted-foreground">
-                                            {' '}
-                                            / 20
-                                        </span>
+                                        {bulletin.moyenne_generale && (
+                                            <span className="text-xs text-muted-foreground">
+                                                {' '}
+                                                / 20
+                                            </span>
+                                        )}
                                     </TableCell>
 
                                     {/* Mention */}
@@ -178,7 +179,10 @@ const TableBulletin = ({
                                                 Aperçu
                                             </Button>
 
-                                            <a href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`} target='_blank'>
+                                            <a
+                                                href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`}
+                                                target="_blank"
+                                            >
                                                 <Button
                                                     id={`btn-pdf-${bulletin.id}`}
                                                     variant="default"

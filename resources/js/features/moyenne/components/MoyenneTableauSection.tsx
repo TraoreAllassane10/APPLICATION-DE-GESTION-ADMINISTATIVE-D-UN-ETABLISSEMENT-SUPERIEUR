@@ -31,6 +31,7 @@ const MoyenneTableauSection = ({
     onUpdateCoefficient,
 }: MoyenneTableauSectionProps) => {
     const [isEditCoefficient, setIsEditCoefficient] = useState(false);
+console.log(moyennes);
 
     return (
         <Card>
@@ -165,19 +166,21 @@ const MoyenneTableauSection = ({
                                                                 }
                                                             >
                                                                 {
-                                                                    evaluation.note
+                                                                    evaluation.note ?? "NC"
                                                                 }
                                                             </span>
-                                                            /
+                                                            
                                                             {
-                                                                evaluation.note_maximale
+                                                              evaluation.note &&  "/" + evaluation.note_maximale
                                                             }
-                                                            <span className="ml-2 items-center justify-center rounded-full p-1 text-xs text-amber-600">
+                                                          {
+                                                            evaluation.note && (  <span className="ml-2 items-center justify-center rounded-full p-1 text-xs text-amber-600">
                                                                 x
                                                                 {
                                                                     evaluation.coefficient
                                                                 }
-                                                            </span>
+                                                            </span>)
+                                                          }
                                                         </Link>
                                                     </TableCell>
                                                 ),
