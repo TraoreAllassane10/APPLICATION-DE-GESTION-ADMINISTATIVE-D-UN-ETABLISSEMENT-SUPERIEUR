@@ -19,7 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from '../../../../components/ui/table';
-import ModalPaiement from '../ModalPaiement';
+import ModalPaiement from '../../../paiement/components/ModalPaiement';
 import { Inscription } from '../../types/inscription.types';
 export default function TabFinancier({ ins }: { ins: Inscription }) {
     const [modalOpen, setModalOpen] = useState(false);

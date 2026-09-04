@@ -1,5 +1,5 @@
 import { Banknote, PiggyBank, Wallet } from 'lucide-react';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent } from '../../../components/ui/card';
 import { fmt } from '@/utils/util';
 
 interface StatProps {

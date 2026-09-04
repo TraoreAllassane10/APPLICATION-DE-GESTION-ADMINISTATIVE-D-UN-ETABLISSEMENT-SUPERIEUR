@@ -147,19 +147,6 @@ export interface Scolarite {
     niveau_id: number;
 }
 
-
-// Types Paiements
-export interface Paiement {
-    id: string;
-    reference: string;
-    date_paiement: string;
-    methode_paiement: string;
-    montant: number;
-    receveur?: User;
-    inscription?: Inscription;
-    nom_receveur: string;
-}
-
 // Types Dashboard
 export interface StatFinanciere {
     totalAttendu: number;
