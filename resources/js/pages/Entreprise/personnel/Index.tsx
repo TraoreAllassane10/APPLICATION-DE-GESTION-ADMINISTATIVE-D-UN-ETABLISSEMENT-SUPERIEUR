@@ -1,4 +1,4 @@
-import Avatar from '@/components/etudiant/Avatar';
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,6 +26,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import Avatar from '@/features/etudiant/components/Avatar';
 import usePersonnel from '@/hooks/Entreprise/usePersonnel';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Meta, Personnel } from '@/types';

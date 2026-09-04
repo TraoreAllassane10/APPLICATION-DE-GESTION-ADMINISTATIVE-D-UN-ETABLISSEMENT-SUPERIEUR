@@ -101,7 +101,7 @@ const Index = () => {
     const { createScolarite, deleteScolarite } = useScolarite();
 
     // Enregistrement d'une scolarite
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Verification des données
         if (
             type == '' ||
@@ -114,7 +114,7 @@ const Index = () => {
         }
 
         // Creation d'une nouvelle scolarite
-        createScolarite({
+       await createScolarite({
             annee_id: annee.id,
             montant: Number(montant),
             type,
@@ -131,8 +131,8 @@ const Index = () => {
     };
 
     // Suppression d'une scolarite
-    const handleDelete = (id: number) => {
-        if (id) deleteScolarite(id);
+    const handleDelete = async (id: number) => {
+        if (id) await deleteScolarite(id);
     };
 
     return (

@@ -2,10 +2,10 @@
 
 namespace App\Modules\Inscription\repositories;
 
-use App\Enums\StatutInscription;
 use App\Models\Inscription;
 use App\Models\Paiement;
 use App\Modules\AnneeAcademique\Repositories\AnneeAcademiqueRepository;
+use App\Modules\Inscription\Enums\StatutInscription;
 use Illuminate\Http\Request;
 
 class InscriptionRepository
