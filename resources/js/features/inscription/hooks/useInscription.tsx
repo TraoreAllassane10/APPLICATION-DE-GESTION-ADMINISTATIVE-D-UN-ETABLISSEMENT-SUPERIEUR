@@ -48,6 +48,8 @@ export default function useInscription() {
                     if (response.data.success) {
                         console.log(response);
                         toast.success('Inscription effectuée !');
+
+                        router.visit('/inscriptions');
                     }
 
                     // Echec

@@ -83,7 +83,7 @@ const Index = () => {
     const { createFiliere, deleteFiliere } = useFiliere();
 
     // Enregistrement d'une filiere
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Verification des données
         if (nom == '') {
             toast.error('Veuillez entrer le nom de la filière!');
@@ -91,7 +91,7 @@ const Index = () => {
         }
 
         // Création d'une filière
-        createFiliere({ nom });
+        await createFiliere({ nom });
 
         // Nettoyage de l'etat
         setNom('');
@@ -101,8 +101,8 @@ const Index = () => {
     };
 
     // Suppression d'une filiere
-    const handleDelete = (id: number) => {
-        if (id) deleteFiliere(id);
+    const handleDelete = async (id: number) => {
+        if (id) await deleteFiliere(id);
     };
 
     return (
