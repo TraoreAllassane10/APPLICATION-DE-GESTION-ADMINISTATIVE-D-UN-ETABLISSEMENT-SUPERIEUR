@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Observers;
+namespace App\Modules\Niveau\Observers;
 
 use App\Enums\TypeAction;
 use App\Models\ActivityLog;
@@ -55,19 +55,4 @@ class NiveauObserver
         ]);
     }
 
-    /**
-     * Handle the Niveau "restored" event.
-     */
-    public function restored(Niveau $niveau): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Niveau "force deleted" event.
-     */
-    public function forceDeleted(Niveau $niveau): void
-    {
-        //
-    }
 }

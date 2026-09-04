@@ -105,9 +105,18 @@ app/
 ├── Http/
 │ ├── Controllers/
 │ ├── Requests/
-├── Services/
-├── Repositories/
-
+├── Modules/
+    ├──Etudiant
+       ├──Controllers
+       ├── Resources
+       ├── Services
+       ├── Repositories
+       ├── Requests
+       ├── Enums
+       ├── Events
+       ├── Listeners
+       ├── Observers
+    ...
 database/
 ├── migrations/
 ├── factories/
@@ -115,9 +124,26 @@ database/
 
 resources/
 ├── js/
-│ ├── Pages/
-│ ├── Components/
-
+    ├── Pages/
+    ├── Components/
+    ├── features
+        ├── etudiant
+            ├── components
+            ├── hooks
+            ├── types
+            ├── validators
+            ├── helpers
+        ├── inscription
+            ├── components
+            ├── hooks
+            ├── types
+            ├── validators
+            ├── helpers
+        ...
+    ├── layouts
+    ├── hooks
+    ├── pages
+    ├── types
 routes/
 ├── web.php
 ├── api.php
