@@ -1,9 +1,9 @@
 import { Etudiant } from '@/types';
 import { Link } from '@inertiajs/react';
 import { Briefcase, Phone, User, Users } from 'lucide-react';
-import { Alert, AlertDescription } from '../ui/alert';
-import InfoRow from './InfoRow';
-import Section from './Section';
+import InfoRow from '../InfoRow';
+import Section from '../Section';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const ResponsableSection = ({ etudiant }: { etudiant: Etudiant }) => {
     return (

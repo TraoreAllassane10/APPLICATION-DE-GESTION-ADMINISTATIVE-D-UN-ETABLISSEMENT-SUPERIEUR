@@ -1,9 +1,10 @@
 import { Etudiant } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Calendar, FileText, Hash } from 'lucide-react';
-import { Alert, AlertDescription } from '../ui/alert';
-import InfoRow from './InfoRow';
-import Section from './Section';
+
+import InfoRow from '../InfoRow';
+import Section from '../Section';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AcademiqueSection = ({ etudiant }: { etudiant: Etudiant }) => {
     return (

@@ -1,7 +1,7 @@
-import { EtudiantForm } from '@/components/etudiant/EtudiantForm';
-import useEtudiant from '@/hooks/useEtudiant';
+import { EtudiantForm } from '@/features/etudiant/components/EtudiantForm';
+import useEtudiant from '@/features/etudiant/hooks/useEtudiant';
+import { EtudiantFormData } from '@/features/etudiant/types/etudiant.types';
 import AppLayout from '@/layouts/app-layout';
-import { EtudiantFormData } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 

@@ -1,4 +1,5 @@
-export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert';
+import { StatutEtudiant } from "../types/etudiant.types";
+
 
 export const statutConfig: Record<StatutEtudiant, { className: string; dotClass: string }> = {
   Affecté:   { className: 'bg-emerald-50 text-emerald-700 border border-emerald-200', dotClass: 'bg-emerald-500' },

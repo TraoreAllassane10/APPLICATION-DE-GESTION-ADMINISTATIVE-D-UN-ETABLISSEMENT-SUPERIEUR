@@ -1,6 +1,6 @@
 import { ArrowRightLeft, UserCheck, Users, UserX } from 'lucide-react';
-import StatCard from '../StatCard';
-import { StatsEtudiant } from '@/types';
+import StatCard from '@/components/StatCard';
+import { StatsEtudiant } from '../types/etudiant.types';
 
 const EtudiantStats = ({ stats }: {stats: StatsEtudiant}) => {
     return (

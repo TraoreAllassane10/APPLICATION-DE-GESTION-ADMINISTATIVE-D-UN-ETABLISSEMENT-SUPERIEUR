@@ -1,7 +1,7 @@
-import { Etudiant } from '@/types';
 import { Calendar, Clock, Globe, Hash, MapPin, User } from 'lucide-react';
-import InfoRow from './InfoRow';
-import Section from './Section';
+import InfoRow from '../InfoRow';
+import Section from '../Section';
+import { Etudiant } from '../../types/etudiant.types';
 
 const ProfilSection = ({ etudiant }: { etudiant: Etudiant }) => {
     return (

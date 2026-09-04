@@ -18,13 +18,12 @@ import {
     Users,
 } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes, useState } from 'react';
-
-import { EtudiantFormData } from '@/types';
 import Step1 from './steps/Step1';
 import Step2 from './steps/Step2';
 import Step3 from './steps/Step3';
 import Step4 from './steps/Step4';
 import Stepper from './steps/Stepper';
+import { EtudiantFormData } from '../types/etudiant.types';
 
 export const emptyForm = (): EtudiantFormData => ({
     ip: '',

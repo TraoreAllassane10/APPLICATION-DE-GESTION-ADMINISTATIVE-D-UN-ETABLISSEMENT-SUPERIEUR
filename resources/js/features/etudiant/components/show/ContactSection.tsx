@@ -1,7 +1,7 @@
 import { Etudiant } from '@/types';
 import { Hash, Mail, MapPin, Phone, Shield } from 'lucide-react';
-import InfoRow from './InfoRow';
-import Section from './Section';
+import InfoRow from '../InfoRow';
+import Section from '../Section';
 
 const ContactSection = ({ etudiant }: { etudiant: Etudiant }) => {
     return (

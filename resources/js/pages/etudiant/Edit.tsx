@@ -1,10 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-
-import { EtudiantForm } from '@/components/etudiant/EtudiantForm';
-import useEtudiant from '@/hooks/useEtudiant';
-import { Etudiant, EtudiantFormData } from '@/types';
+import useEtudiant from '@/features/etudiant/hooks/useEtudiant';
+import { EtudiantForm } from '@/features/etudiant/components/EtudiantForm';
+import { Etudiant, EtudiantFormData } from '@/features/etudiant/types/etudiant.types';
 
 export default function Edit() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
