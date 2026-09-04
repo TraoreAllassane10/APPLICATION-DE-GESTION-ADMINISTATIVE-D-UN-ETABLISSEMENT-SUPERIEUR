@@ -73,11 +73,24 @@ class EnseignementController extends Controller
                 "success" => true,
             ]);
         } catch (Exception $e) {
-            Log::error('Erreur survenue lors de la suppression d\'un enseignement');
+            Log::error('Erreur survenue lors de la suppression d\'un enseignement', ["erreur" => $e->getMessage()]);
             return response()->json([
                 "success" => false,
                 "message" => "Erreur survenue lors de la suppression d'un enseignement"
             ]);
+        }
+    }
+
+    public function updateCoefficentInClasse(Request $request, string $enseignement)
+    {
+        try {
+            $data = $request->validate(["classeId" => ['required'], "coefficient" => ["required"]]);
+
+            $this->enseignementService->updateCoefficentInClasse($enseignement, $data);
+
+            return response()->json(["success" => true]);
+        } catch (Exception $e) {
+            Log::error('Erreur survenue lors de la mise à jour d\'un coefficient', ["erreur" => $e->getMessage()]);
         }
     }
 }

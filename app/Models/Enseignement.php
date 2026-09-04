@@ -30,7 +30,8 @@ class Enseignement extends Model
 
     public function niveaux()
     {
-        return $this->belongsToMany(Niveau::class, "enseignement_classe");
+        return $this->belongsToMany(Niveau::class, "enseignement_classe")
+            ->withPivot('coefficient');
     }
 
     public function evaluations()

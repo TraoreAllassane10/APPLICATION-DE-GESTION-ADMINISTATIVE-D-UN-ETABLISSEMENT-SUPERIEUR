@@ -17,7 +17,7 @@ export default function useMoyenne() {
                 `/moyennes/search?classeId=${classeId}&enseignementId=${enseignementId}&periodeId=${periodeId}`,
             );
 
-            return response.data.data;
+            return response.data;
         } catch (error) {
             console.log(
                 'Erreur survenue lors de la recuperation des moyennes : ',

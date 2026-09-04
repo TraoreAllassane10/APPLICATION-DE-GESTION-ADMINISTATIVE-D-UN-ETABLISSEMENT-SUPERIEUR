@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 
 interface Data {
     nom: string;
+    type_enseignement: string;
 }
 
 export default function useCours() {
@@ -47,7 +48,7 @@ export default function useCours() {
     };
 
     // Modification d'un cours
-    const updateCours = async (id: string, data: Data) => {
+    const updateCours = async (id: number, data: Data) => {
         try {
             await axios
                 .put(`/cours/${id}/update`, data)
@@ -76,6 +77,7 @@ export default function useCours() {
                 .delete(`/cours/${id}/delete`)
                 .then(() => {
                     toast.success('Cours supprimé !');
+                    router.reload()
                 })
                 .catch((error) => {
                     toast.error(

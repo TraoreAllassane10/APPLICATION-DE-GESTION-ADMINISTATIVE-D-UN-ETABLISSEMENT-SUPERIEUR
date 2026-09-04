@@ -49,55 +49,7 @@ export interface User {
 }
 
 export type Statut = 'Actif' | 'Suspendu' | 'Terminé';
-export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert';
 
-export interface Etudiant {
-    ip: string;
-    civilite: Civilite;
-    genre: string;
-    nom: string;
-    prenom: string;
-    date_naissance: string;
-    lieu_naissance: string;
-    nationnalite: string;
-    statut: StatutEtudiant;
-    email: string | null;
-    pays_residence: string | null;
-    etablissement_origine: string | null;
-    annee_obtention_bac: string | null;
-    serie_bac: string | null;
-    numero_table_bac: string | null;
-    contacts: string | null;
-    nature_piece: NaturePiece | null;
-    numero_piece: string | null;
-    adresse_geographique: string | null;
-    matricule_secondaire: string | null;
-
-    type_responsable: string | null;
-    nom_responsable: string | null;
-    numero_responsable: string | null;
-    profession_responsable: string | null;
-
-    photo: File | string | null;
-
-    inscriptions: Inscription[];
-
-    created_at: string;
-    updated_at: string;
-}
-
-export type EtudiantFormData = Omit<
-    Etudiant,
-    'created_at' | 'updated_at'| 'photo' | inscriptions
->;
-
-export interface StatsEtudiant {
-    total: number;
-    affecte: number;
-    naff: number;
-    reaffecte: number;
-    transfert: number;
-}
 
 export interface Meta {
     current_page: number;
@@ -193,38 +145,6 @@ export interface Scolarite {
     niveau: DataNiveau;
     annee_universitaire_id: number;
     niveau_id: number;
-}
-
-// Types Inscription
-export interface Inscription {
-    id: number;
-    etudiant: Etudiant;
-    annee: Annee;
-    niveaux: DataNiveau[];
-    date: string;
-    taux_reduction: number;
-    frais_annexe: number;
-    montant_scolarite: number;
-    montant_total: number;
-    status: string | null;
-    type_inscription: TypeInscription;
-    paiements: Paiement[];
-    total_paiements: string;
-
-    etudiant?: Etudiant;
-    niveaux?: DataNiveau[];
-}
-
-// Types Paiements
-export interface Paiement {
-    id: string;
-    reference: string;
-    date_paiement: string;
-    methode_paiement: string;
-    montant: number;
-    receveur?: User;
-    inscription?: Inscription;
-    nom_receveur: string;
 }
 
 // Types Dashboard

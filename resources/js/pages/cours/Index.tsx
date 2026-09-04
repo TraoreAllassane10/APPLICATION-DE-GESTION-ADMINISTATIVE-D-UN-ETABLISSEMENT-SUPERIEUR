@@ -11,6 +11,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
+import {
     Sheet,
     SheetClose,
     SheetContent,
@@ -52,6 +56,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Data {
     id: number;
     nom: string;
+    type_enseignement: string;
 }
 
 interface Meta {
@@ -73,30 +78,31 @@ interface Cours {
 
 interface CoursProps {
     cours: Cours;
-
+    types_enseignement: string[];
     [key: string]: unknown;
 }
 
 const Index = () => {
-    const { cours } = usePage<CoursProps>().props;
-
+    const { cours, types_enseignement } = usePage<CoursProps>().props;
     const [nom, setNom] = useState('');
+    const [type_enseignement, setTypeEnseignement] = useState('');
 
     const { createCours, deleteCours } = useCours();
 
     // Enregistrement d'un cours
     const handleSubmit = async () => {
         // Verification des données
-        if (nom == '') {
+        if (nom == '' || type_enseignement == '') {
             toast.error('Veuillez remplir tous les champs!');
             return;
         }
 
         // Création d'un cours
-        await createCours({ nom });
+        await createCours({ nom, type_enseignement });
 
         // Nettoyage de l'etat
         setNom('');
+        setTypeEnseignement('');
     };
 
     // Suppression d'un cours
@@ -151,6 +157,29 @@ const Index = () => {
                                             }
                                         />
                                     </div>
+
+                                    <div className="grid gap-3">
+                                        <Label>Type d'enseigenement</Label>
+                                        <NativeSelect
+                                            className="w-full"
+                                            value={type_enseignement}
+                                            onChange={(e) =>
+                                                setTypeEnseignement(
+                                                    e.target.value,
+                                                )
+                                            }
+                                        >
+                                            <NativeSelectOption value="" />
+                                            {types_enseignement.map((type) => (
+                                                <NativeSelectOption
+                                                    key={type}
+                                                    value={type}
+                                                >
+                                                    {type}
+                                                </NativeSelectOption>
+                                            ))}
+                                        </NativeSelect>
+                                    </div>
                                 </div>
                                 <SheetFooter>
                                     <Button onClick={handleSubmit}>
@@ -171,6 +200,7 @@ const Index = () => {
                             <TableHeader>
                                 <TableRow className="bg-muted/40 hover:bg-muted/40">
                                     <TableHead>Nom du cours</TableHead>
+                                    <TableHead>Type d'enseignement</TableHead>
                                     <TableHead className="w-[80px]" />
                                 </TableRow>
                             </TableHeader>
@@ -200,6 +230,9 @@ const Index = () => {
                                                 {cours.nom}
                                             </TableCell>
 
+                                            <TableCell className="text-md">
+                                                {cours.type_enseignement}
+                                            </TableCell>
                                             <TableCell>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger

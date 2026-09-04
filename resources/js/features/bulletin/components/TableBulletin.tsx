@@ -9,8 +9,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { formatRang } from '@/utils/util';
 import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
-import { formatRang, getMentionConfig, getMoyenneColor } from '../helpers';
+import { getMentionConfig, getMoyenneColor } from '../helpers';
 import { Bulletin } from '../types/bulletin.types';
 
 const getRangIcon = (rang: number) => {
@@ -19,18 +20,6 @@ const getRangIcon = (rang: number) => {
     if (rang === 3) return <Trophy className="size-4 text-amber-600" />;
     return null;
 };
-
-type Mention = 'Très Bien' | 'Bien' | 'Assez Bien' | 'Passable' | 'Ajourné';
-
-interface BulletinEtudiant {
-    id: number;
-    rang: number;
-    matricule: string;
-    nom: string;
-    prenom: string;
-    moyenneGenerale: number;
-    mention: Mention;
-}
 
 interface TableBulletinProps {
     bulletins: Bulletin[];
@@ -102,7 +91,7 @@ const TableBulletin = ({
                     <TableBody>
                         {bulletins.map((bulletin) => {
                             const mentionConfig = getMentionConfig(
-                                bulletin.mention?? "Passable",
+                                bulletin.mention ?? 'Passable',
                             );
                             return (
                                 <TableRow
@@ -113,15 +102,16 @@ const TableBulletin = ({
                                     {/* Rang */}
                                     <TableCell className="text-center">
                                         <div className="flex items-center justify-center gap-1">
-                                            {/* {getRangIcon(bulletin.rang!)} */}
+                                            {getRangIcon(bulletin.rang!)}
                                             <span
-                                                // className={`text-sm font-bold ${
-                                                //     bulletin.rang <= 3
-                                                //         ? 'text-amber-600 dark:text-amber-400'
-                                                //         : 'text-muted-foreground'
-                                                // }`}
+                                                className={`text-sm font-bold ${
+                                                    bulletin.rang &&
+                                                    bulletin.rang <= 3
+                                                        ? 'text-amber-600 dark:text-amber-400'
+                                                        : 'text-muted-foreground'
+                                                }`}
                                             >
-                                                {/* {formatRang(etudiant.rang)} */} 1
+                                                {formatRang(bulletin.rang!)}
                                             </span>
                                         </div>
                                     </TableCell>
@@ -129,7 +119,7 @@ const TableBulletin = ({
                                     {/* Matricule */}
                                     <TableCell>
                                         <span className="font-mono text-sm text-muted-foreground">
-                                            {bulletin.inscription.etudiant.ip}
+                                            {bulletin.etudiant_ip}
                                         </span>
                                     </TableCell>
 
@@ -137,74 +127,74 @@ const TableBulletin = ({
                                     <TableCell>
                                         <div className="font-medium">
                                             <span className="uppercase">
-                                                {bulletin.inscription.etudiant.nom}
+                                                {bulletin.nom}
                                             </span>{' '}
                                             <span className="text-muted-foreground">
-                                                {bulletin.inscription.etudiant.prenom}
+                                                {bulletin.prenom}
                                             </span>
                                         </div>
                                     </TableCell>
 
                                     {/* Moyenne */}
-                                    {/* <TableCell className="text-center">
+                                    <TableCell className="text-center">
                                         <span
                                             className={getMoyenneColor(
-                                                etudiant.moyenneGenerale,
+                                                bulletin.moyenne_generale!,
                                             )}
                                         >
-                                            {etudiant.moyenneGenerale.toFixed(
-                                                2,
-                                            )}
+                                            {bulletin.moyenne_generale ?? 'NC'}
                                         </span>
-                                        <span className="text-xs text-muted-foreground">
-                                            {' '}
-                                            / 20
-                                        </span>
-                                    </TableCell> */}
+                                        {bulletin.moyenne_generale && (
+                                            <span className="text-xs text-muted-foreground">
+                                                {' '}
+                                                / 20
+                                            </span>
+                                        )}
+                                    </TableCell>
 
                                     {/* Mention */}
-                                    {/* <TableCell className="text-center">
+                                    <TableCell className="text-center">
                                         <Badge
-                                            className={mentionConfig.className}
+                                            className={mentionConfig?.className}
                                         >
-                                            {mentionConfig.label}
+                                            {mentionConfig?.label}
                                         </Badge>
-                                    </TableCell> */}
+                                    </TableCell>
 
                                     {/* Actions */}
-                                    {/* <TableCell
+                                    <TableCell
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <div className="flex items-center justify-center gap-2">
                                             <Button
-                                                id={`btn-apercu-${etudiant.id}`}
+                                                id={`btn-apercu-${bulletin.id}`}
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() =>
-                                                    onOpenDetail(etudiant)
+                                                    onOpenDetail(bulletin)
                                                 }
                                                 className="h-7 gap-1.5 text-xs"
                                             >
                                                 <Eye className="size-3" />
                                                 Aperçu
                                             </Button>
-                                            <Button
-                                                id={`btn-pdf-${etudiant.id}`}
-                                                variant="default"
-                                                size="sm"
-                                                onClick={(e) =>
-                                                    onTelechargerPDF(
-                                                        etudiant,
-                                                        e,
-                                                    )
-                                                }
-                                                className="h-7 gap-1.5 text-xs"
+
+                                            <a
+                                                href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`}
+                                                target="_blank"
                                             >
-                                                <FileText className="size-3" />
-                                                PDF
-                                            </Button>
+                                                <Button
+                                                    id={`btn-pdf-${bulletin.id}`}
+                                                    variant="default"
+                                                    size="sm"
+                                                    className="h-7 gap-1.5 text-xs"
+                                                >
+                                                    <FileText className="size-3" />
+                                                    PDF
+                                                </Button>
+                                            </a>
                                         </div>
-                                    </TableCell> */}
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}

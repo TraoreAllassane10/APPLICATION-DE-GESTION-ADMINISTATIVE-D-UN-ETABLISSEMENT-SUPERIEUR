@@ -21,31 +21,38 @@ const StatItem = ({ icon, label, value, colorClass }: StatItemProps) => (
     </div>
 );
 
-function StatistiqueSection() {
+interface StatistiqueSectionProps {
+    total_etudiant: number;
+    total_admis: number;
+    total_ajourne: number;
+    moyenne_classe: number;
+}
+
+function StatistiqueSection({total_etudiant, total_admis, total_ajourne, moyenne_classe}: StatistiqueSectionProps) {
     return (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <StatItem
                 icon={<Users className="size-4 text-blue-600" />}
                 label="Total étudiants"
-                value={10}
+                value={total_etudiant}
                 colorClass="bg-blue-50 dark:bg-blue-900/20"
             />
             <StatItem
                 icon={<Award className="size-4 text-emerald-600" />}
                 label="Admis"
-                value={5}
+                value={total_admis}
                 colorClass="bg-emerald-50 dark:bg-emerald-900/20"
             />
             <StatItem
                 icon={<FileText className="size-4 text-red-500" />}
                 label="Ajournés"
-                value={5}
+                value={total_ajourne}
                 colorClass="bg-red-50 dark:bg-red-900/20"
             />
             <StatItem
                 icon={<TrendingUp className="size-4 text-violet-600" />}
                 label="Moy. classe"
-                value={`12.23 / 20`} // ${moyenneClasse.toFixed(2)}
+                value={`${moyenne_classe.toFixed(2)} / 20`} 
                 colorClass="bg-violet-50 dark:bg-violet-900/20"
             />
         </div>

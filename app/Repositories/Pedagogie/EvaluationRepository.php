@@ -58,7 +58,7 @@ class EvaluationRepository
 
     public function update(Evaluation $evaluation, array $data)
     {
-        return $evaluation->update([
+        $evaluation->update([
             "enseignement_id" => $evaluation->enseignement_id,
             "periode_academique_id" => $evaluation->periode_academique_id,
             "titre" => $data['titre'],
@@ -67,6 +67,8 @@ class EvaluationRepository
             "coefficient" => $data['coefficient'],
             "note_maximale" => $data['note_maximale'],
         ]);
+
+        return $evaluation->getChanges();
     }
 
     public function delete(Evaluation $evaluation)

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bulletins', function (Blueprint $table) {
             $table->id();
-            $table->integer("moyenne_generale")->nullable();
+            $table->decimal("moyenne_generale", 5, 2)->nullable();
             $table->string('mention')->nullable();
             $table->string('decision_jury')->nullable();
             $table->string('statut')->default("BROUILLON");

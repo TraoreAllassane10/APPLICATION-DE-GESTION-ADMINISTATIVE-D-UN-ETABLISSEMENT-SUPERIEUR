@@ -34,6 +34,10 @@ class MoyenneController extends Controller
 
         $data = $this->moyenneService->getMoyennes($classeId, $enseignementId, $periodeId);
 
-        return response()->json(["success" => true, "data" => $data]);
+        return response()->json([
+            "success" => true,
+            "coefficient" => $data['coefficient'],
+            "data" => $data['data']
+        ]);
     }
 }

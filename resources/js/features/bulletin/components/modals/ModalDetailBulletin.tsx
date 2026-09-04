@@ -15,12 +15,12 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { formatRang } from '@/utils/util';
 import { Printer, Save, Trophy } from 'lucide-react';
-import { formatRang, getMentionConfig, getMoyenneColor } from '../../helpers';
+import { getMoyenneColor } from '../../helpers';
 import { Bulletin } from '../../types/bulletin.types';
 
 type Mention = 'Très Bien' | 'Bien' | 'Assez Bien' | 'Passable' | 'Ajourné';
@@ -78,7 +78,6 @@ function ModalDetailBulletin({
     appreciationEditable,
     onAppreciationEditable,
 }: ModalDetailBulletinProps) {
-    console.log(bulletin)
     return (
         <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
             <DialogContent className="min-w-[90vw]">
@@ -88,11 +87,12 @@ function ModalDetailBulletin({
                             <DialogTitle className="text-base font-semibold">
                                 Détail du Bulletin —{' '}
                                 <span className="uppercase">
-                                    {bulletin.inscription.etudiant.nom}
+                                    {bulletin.nom}
                                 </span>{' '}
-                                {bulletin.inscription.etudiant.prenom}
+                                {bulletin.prenom}
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
-                                    (1ère Année Finance)
+                                    {bulletin.moyenne_generale} -{' '}
+                                    {formatRang(bulletin.rang!)}
                                 </span>
                             </DialogTitle>
                         </DialogHeader>
@@ -165,9 +165,7 @@ function ModalDetailBulletin({
                                         <TableHead className="w-28 text-center font-semibold">
                                             Moyenne / 20
                                         </TableHead>
-                                        <TableHead className="w-28 text-center font-semibold">
-                                            Total Points
-                                        </TableHead>
+                                     
                                         <TableHead className="font-semibold">
                                             Appréciation
                                         </TableHead>
@@ -180,23 +178,23 @@ function ModalDetailBulletin({
                                                 {ligne.cours.nom}
                                             </TableCell>
                                             <TableCell className="text-center text-muted-foreground">
-                                                {ligne.pivot.coefficient ?? 1}
+                                                {ligne.niveaux[0].pivot.coefficient}
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <span
-                                                    // className={getMoyenneColor(
-                                                    //     ligne.moyenne,
-                                                    // )}
+                                                    className={getMoyenneColor(
+                                                        ligne.pivot
+                                                            .moyenne_generale_matiere!,
+                                                    )}
                                                 >
-                                                    {ligne.pivot.moyenne_generale_matiere?? "aucune"}
+                                                    {ligne.pivot
+                                                        .moyenne_generale_matiere ??
+                                                        'NC'}
                                                 </span>
                                             </TableCell>
-                                            {/* <TableCell className="text-center font-mono text-sm">
-                                                {ligne.totalPoints.toFixed(2)}
-                                            </TableCell>
-                                            <TableCell className="text-sm text-muted-foreground italic">
+                                            {/* <TableCell className="text-sm text-muted-foreground italic">
                                                 {ligne.appreciation}
-                                            </TableCell> */}
+                                            </TableCell>  */}
                                         </TableRow>
                                     ))}
                                 </TableBody>

@@ -10,7 +10,7 @@ class Cours extends Model
     /** @use HasFactory<\Database\Factories\CoursFactory> */
     use HasFactory;
 
-    protected $fillable = ["nom", "professeur_id"];
+    protected $fillable = ["nom", "type_enseignement", "professeur_id"];
 
     public function professeur() 
     {

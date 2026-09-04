@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pedagogie;
 
+use App\Enums\TypeEnseignement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\cours\CreateCoursRequest;
 use App\Http\Requests\cours\UpdateCoursRequest;
@@ -25,6 +26,7 @@ class CoursController extends Controller
 
             return Inertia::render("cours/Index", [
                 "cours" => $cours,
+                "types_enseignement" => TypeEnseignement::cases(),
                 "professeurs" => ProfesseurResource::collection(Professeur::latest()->get())
             ]);
         } catch (Exception $e) {
@@ -59,7 +61,7 @@ class CoursController extends Controller
     {
         return Inertia::render("cours/Edit", [
             "cours" => $cours,
-            "professeurs" => ProfesseurResource::collection(Professeur::latest()->get())
+            "types_enseignement" => TypeEnseignement::cases()
         ]);
     }
 

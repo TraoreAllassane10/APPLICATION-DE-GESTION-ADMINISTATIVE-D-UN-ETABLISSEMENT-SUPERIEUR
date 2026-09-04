@@ -186,7 +186,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get("/enseignements/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
             Route::put("/enseignements/{enseignement}/update", "update")->name("enseigenement.update");
             Route::delete("/enseignements/{enseignement}/delete", "destroy")->name("enseigenement.delete");
-        });
+            Route::put('/enseignement/{enseignement}/update-coefficient-in-classe', 'updateCoefficentInClasse');
+            });
 
         // Routes Evaluations
         Route::controller(EvaluationController::class)->group(function () {
@@ -205,14 +206,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // Routes Moyenne
-        Route::controller(MoyenneController::class)->group(function() {
+        Route::controller(MoyenneController::class)->group(function () {
             Route::get('moyennes', 'index')->name('moyennes');
             Route::get('moyennes/search', "getMoyennes")->name('moyennes.getMoyennes');
         });
 
         // Routes Bulletin
-          Route::controller(BulletinController::class)->group(function () {
+        Route::controller(BulletinController::class)->group(function () {
             Route::get("bulletins", "index")->name("bulletins");
+            Route::get('bulletins/search', "getBulletins")->name('bulletins.getBulletins');
+            Route::get('bulletins/{bulletin}/telecharger-bulletin-pdf', "telechargerBulletin")->name('bulletins.telechargerBulletinPdf');
         });
     });
 });

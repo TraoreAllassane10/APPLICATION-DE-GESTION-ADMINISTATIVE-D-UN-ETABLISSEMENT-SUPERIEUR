@@ -23,6 +23,7 @@ class CreateCoursRequest extends FormRequest
     {
         return [
             "nom" => "required",
+            "type_enseignement" => "required"
         ];
     }
 
@@ -30,6 +31,7 @@ class CreateCoursRequest extends FormRequest
     {
         return [
             "nom.required" => "Le nom du cours est requis",
+            "type_enseignement.required" => "Le type de l'enseignement est requis"
         ];
     }
 }

@@ -79,5 +79,19 @@ export default function useEnseignement() {
         }
     };
 
-    return {createEnseignement, getEnseignement, updateEnseignement, deleteEnseignement, loading };
+    // Mettre à jour le coefficient d'un enseignement dans une classe donnée
+    const updateCoefficientEnseignementInclasse = async (enseignementId: number, classeId: number, coefficient: number) => {
+        try {
+            const response = await axios.put(`/enseignement/${enseignementId}/update-coefficient-in-classe`, {classeId, coefficient});
+            
+            if (response.data.success) {
+                toast.success('Coefficient mis à jour avec succès');
+            }
+        } catch (error) {
+            toast.error('Erreur survenue lors de la mise à jour du coefficient');
+            console.log(error);
+        }
+    }
+
+    return {createEnseignement, getEnseignement, updateEnseignement, deleteEnseignement, updateCoefficientEnseignementInclasse, loading };
 }
