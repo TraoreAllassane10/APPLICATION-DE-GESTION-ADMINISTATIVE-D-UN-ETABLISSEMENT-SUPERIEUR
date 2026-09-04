@@ -2,9 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\AnneeUniversitaire;
-use App\Models\User;
-use App\Services\AnneeAcademiqueService;
+use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

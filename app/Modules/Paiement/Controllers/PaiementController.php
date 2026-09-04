@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Modules\Paiement\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Inscription;
+use App\Models\Paiement;
+use App\Modules\Paiement\Requests\CreatePaiementRequest;
+use App\Modules\Paiement\Services\PaiementService;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+
+class PaiementController extends Controller
+{
+    public function __construct(
+        protected PaiementService $paiementService
+    ) {}
+
+    public function index(Request $request)
+    {
+
+        $data = $this->paiementService->getPaiements($request);
+
+        return Inertia::render('paiement/Index', [
+            "total_recette_inscriptions" => $data['total_recette_inscriptions'],
+            "total_encaisse" => $data['total_encaisse'],
+            "total_reste" => $data['total_reste'],
+            "paiements" => $data['paiements']
+        ]);
+    }
+
+    public function store(CreatePaiementRequest $request, string $inscriptionId)
+    {
+        try {
+            $data = $request->validated();
+
+            return $this->paiementService->createPaiement($inscriptionId, $data);
+        } catch (Exception $e) {
+
+            Log::error('Erreur lors de l\'enregistrement d\'un paiement', ["erreur" => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Erreur lors de l\'enregistrement d\'un paiement']);
+        }
+    }
+
+    public function recu(Paiement $paiement)
+    {
+        try {
+            $pdf = $this->paiementService->getRecuPaiement($paiement);
+
+            return $pdf->stream("reçu_{$paiement->inscription->etudiant->nom}_{$paiement->inscription->etudiant->prenom}_{$paiement->date}.pdf");
+        } catch (Exception $e) {
+            Log::error('Erreur lors de la génération d\' reçu de paiement', ["erreur" => $e->getMessage()]);
+        }
+    }
+
+    public function exportPaiements(Request $request)
+    {
+        $periode = $request->query('periode');
+
+        return $this->paiementService->exportPaiements($periode);
+    }
+
+    // Recapitulatif des paiements d'un etudiant
+    public function recapitulatifPaiement(Inscription $inscription)
+    {
+        try {
+            $pdf = $this->paiementService->getRecapPaiements($inscription);
+
+            return $pdf->stream("paiments_{$inscription->etudiant->nom}_{$inscription->etudiant->prenom}.pdf");
+        } catch (Exception $e) {
+            Log::error('Erreur lors de la génération d\'un recap de paiement', ["erreur" => $e->getMessage()]);
+        }
+    }
+}

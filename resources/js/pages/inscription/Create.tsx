@@ -43,16 +43,14 @@ export default function Create() {
 
     const { createEtudiant } = useInscription();
 
-    const handleSubmit = () => {
-        createEtudiant({
+    const handleSubmit = async () => {
+        await createEtudiant({
             etudiant_ip: etudiant?.ip,
             annee_id: annee,
             niveaux: niveau,
             type_inscription: typeInscription,
             taux_reduction: Number(taux_reduction),
         });
-
-        router.visit('/inscriptions');
     };
 
     return (

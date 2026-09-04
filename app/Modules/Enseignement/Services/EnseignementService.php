@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Modules\Enseignement\Services;
+
+use App\Models\Enseignement;
+use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
+
+
+class EnseignementService
+{
+    public function __construct(
+        protected AnneeAcademiqueService $anneeAcademiqueService
+    ) {}
+
+    public function getEnseignements()
+    {
+        return Enseignement::latest()->get();
+    }
+
+    public function getEnseignement(string $id)
+    {
+        return Enseignement::where("id", $id)->first();
+    }
+
+    public function createEnseignement(string $coursId, string $professeurId)
+    {
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+
+        return Enseignement::create([
+            "professeur_id" => $professeurId,
+            "cours_id" => $coursId,
+            "annee_universitaire_id" => $anneeActive->id
+        ]);
+    }
+
+    public function updateEnseignement(string $id, array $data)
+    {
+        $enseignement = Enseignement::find($id);
+        return $enseignement->niveaux()->sync($data['classes']);
+    }
+
+    public function deleteEnseignement(string $id)
+    {
+        $enseignement = Enseignement::find($id);
+        return $enseignement->delete();
+    }
+
+    public function updateCoefficentInClasse(string $id, array $data)
+    {
+        $enseignement = Enseignement::find($id);
+
+        return $enseignement->niveaux()->syncWithPivotValues($data['classeId'], [
+            "coefficient" => $data['coefficient']
+        ]);
+    }
+}

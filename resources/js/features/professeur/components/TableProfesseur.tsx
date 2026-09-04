@@ -1,4 +1,3 @@
-import Avatar from '@/components/etudiant/Avatar';
 import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -21,6 +20,7 @@ import { Meta } from '@/types';
 import { Link } from '@inertiajs/react';
 import { ChevronDown, Edit, Folder, GraduationCap, Trash2, UserRound } from 'lucide-react';
 import { Professeur } from '../types/professeur.types';
+import Avatar from '@/features/etudiant/components/Avatar';
 
 interface TableProfesseurProps {
     professeurs: {

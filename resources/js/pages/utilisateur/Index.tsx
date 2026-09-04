@@ -1,4 +1,4 @@
-import Avatar from '@/components/etudiant/Avatar';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import Avatar from '@/features/etudiant/components/Avatar';
 import AppLayout from '@/layouts/app-layout';
 import ConfigurationLayout from '@/layouts/configurations/ConfigurationLayout';
 import { utilisateur } from '@/routes';

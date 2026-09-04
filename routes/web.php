@@ -1,24 +1,25 @@
 <?php
 
-use App\Http\Controllers\Administrateur\ActivityLogController;
-use App\Http\Controllers\Administrateur\AnneeAcademiqueController;
-use App\Http\Controllers\Administrateur\InscriptionController;
-use App\Http\Controllers\Administrateur\PaiementController;
-use App\Http\Controllers\Administrateur\ScolariteController;
-use App\Http\Controllers\Administrateur\UserController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EnseignementController;
-use App\Http\Controllers\Entreprise\PersonnelController;
-use App\Http\Controllers\EtudiantController;
-use App\Http\Controllers\Pedagogie\BulletinController;
-use App\Http\Controllers\Pedagogie\CoursController;
-use App\Http\Controllers\Pedagogie\EvaluationController;
-use App\Http\Controllers\Pedagogie\FiliereController;
-use App\Http\Controllers\Pedagogie\MoyenneController;
-use App\Http\Controllers\Pedagogie\NiveauController;
-use App\Http\Controllers\Pedagogie\NoteController;
-use App\Http\Controllers\Pedagogie\PeriodeAcdemiqueController;
-use App\Http\Controllers\Pedagogie\ProfesseurController;
+
+use App\Modules\AnneeAcademique\controllers\AnneeAcademiqueController;
+use App\Modules\Bulletin\Controllers\BulletinController;
+use App\Modules\Cours\Controllers\CoursController;
+use App\Modules\Dashboard\Controllers\DashboardController;
+use App\Modules\Enseignement\Controllers\EnseignementController;
+use App\Modules\Etudiant\Controllers\EtudiantController;
+use App\Modules\Evaluation\Controllers\EvaluationController;
+use App\Modules\Filiere\Controllers\FiliereController;
+use App\Modules\HistoriqueActivite\Controllers\ActivityLogController;
+use App\Modules\Inscription\Controllers\InscriptionController;
+use App\Modules\Moyenne\Controllers\MoyenneController;
+use App\Modules\Niveau\Controllers\NiveauController;
+use App\Modules\Note\Controllers\NoteController;
+use App\Modules\Paiement\Controllers\PaiementController;
+use App\Modules\PeriodeAcademique\Controllers\PeriodeAcdemiqueController;
+use App\Modules\Personnel\Controllers\PersonnelController;
+use App\Modules\Professeur\Controllers\ProfesseurController;
+use App\Modules\Scolarite\Controllers\ScolariteController;
+use App\Modules\Utilisateur\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;

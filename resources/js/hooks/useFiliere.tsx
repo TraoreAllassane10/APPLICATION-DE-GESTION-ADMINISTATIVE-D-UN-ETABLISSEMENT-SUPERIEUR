@@ -57,6 +57,8 @@ export default function useFiliere() {
                 .delete(`/filiere/${id}/delete`)
                 .then(() => {
                     toast.success('Filiere supprimée !');
+
+                    router.reload()
                 })
                 .catch((error) => {
                     toast.error(
