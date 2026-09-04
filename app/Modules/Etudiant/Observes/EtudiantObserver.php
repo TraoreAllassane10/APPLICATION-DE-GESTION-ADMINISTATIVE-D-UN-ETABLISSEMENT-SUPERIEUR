@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Observers;
+namespace App\Modules\Etudiant\Observes;
 
 use App\Enums\TypeAction;
 use App\Models\ActivityLog;
@@ -55,19 +55,4 @@ class EtudiantObserver
         ]);
     }
 
-    /**
-     * Handle the Etudiant "restored" event.
-     */
-    public function restored(Etudiant $etudiant): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Etudiant "force deleted" event.
-     */
-    public function forceDeleted(Etudiant $etudiant): void
-    {
-        //
-    }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Modules\Etudiant\Controllers;
 
-use App\Enums\StatutEtudiant;
 use App\Http\Controllers\Controller;
 use App\Models\Etudiant;
+use App\Modules\Etudiant\Enums\StatutEtudiant;
 use App\Modules\Etudiant\Requests\CreateEtudiantRequest;
 use App\Modules\Etudiant\Requests\UpdateEtudiantRequest;
 use App\Modules\Etudiant\Services\EtudiantService;

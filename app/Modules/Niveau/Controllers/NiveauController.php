@@ -3,14 +3,14 @@
 namespace App\Modules\Niveau\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\FiliereResource;
 use App\Models\Filiere;
 use App\Models\Niveau;
+use App\Modules\Filiere\Resources\FiliereResource;
+use App\Modules\Filiere\Services\FiliereService;
 use App\Modules\Niveau\Requests\CreateNiveauRequest;
 use App\Modules\Niveau\Requests\UpdateNiveauRequest;
 use App\Modules\Niveau\Resources\NiveauResource;
 use App\Modules\Niveau\Services\NiveauService;
-use App\Services\FiliereService;
 use Exception;
 use Inertia\Inertia;
 

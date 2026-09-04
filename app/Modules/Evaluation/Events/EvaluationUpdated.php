@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Events;
+namespace App\Modules\Evaluation\Events;
 
-use App\Models\Evaluation;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,16 +10,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class EvaluationNoteUpdated
+class EvaluationUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public Evaluation $evaluation
-    ) {}
+    public function __construct()
+    {
+        //
+    }
 
     /**
      * Get the channels the event should broadcast on.

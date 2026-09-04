@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Observers;
+namespace App\Modules\Paiement\Observers;
 
 use App\Enums\TypeAction;
 use App\Models\ActivityLog;
@@ -55,19 +55,4 @@ class PaiementObserver
         ]);
     }
 
-    /**
-     * Handle the Paiement "restored" event.
-     */
-    public function restored(Paiement $paiement): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Paiement "force deleted" event.
-     */
-    public function forceDeleted(Paiement $paiement): void
-    {
-        //
-    }
 }

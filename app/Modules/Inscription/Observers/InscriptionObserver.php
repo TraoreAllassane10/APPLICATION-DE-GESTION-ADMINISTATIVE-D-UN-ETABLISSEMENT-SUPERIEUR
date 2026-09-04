@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Observers;
+namespace App\Modules\Inscription\Observers;
 
 use App\Enums\TypeAction;
 use App\Models\ActivityLog;
@@ -55,19 +55,5 @@ class InscriptionObserver
         ]);
     }
 
-    /**
-     * Handle the Inscription "restored" event.
-     */
-    public function restored(Inscription $inscription): void
-    {
-        //
-    }
 
-    /**
-     * Handle the Inscription "force deleted" event.
-     */
-    public function forceDeleted(Inscription $inscription): void
-    {
-        //
-    }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Modules\Moyenne\Listeners;
 
-use App\Events\EvaluationNoteUpdated;
-use App\Events\EvaluationUpdated;
 use App\Models\Bulletin;
 use App\Models\Enseignement;
 use App\Models\Niveau;
+use App\Modules\Evaluation\Events\EvaluationNoteUpdated;
+use App\Modules\Evaluation\Events\EvaluationUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;

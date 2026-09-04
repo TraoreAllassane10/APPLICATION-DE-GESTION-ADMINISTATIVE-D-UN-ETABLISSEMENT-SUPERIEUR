@@ -2,7 +2,7 @@
 
 namespace App\Modules\Note\Services;
 
-use App\Events\EvaluationNoteUpdated;
+use App\Modules\Evaluation\Events\EvaluationNoteUpdated;
 use App\Modules\Evaluation\Services\EvaluationService;
 use Exception;
 
