@@ -1,18 +1,16 @@
 import { useState } from 'react';
-
-import { Inscription } from '@/types';
 import { fmt } from '@/utils/util';
 import { ChevronDown, Download, PlusCircle } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../../../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { Progress } from '../ui/progress';
-import { Separator } from '../ui/separator';
+} from '../../../../components/ui/dropdown-menu';
+import { Progress } from '../../../../components/ui/progress';
+import { Separator } from '../../../../components/ui/separator';
 import {
     Table,
     TableBody,
@@ -20,8 +18,9 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '../ui/table';
-import ModalPaiement from './ModalPaiement';
+} from '../../../../components/ui/table';
+import ModalPaiement from '../ModalPaiement';
+import { Inscription } from '../../types/inscription.types';
 export default function TabFinancier({ ins }: { ins: Inscription }) {
     const [modalOpen, setModalOpen] = useState(false);
 

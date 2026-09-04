@@ -11,12 +11,13 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import StepAcademique from '@/components/inscription/steps/StepAcademique';
-import StepEtudiant from '@/components/inscription/steps/StepEtudiant';
-import StepFinancier from '@/components/inscription/steps/StepFinancier';
-import Stepper from '@/components/inscription/steps/Stepper';
-import useInscription from '@/hooks/useInscription';
-import { Etudiant, TypeInscription } from '@/types';
+import StepAcademique from '@/features/inscription/components/steps/StepAcademique';
+import StepEtudiant from '@/features/inscription/components/steps/StepEtudiant';
+import StepFinancier from '@/features/inscription/components/steps/StepFinancier';
+import Stepper from '@/features/inscription/components/steps/Stepper';
+import useInscription from '@/features/inscription/hooks/useInscription';
+import { Etudiant } from '@/features/etudiant/types/etudiant.types';
+import { TypeInscription } from '@/features/inscription/types/inscription.types';
 
 interface CreateInscriptionProps {
     etudiants: Etudiant[];

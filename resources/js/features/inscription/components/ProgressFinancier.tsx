@@ -1,5 +1,5 @@
 import { fmt } from "@/utils/util";
-import { Progress } from "../ui/progress";
+import { Progress } from "../../../components/ui/progress";
 
 export default function ProgressFinanciere({ paye, total }: { paye: number; total: number }) {
     const pct = total > 0 ? Math.round((paye / total) * 100) : 0;

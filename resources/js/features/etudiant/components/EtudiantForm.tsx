@@ -282,7 +282,7 @@ export function EtudiantForm({
                                 ? setStep((s) => s + 1)
                                 : onSubmit(data)
                         }
-                        disabled={!canNext()}
+                        disabled={!canNext() && isLoading}
                     >
                         {step < STEPS.length ? (
                             <>

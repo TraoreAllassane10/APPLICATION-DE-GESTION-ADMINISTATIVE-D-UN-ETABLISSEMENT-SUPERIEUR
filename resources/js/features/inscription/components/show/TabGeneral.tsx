@@ -1,8 +1,8 @@
-import { Inscription } from "@/types";
 import { Calendar, CheckCircle2, Hash, Mail, Phone, User } from "lucide-react";
-import { Separator } from "../ui/separator";
-import StatutInscriptionBadge from "./StatutInscriptionBadge";
-import InfoField from "./InfoField";
+import { Separator } from "../../../../components/ui/separator";
+import StatutInscriptionBadge from "../StatutInscriptionBadge";
+import InfoField from "../InfoField";
+import { Inscription } from "../../types/inscription.types";
 
 export default function TabGeneral({ ins }: { ins: Inscription }) {
     return (

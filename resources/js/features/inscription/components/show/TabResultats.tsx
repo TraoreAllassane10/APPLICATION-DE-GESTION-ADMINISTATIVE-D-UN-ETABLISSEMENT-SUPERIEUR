@@ -1,6 +1,6 @@
 import { Clock } from "lucide-react";
-import { Alert, AlertDescription } from "../ui/alert";
-import { Inscription } from "@/types";
+import { Alert, AlertDescription } from "../../../../components/ui/alert";
+import { Inscription } from "../../types/inscription.types";
 
 export default function TabResultats({ ins }: { ins: Inscription }) {
     // const { moyenneS1, moyenneS2, decision, ues } = ins.resultats;

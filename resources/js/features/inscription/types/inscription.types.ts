@@ -20,3 +20,10 @@ export interface Inscription {
 
 }
 
+export type Tab = 'general' | 'financier' | 'resultats';
+
+export type ShowTabs = {
+    id: Tab;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+}
