@@ -39,9 +39,9 @@ export default function Index() {
 
     const { deleteEtudiant, rechercheEtFiltrage } = useEtudiant();
 
-    const handleDelete = (ip: string) => {
+    const handleDelete = async (ip: string) => {
         if (ip) {
-            deleteEtudiant(ip);
+           await deleteEtudiant(ip);
 
             router.visit('/etudiants');
         }

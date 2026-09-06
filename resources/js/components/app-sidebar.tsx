@@ -21,6 +21,7 @@ import {
 import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
+    BellDotIcon,
     ClipboardList,
     ClipboardPen,
     CreditCard,
@@ -121,6 +122,12 @@ export function AppSidebar() {
                   },
               ]
             : []),
+
+        {
+            title: 'Centre de notification',
+            href: "/notifications",
+            icon: BellDotIcon,
+        },
     ];
 
     const mainNavItemsPersonnel: NavItem[] = [

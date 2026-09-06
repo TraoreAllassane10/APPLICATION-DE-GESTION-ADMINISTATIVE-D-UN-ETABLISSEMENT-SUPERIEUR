@@ -5,15 +5,19 @@ namespace App\Modules\Etudiant\Services;
 use App\Models\Etudiant;
 use App\Modules\Etudiant\Repositories\EtudiantRepository;
 use App\Modules\Etudiant\Resources\EtudiantRessource;
+use App\Modules\Utilisateur\Services\UserService;
+use App\Notifications\EtudiantCreatedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class EtudiantService
 {
 
     public function __construct(
-        protected EtudiantRepository $etudiantRepository
+        protected EtudiantRepository $etudiantRepository,
+        protected UserService $userService
     ) {}
 
     public function all(Request $request)
@@ -37,7 +41,16 @@ class EtudiantService
             $data['photo'] = $data['photo']->store('etudiants', 'public');
         }
 
-        return $this->etudiantRepository->create($data);
+        // Creer un etudiant
+        $etudiant= $this->etudiantRepository->create($data);
+
+        // Recuperer tous les admininstrateur
+        $admins = $this->userService->getAdmins();
+
+        // Envoyer la notification pour l'etudiant crée
+        Notification::send($admins,  new EtudiantCreatedNotification($etudiant));
+
+        return $etudiant;
     }
 
     public function update(Etudiant $etudiant, array $data)

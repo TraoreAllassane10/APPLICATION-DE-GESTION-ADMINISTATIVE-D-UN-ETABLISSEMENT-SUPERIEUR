@@ -219,6 +219,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('bulletins/{bulletin}/telecharger-bulletin-pdf', "telechargerBulletin")->name('bulletins.telechargerBulletinPdf');
         });
     });
+
+    Route::get('/notifications', function() {
+        return Inertia::render('notification/Index');
+    });
 });
 
 require __DIR__ . '/settings.php';
