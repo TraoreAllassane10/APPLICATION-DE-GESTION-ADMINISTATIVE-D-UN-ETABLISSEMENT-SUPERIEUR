@@ -1,31 +1,14 @@
-import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { EvaluationData } from '@/pages/evaluation/Index';
-import { formatDate } from '@/utils/date';
 import { Link } from '@inertiajs/react';
 import {
     BookOpen,
-    ChevronDown,
-    ClipboardList,
-    ClipboardPen,
-    Edit,
+    Calendar,
+    GraduationCap,
+    Pen,
     Trash2,
+    User,
 } from 'lucide-react';
 import useEvaluation from '../hooks/useEvaluation';
 
@@ -42,118 +25,110 @@ const EvaluationTableSection = ({
         await deleteEvaluation(id);
     };
     return (
-        <Card className="overflow-hidden shadow-sm">
-            <Table>
-                <TableHeader>
-                    <TableRow className="bg-muted/40 hover:bg-muted/40">
-                        <TableHead>Enseignement</TableHead>
-                        <TableHead>Titre</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Coefficient</TableHead>
-                        <TableHead className="w-[80px]" />
-                    </TableRow>
-                </TableHeader>
+        <>
+            <div className="grid grid-cols-4 gap-2">
+                {evaluations.data.map((evaluation) => (
+                    <Card key={evaluation.id}>
+                        <CardHeader>
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center justify-center rounded-full bg-red-50 p-2">
+                                    <BookOpen
+                                        size={20}
+                                        className="text-red-500"
+                                    />
+                                </div>
+                                <h2
+                                    title={evaluation.enseignement.cours.nom}
+                                    className="truncate text-sm font-bold text-slate-800"
+                                >
+                                    {evaluation.enseignement.cours.nom} -{' '}
+                                </h2>
 
-                <TableBody>
-                    {evaluations.data.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={6} className="h-48 text-center">
-                                <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                                    <ClipboardPen className="h-10 w-10 opacity-20" />
-                                    <p className="text-sm">
-                                        Aucune evaluation touvée.
+                                <Link
+                                    href={`/evaluations/${evaluation.id}/edit`}
+                                    className="cursor-pointer rounded-full text-muted-foreground hover:text-red-500"
+                                >
+                                    <Pen size={16} />
+                                </Link>
+
+                                <Button
+                                    variant={'default'}
+                                    size={'icon-sm'}
+                                    onClick={() => handleDelete(evaluation.id)}
+                                    disabled={loading}
+                                    className="cursor-pointer rounded-full bg-transparent text-muted-foreground hover:bg-transparent hover:text-red-500"
+                                >
+                                    <Trash2 />
+                                </Button>
+                            </div>
+                        </CardHeader>
+
+                        <CardContent className="space-y-1">
+                            <p className="mb-4 truncate text-sm tracking-wide text-muted-foreground">
+                                {evaluation.titre}
+                            </p>
+
+                            <div className="flex items-center gap-8 text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                    <Calendar size={10} />
+                                    <p className="text-xs">{evaluation.date}</p>
+                                </div>
+
+                                <div className="flex items-center gap-1">
+                                    <GraduationCap size={10} />
+                                    <p className="text-xs">
+                                        {evaluation.enseignement.niveaux
+                                            .map((niveau) => niveau.nom)
+                                            .join(', ')}
                                     </p>
                                 </div>
-                            </TableCell>
-                        </TableRow>
-                    ) : (
-                        evaluations.data.map((evaluation) => (
-                            <TableRow key={evaluation.id} className="group">
-                                <TableCell className="flex items-center gap-2 text-sm leading-none font-medium">
-                                    <BookOpen className="h-4 w-4 text-muted-foreground" />
-                                    <p>
-                                        {evaluation.enseignement.cours.nom} -{' '}
-                                        {evaluation.enseignement.niveaux.map((niveau) => niveau.nom,).join(', ')}
+                            </div>
+
+                            <div className="flex items-center text-muted-foreground">
+                                <User size={10} />
+                                <p className="text-xs">
+                                    {
+                                        evaluation.enseignement.professeur
+                                            .nom_prenom
+                                    }
+                                </p>
+                            </div>
+                        </CardContent>
+
+                        <CardContent>
+                            <div className="mb-2 flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-1">
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        Coefficient :{' '}
                                     </p>
-                                </TableCell>
+                                    <p className="text-sm text-red-500">
+                                        {evaluation.coefficient}
+                                    </p>
+                                </div>
 
-                                <TableCell className="text-sm leading-none">
-                                    {evaluation.titre}
-                                </TableCell>
+                                <div className="flex items-center gap-1">
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        Note maximale :{' '}
+                                    </p>
+                                    <p className="text-sm text-red-500">
+                                        {evaluation.note_maximale}
+                                    </p>
+                                </div>
+                            </div>
 
-                                <TableCell className="text-sm leading-none">
-                                    {evaluation.type}
-                                </TableCell>
-
-                                <TableCell className="text-sm leading-none">
-                                    {formatDate(new Date(evaluation.date))}
-                                </TableCell>
-
-                                <TableCell className="text-sm leading-none">
-                                    {evaluation.coefficient}
-                                </TableCell>
-
-                                <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
-                                            >
-                                                Actions{' '}
-                                                <ChevronDown className="h-3 w-3" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-
-                                        <DropdownMenuContent
-                                            align="end"
-                                            className="w-48"
-                                        >
-                                            <DropdownMenuItem asChild>
-                                                <Link
-                                                    href={`/notes/${evaluation.id}/create-note`}
-                                                    className="flex cursor-pointer items-center gap-2"
-                                                >
-                                                    <ClipboardList className="h-4 w-4" />{' '}
-                                                    Saisir notes
-                                                </Link>
-                                            </DropdownMenuItem>
-
-                                            <DropdownMenuItem asChild>
-                                                <Link
-                                                    href={`/evaluations/${evaluation.id}/edit`}
-                                                    className="flex cursor-pointer items-center gap-2"
-                                                >
-                                                    <Edit className="h-4 w-4" />{' '}
-                                                    Modifier
-                                                </Link>
-                                            </DropdownMenuItem>
-
-                                            <DropdownMenuSeparator />
-
-                                            <DropdownMenuItem
-                                                onClick={() =>
-                                                    handleDelete(evaluation.id)
-                                                }
-                                                disabled={loading}
-                                                className="cursor-pointer gap-2 text-destructive focus:text-destructive"
-                                            >
-                                                <Trash2 className="h-4 w-4" />{' '}
-                                                Supprimer
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-
-                <PaginationLinks links={evaluations.links} />
-            </Table>
-        </Card>
+                            <Link href={`/notes/${evaluation.id}/create-note`}>
+                                <Button
+                                    size={'sm'}
+                                    className="w-full hover:bg-red-700"
+                                >
+                                    Saisir les notes
+                                </Button>
+                            </Link>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        </>
     );
 };
 
