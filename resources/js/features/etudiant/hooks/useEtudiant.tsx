@@ -1,9 +1,9 @@
 import { etudiants } from '@/routes';
-import { EtudiantFormData } from '@/types';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { EtudiantFormData } from '../types/etudiant.types';
 
 export default function useEtudiant() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -130,7 +130,7 @@ export default function useEtudiant() {
                 })
                 .catch((error) => {
                     toast.error(
-                        'Erreur survenue lors de la suppression du seance',
+                        'Erreur survenue lors de la suppression de l\'etudiant',
                     );
                     console.log(error);
                 });
