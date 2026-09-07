@@ -52,7 +52,8 @@ class EtudiantCreatedNotification extends Notification implements ShouldQueue
             'type' => "Etudiant",
             'etudiant_ip' => $this->etudiant->ip,
             'titre' => "Nouvel étudiant enregistré",
-            'message' => "{$this->etudiant->nom} {$this->etudiant->prenom} a été enregistré par le secrétaire de scolarité."
+            'message' => "{$this->etudiant->nom} {$this->etudiant->prenom} a été enregistré par le secrétaire de scolarité.",
+            'lien' => "/etudiants/{$this->etudiant->ip}/show"
         ];
     }
 

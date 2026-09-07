@@ -125,7 +125,7 @@ export function AppSidebar() {
 
         {
             title: 'Centre de notification',
-            href: "/notifications",
+            href: '/notifications',
             icon: BellDotIcon,
         },
     ];
@@ -168,7 +168,7 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent className="px-2 py-3">
+            <SidebarContent className="overflow-y-auto px-2 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <NavMain items={mainNavItems} title="Gestion académique" />
                 {isAuthorize && (
                     <NavMain items={mainNavItemsPersonnel} title="Personnel" />

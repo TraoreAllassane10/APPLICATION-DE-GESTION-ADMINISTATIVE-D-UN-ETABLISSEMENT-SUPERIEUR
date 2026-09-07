@@ -14,6 +14,7 @@ use App\Modules\Inscription\Controllers\InscriptionController;
 use App\Modules\Moyenne\Controllers\MoyenneController;
 use App\Modules\Niveau\Controllers\NiveauController;
 use App\Modules\Note\Controllers\NoteController;
+use App\Modules\Notification\Controllers\NotificationController;
 use App\Modules\Paiement\Controllers\PaiementController;
 use App\Modules\PeriodeAcademique\Controllers\PeriodeAcdemiqueController;
 use App\Modules\Personnel\Controllers\PersonnelController;
@@ -188,7 +189,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put("/enseignements/{enseignement}/update", "update")->name("enseigenement.update");
             Route::delete("/enseignements/{enseignement}/delete", "destroy")->name("enseigenement.delete");
             Route::put('/enseignement/{enseignement}/update-coefficient-in-classe', 'updateCoefficentInClasse');
-            });
+        });
 
         // Routes Evaluations
         Route::controller(EvaluationController::class)->group(function () {
@@ -220,8 +221,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    Route::get('/notifications', function() {
-        return Inertia::render('notification/Index');
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('notifications', 'index')->name('notifications');
+        Route::get('notifications/dernieres', 'dernieresNotifications')->name('notifications.dernieres');
+        Route::put('notifications/{notification}/marquer-comme-lue', 'marquerNotificationCommeLue')->name('notifications.marquerNotificationCommeLue');
+        Route::put('notifications/marquer-tout-comme-lue', 'marquerTouteNotificationCommeLue')->name('notifications.marquerTouteNotificationCommeLue');
+        Route::delete('notifications/{notification}/delete', 'delete')->name('notifications.delete');
+        Route::delete('notifications/clear', 'clear')->name('notifications.clear');
     });
 });
 

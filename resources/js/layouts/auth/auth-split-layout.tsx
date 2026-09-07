@@ -1,9 +1,7 @@
-import AuthImage from '@/assets/auth-image.png';
 import Logo from '@/assets/logo.jpg';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { home } from '@/routes';
-import { type SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 
 interface AuthLayoutProps {
@@ -16,27 +14,44 @@ export default function AuthSplitLayout({
     title,
     description,
 }: PropsWithChildren<AuthLayoutProps>) {
-    // const { name, quote } = usePage<SharedData>().props;
-
     return (
         <div className="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
-            <div
-                className={`relative hidden h-full flex-col p-10 text-white lg:flex dark:border-r`}
-                style={{ backgroundImage: `url(${AuthImage})` }}
-            >
-                <div className="absolute inset-0 bg-zinc-900 opacity-45" />
+            {/* Section Gauche : Dégradé Rouge avec Contenu */}
+            <div className="relative hidden h-full flex-col justify-between overflow-hidden bg-gradient-to-br from-red-700 via-red-600 to-red-500 p-10 text-white lg:flex dark:border-r">
+                {/* Motif décoratif en filigrane en arrière-plan */}
+                <div className="absolute -right-16 -top-16 h-96 w-96 rounded-full bg-red-600/20 blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 h-96 w-96 rounded-full bg-rose-500/15 blur-3xl" />
+
+                {/* En-tête / Logo */}
                 <Link
                     href={home()}
-                    className="relative z-20 flex items-center text-lg font-medium"
+                    className="relative z-20 flex items-center text-lg font-semibold tracking-wide"
                 >
-                    {/* <AppLogoIcon className="mr-2 size-8 fill-current text-white" /> */}
-                    <img src={Logo} alt="logo" className="mr-2 size-20" />
-                    INEC DALOA
+                    <img src={Logo} alt="Logo" className="mr-3 size-16 rounded-full object-cover shadow-md ring-2 ring-white/20" />
+                    <span>INEC DALOA</span>
                 </Link>
-                <div className="relative z-20 mt-38">
-                    <h1 className='text-4xl font-bold tracking-wide leading-12'>Application de gestion administrative - INEC SA</h1>
+
+                {/* Contenu textuel central */}
+                <div className="relative z-20 my-auto max-w-xl space-y-4">
+                    <span className="inline-block rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-200 backdrop-blur-sm">
+                        Institut National d'Intelligence Numérique, Economique et Commerciale
+                    </span>
+                    <h1 className="text-4xl font-extrabold tracking-tight leading-snug">
+                        Application de gestion administrative
+                    </h1>
+                    <p className="text-base text-red-100/80 leading-relaxed">
+                        Plateforme centralisée pour la gestion des étudiants, la gestion des inscriptions et le suivi académique de l'INEC SA.
+                    </p>
+                </div>
+
+                {/* Pied de page / Branding */}
+                <div className="relative z-20 flex items-center justify-between border-t border-white/10 pt-6 text-xs text-red-200/70">
+                    <p>© {new Date().getFullYear()} INEC SA. Tous droits réservés.</p>
+                    <p>Scolarité & Administration & Pedagogie</p>
                 </div>
             </div>
+
+            {/* Section Droite : Formulaire */}
             <div className="w-full lg:p-8">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <Link

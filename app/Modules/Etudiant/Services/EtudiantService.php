@@ -9,6 +9,7 @@ use App\Modules\Utilisateur\Services\UserService;
 use App\Notifications\EtudiantCreatedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,7 +46,8 @@ class EtudiantService
         $etudiant= $this->etudiantRepository->create($data);
 
         // Recuperer tous les admininstrateur
-        $admins = $this->userService->getAdmins();
+        $user = Auth::user();
+        $admins = $this->userService->getAdmins()->where('id', "!=", $user->id);
 
         // Envoyer la notification pour l'etudiant crée
         Notification::send($admins,  new EtudiantCreatedNotification($etudiant));
