@@ -1,8 +1,6 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
     Table,
     TableBody,
@@ -12,155 +10,212 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatRang } from '@/utils/util';
-import { Download, Eye, FileText, Search, Trophy } from 'lucide-react';
-import { useState } from 'react';
+import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
 import { getMentionConfig, getMoyenneColor } from '../helpers';
 import { Bulletin } from '../types/bulletin.types';
+
+const getRangIcon = (rang: number) => {
+    if (rang === 1) return <Trophy className="size-4 text-yellow-500" />;
+    if (rang === 2) return <Trophy className="size-4 text-slate-400" />;
+    if (rang === 3) return <Trophy className="size-4 text-amber-600" />;
+    return null;
+};
 
 interface TableBulletinProps {
     bulletins: Bulletin[];
     onTelechargerTous: () => void;
     onOpenDetail: (bulletin: Bulletin) => void;
-    onTelechargerPDF: (bulletin: Bulletin, e: React.MouseEvent) => void;
+    onTelechargerPDF: (etudiant: Bulletin, e: React.MouseEvent) => void;
 }
 
-const getRangBadge = (rang: number) => {
-    if (rang === 1) return <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30 gap-1"><Trophy className="size-3 text-amber-500" /> 1er</Badge>;
-    if (rang === 2) return <Badge variant="outline" className="bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-300 gap-1"><Trophy className="size-3 text-slate-400" /> 2ème</Badge>;
-    if (rang === 3) return <Badge variant="outline" className="bg-amber-700/10 text-amber-800 dark:text-amber-500 border-amber-700/30 gap-1"><Trophy className="size-3 text-amber-700" /> 3ème</Badge>;
-    return <span className="text-xs text-muted-foreground font-medium">{formatRang(rang)}</span>;
-};
-
-export default function TableBulletin({
+const TableBulletin = ({
     bulletins,
+    onTelechargerTous,
     onOpenDetail,
-}: TableBulletinProps) {
-    const [search, setSearch] = useState('');
-
-    const filteredBulletins = bulletins.filter((b) =>
-        `${b.nom} ${b.prenom} ${b.etudiant_ip}`
-            .toLowerCase()
-            .includes(search.toLowerCase())
-    );
-
+    onTelechargerPDF,
+}: TableBulletinProps) => {
     return (
-        <Card className="border-border/60 shadow-xs">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                <div>
-                    <CardTitle className="text-base font-semibold">
-                        Liste des Étudiants ({bulletins.length})
-                    </CardTitle>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                        Cliquez sur une ligne pour voir le détail des notes
-                    </p>
+        <Card>
+            <CardHeader className="pb-0">
+                {/* Barre statut + actions */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                        <LockOpen className="size-4 text-amber-500" />
+                        <span className="text-sm font-medium">Statut :</span>
+                        <Badge className="border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                            Brouillon (Non verrouillé)
+                        </Badge>
+                    </div>
+
+                    <Button
+                        id="btn-telecharger-tous"
+                        variant="outline"
+                        onClick={onTelechargerTous}
+                        className="gap-2"
+                    >
+                        <Download className="size-4" />
+                        Télécharger Tous (ZIP/PDF)
+                    </Button>
                 </div>
-                {/* Champ de recherche rapide */}
-                <div className="relative w-64">
-                    <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
-                    <Input
-                        placeholder="Rechercher nom, matricule..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="pl-9 h-9 text-xs"
-                    />
-                </div>
+
+                {/* Sous-titre contextuel */}
+                <p className="mt-2 text-xs text-muted-foreground">
+                    Semestre 1 —1ère Année Finance
+                </p>
             </CardHeader>
 
-            <CardContent className="p-0">
-                <div className="border-t">
-                    <Table>
-                        <TableHeader className="bg-muted/40">
-                            <TableRow>
-                                <TableHead className="w-20 text-center font-semibold text-xs">Rang</TableHead>
-                                <TableHead className="font-semibold text-xs">Étudiant</TableHead>
-                                <TableHead className="font-semibold text-xs">Matricule</TableHead>
-                                <TableHead className="text-center font-semibold text-xs">Moyenne Générale</TableHead>
-                                <TableHead className="text-center font-semibold text-xs">Mention</TableHead>
-                                <TableHead className="text-right pr-6 font-semibold text-xs">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {filteredBulletins.map((bulletin) => {
-                                const mentionConfig = getMentionConfig(bulletin.mention ?? 'Passable');
-                                const initials = `${bulletin.nom?.[0] || ''}${bulletin.prenom?.[0] || ''}`;
-
-                                return (
-                                    <TableRow
-                                        key={bulletin.id}
-                                        onClick={() => onOpenDetail(bulletin)}
-                                        className="group cursor-pointer hover:bg-muted/50 transition-colors"
-                                    >
-                                        <TableCell className="text-center font-medium">
-                                            {getRangBadge(bulletin.rang!)}
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <Avatar className="h-8 w-8 border">
-                                                    <AvatarFallback className="text-xs font-semibold bg-primary/5 text-primary">
-                                                        {initials}
-                                                    </AvatarFallback>
-                                                </Avatar>
-                                                <div className="flex flex-col">
-                                                    <span className="font-semibold text-sm leading-none group-hover:text-primary transition-colors">
-                                                        {bulletin.nom.toUpperCase()} {bulletin.prenom}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <span className="font-mono text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                                                {bulletin.etudiant_ip}
+            <CardContent className="pt-4">
+                <Table>
+                    <TableHeader>
+                        <TableRow className="bg-muted/50">
+                            <TableHead className="w-16 text-center font-semibold">
+                                Rang
+                            </TableHead>
+                            <TableHead className="font-semibold">
+                                Matricule
+                            </TableHead>
+                            <TableHead className="font-semibold">
+                                Nom &amp; Prénoms
+                            </TableHead>
+                            <TableHead className="text-center font-semibold">
+                                Moyenne Gén.
+                            </TableHead>
+                            <TableHead className="text-center font-semibold">
+                                Mention
+                            </TableHead>
+                            <TableHead className="text-center font-semibold">
+                                Actions
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {bulletins.map((bulletin) => {
+                            const mentionConfig = getMentionConfig(
+                                bulletin.mention ?? 'Passable',
+                            );
+                            return (
+                                <TableRow
+                                    key={bulletin.id}
+                                    className="group cursor-pointer transition-colors hover:bg-muted/60"
+                                    onClick={() => onOpenDetail(bulletin)}
+                                >
+                                    {/* Rang */}
+                                    <TableCell className="text-center">
+                                        <div className="flex items-center justify-center gap-1">
+                                            {getRangIcon(bulletin.rang!)}
+                                            <span
+                                                className={`text-sm font-bold ${
+                                                    bulletin.rang &&
+                                                    bulletin.rang <= 3
+                                                        ? 'text-amber-600 dark:text-amber-400'
+                                                        : 'text-muted-foreground'
+                                                }`}
+                                            >
+                                                {formatRang(bulletin.rang!)}
                                             </span>
-                                        </TableCell>
+                                        </div>
+                                    </TableCell>
 
-                                        <TableCell className="text-center">
-                                            <div className="inline-flex items-baseline gap-1">
-                                                <span className={`text-sm font-bold ${getMoyenneColor(bulletin.moyenne_generale!)}`}>
-                                                    {bulletin.moyenne_generale?.toFixed(2) ?? 'N/C'}
-                                                </span>
-                                                <span className="text-[10px] text-muted-foreground">/20</span>
-                                            </div>
-                                        </TableCell>
+                                    {/* Matricule */}
+                                    <TableCell>
+                                        <span className="font-mono text-sm text-muted-foreground">
+                                            {bulletin.etudiant_ip}
+                                        </span>
+                                    </TableCell>
 
-                                        <TableCell className="text-center">
-                                            <Badge variant="outline" className={`text-xs ${mentionConfig?.className}`}>
-                                                {mentionConfig?.label}
-                                            </Badge>
-                                        </TableCell>
+                                    {/* Nom & Prénoms */}
+                                    <TableCell>
+                                        <div className="font-medium">
+                                            <span className="uppercase">
+                                                {bulletin.nom}
+                                            </span>{' '}
+                                            <span className="text-muted-foreground">
+                                                {bulletin.prenom}
+                                            </span>
+                                        </div>
+                                    </TableCell>
 
-                                        <TableCell className="text-right pr-6" onClick={(e) => e.stopPropagation()}>
-                                            <div className="flex items-center justify-end gap-1.5">
+                                    {/* Moyenne */}
+                                    <TableCell className="text-center">
+                                        <span
+                                            className={getMoyenneColor(
+                                                bulletin.moyenne_generale!,
+                                            )}
+                                        >
+                                            {bulletin.moyenne_generale ?? 'NC'}
+                                        </span>
+                                        {bulletin.moyenne_generale && (
+                                            <span className="text-xs text-muted-foreground">
+                                                {' '}
+                                                / 20
+                                            </span>
+                                        )}
+                                    </TableCell>
+
+                                    {/* Mention */}
+                                    <TableCell className="text-center">
+                                        <Badge
+                                            className={mentionConfig?.className}
+                                        >
+                                            {mentionConfig?.label}
+                                        </Badge>
+                                    </TableCell>
+
+                                    {/* Actions */}
+                                    <TableCell
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <div className="flex items-center justify-center gap-2">
+                                            <Button
+                                                id={`btn-apercu-${bulletin.id}`}
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() =>
+                                                    onOpenDetail(bulletin)
+                                                }
+                                                className="h-7 gap-1.5 text-xs"
+                                            >
+                                                <Eye className="size-3" />
+                                                Aperçu
+                                            </Button>
+
+                                            <a
+                                                href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`}
+                                                target="_blank"
+                                            >
                                                 <Button
-                                                    variant="ghost"
+                                                    id={`btn-pdf-${bulletin.id}`}
+                                                    variant="default"
                                                     size="sm"
-                                                    onClick={() => onOpenDetail(bulletin)}
-                                                    className="h-8 w-8 p-0"
-                                                    title="Aperçu rapide"
+                                                    className="h-7 gap-1.5 text-xs"
                                                 >
-                                                    <Eye className="size-4 text-muted-foreground" />
+                                                    <FileText className="size-3" />
+                                                    PDF
                                                 </Button>
+                                            </a>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
 
-                                                <a
-                                                    href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    <Button variant="outline" size="sm" className="h-8 gap-1 text-xs">
-                                                        <FileText className="size-3.5" />
-                                                        PDF
-                                                    </Button>
-                                                </a>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </div>
+                {bulletins.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <FileText className="mb-3 size-12 text-muted-foreground/30" />
+                        <p className="text-sm text-muted-foreground">
+                            Aucun bulletin disponible pour cette sélection.
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                            Sélectionnez une période et une classe, puis cliquez
+                            sur <strong>Recalculer</strong>.
+                        </p>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );
-}
+};
+
+export default TableBulletin;

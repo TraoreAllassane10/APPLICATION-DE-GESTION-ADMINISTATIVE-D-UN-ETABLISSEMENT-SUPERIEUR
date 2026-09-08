@@ -10,6 +10,7 @@ import { BreadcrumbItem, DataNiveau, Periode } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tableau de bord', href: '/dashboard' },
@@ -28,9 +29,14 @@ export default function Index() {
     const [selectedPeriode, setSelectedPeriode] = useState<string>('');
     const [selectedClasse, setSelectedClasse] = useState<string>('');
 
-    const [selectedBulletin, setSelectedBulletin] = useState<Bulletin | null>(null);
-    const [appreciationEditable, setAppreciationEditable] = useState<string>('');
+    const [selectedBulletin, setSelectedBulletin] = useState<Bulletin | null>(
+        null,
+    );
+    const [appreciationEditable, setAppreciationEditable] =
+        useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [downloadingZip, setDownloadingZip] = useState(false);
 
     const { getBulletins, bulletins, stats, loading } = useBulletin();
 
@@ -48,11 +54,31 @@ export default function Index() {
 
     const handleTelechargerPDF = (bulletin: Bulletin, e: React.MouseEvent) => {
         e.stopPropagation();
-        window.open(`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`, '_blank');
+        window.open(
+            `/bulletins/${bulletin.id}/telecharger-bulletin-pdf`,
+            '_blank',
+        );
     };
 
-    const handleTelechargerTous = () => {
-        alert('Téléchargement du package complet en cours...');
+    const handleDownloadZip = () => {
+        if (!selectedClasse || !selectedPeriode) {
+            toast.error(
+                "Veuillez d'abord selectionner une classe et une periode academique",
+            );
+
+            return ;
+        }
+
+        setDownloadingZip(true);
+
+        const downloadUrl = `/classes/${selectedClasse}/periodes/${selectedPeriode}/download-zip`;
+
+        window.location.href = downloadUrl;
+
+        // Réinitialiser l'état du bouton après un délai estimé
+        setTimeout(() => {
+            setDownloadingZip(false);
+        }, 5000);
     };
 
     return (
@@ -61,7 +87,7 @@ export default function Index() {
 
             <div className="space-y-6 p-4 sm:p-6 lg:p-8">
                 {/* En-tête */}
-                <HeaderSection />
+                <HeaderSection downloadingZip={downloadingZip} onDownloadZip={handleDownloadZip} />
 
                 {/* Section Filtres */}
                 <FilterSection
@@ -94,19 +120,23 @@ export default function Index() {
                         </p>
                     </div>
                 ) : !bulletins || bulletins.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center bg-card/30">
-                        <div className="p-3 bg-muted rounded-full mb-3">
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-card/30 py-20 text-center">
+                        <div className="mb-3 rounded-full bg-muted p-3">
                             <BookOpen className="h-6 w-6 text-muted-foreground" />
                         </div>
-                        <h3 className="text-sm font-semibold text-foreground">Aucun bulletin affiché</h3>
-                        <p className="mt-1 text-xs text-muted-foreground max-w-sm">
-                            Veuillez sélectionner une classe et une période ci-dessus pour afficher et gérer les résultats des étudiants.
+                        <h3 className="text-sm font-semibold text-foreground">
+                            Aucun bulletin affiché
+                        </h3>
+                        <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+                            Veuillez sélectionner une classe et une période
+                            ci-dessus pour afficher et gérer les résultats des
+                            étudiants.
                         </p>
                     </div>
                 ) : (
                     <TableBulletin
                         bulletins={bulletins}
-                        onTelechargerTous={handleTelechargerTous}
+                        onTelechargerTous={handleDownloadZip}
                         onOpenDetail={handleOpenDetail}
                         onTelechargerPDF={handleTelechargerPDF}
                     />

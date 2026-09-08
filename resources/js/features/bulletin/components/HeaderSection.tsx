@@ -4,9 +4,11 @@ import { Download, Lock, RefreshCw, Sparkles } from 'lucide-react';
 
 interface HeaderSectionProps {
     isLocked?: boolean;
+    downloadingZip: boolean;
+    onDownloadZip: () => void;
 }
 
-export default function HeaderSection({ isLocked = false }: HeaderSectionProps) {
+export default function HeaderSection({ isLocked = false, downloadingZip,  onDownloadZip }: HeaderSectionProps) {
     return (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ">
             <div>
@@ -29,9 +31,12 @@ export default function HeaderSection({ isLocked = false }: HeaderSectionProps) 
                     variant="outline"
                     size="sm"
                     className="h-9 gap-2 text-xs font-medium"
+                    onClick={onDownloadZip}
+                    disabled={downloadingZip}
                 >
                     <Download className="size-3.5" />
-                    Exporter la classe (ZIP)
+                    {downloadingZip ? "Téléchargement en cours..." : "Exporter la classe (ZIP)"}
+                    
                 </Button>
             </div>
         </div>
