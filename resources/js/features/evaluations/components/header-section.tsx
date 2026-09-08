@@ -2,23 +2,25 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { PlusCircle } from 'lucide-react';
 
-export const HeaderSection = () => {
+const HeaderSection = () => {
     return (
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 className="text-2xl font-bold tracking-tight">
-                    Gestion des evaluations
+                    Gestion des évaluations
                 </h1>
-                <p className="mt-0.5 text-sm text-muted-foreground">
-                    Gérez les evalutions en toute simplicité.
+                <p className="mt-1 text-sm text-muted-foreground">
+                    Planifiez, modifiez et saisissez les notes de vos évaluations académiques.
                 </p>
             </div>
-            <Link href={'/evaluations/create'}>
-                <Button className="gap-2 transition duration-300 hover:bg-red-700">
+            <Link href="/evaluations/create">
+                <Button className="w-full gap-2 sm:w-auto">
                     <PlusCircle className="h-4 w-4" />
-                    Nouvelle evaluation
+                    Nouvelle évaluation
                 </Button>
             </Link>
         </div>
     );
 };
+
+export default HeaderSection;

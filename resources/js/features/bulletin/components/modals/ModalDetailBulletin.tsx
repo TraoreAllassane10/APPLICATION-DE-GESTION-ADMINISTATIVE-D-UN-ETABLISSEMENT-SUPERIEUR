@@ -1,54 +1,18 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { formatRang } from '@/utils/util';
-import { Printer, Save, Trophy } from 'lucide-react';
+import { Award, Printer, Save, User } from 'lucide-react';
 import { getMoyenneColor } from '../../helpers';
 import { Bulletin } from '../../types/bulletin.types';
-
-type Mention = 'Très Bien' | 'Bien' | 'Assez Bien' | 'Passable' | 'Ajourné';
-
-interface BulletinEtudiant {
-    id: number;
-    rang: number;
-    matricule: string;
-    nom: string;
-    prenom: string;
-    moyenneGenerale: number;
-    mention: Mention;
-}
-
-interface LigneMatiere {
-    matiere: string;
-    coefficient: number;
-    moyenne: number;
-    totalPoints: number;
-    appreciation: string;
-}
-
-interface DetailBulletin {
-    etudiantId: number;
-    totalEtudiants: number;
-    appreciationGenerale: string;
-    matieres: LigneMatiere[];
-}
 
 interface ModalDetailBulletinProps {
     isModalOpen: boolean;
@@ -61,195 +25,84 @@ interface ModalDetailBulletinProps {
     onAppreciationEditable: (appreciation: string) => void;
 }
 
-const getRangIcon = (rang: number) => {
-    if (rang === 1) return <Trophy className="size-4 text-yellow-500" />;
-    if (rang === 2) return <Trophy className="size-4 text-slate-400" />;
-    if (rang === 3) return <Trophy className="size-4 text-amber-600" />;
-    return null;
-};
-
-function ModalDetailBulletin({
+export default function ModalDetailBulletin({
     isModalOpen,
     onOpenChange,
     bulletin,
-    detailActif,
     onImprimerPDF,
     onEnregistrer,
     appreciationEditable,
     onAppreciationEditable,
 }: ModalDetailBulletinProps) {
+    if (!bulletin) return null;
+
     return (
         <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="min-w-[90vw]">
-                {bulletin && detailActif && (
-                    <>
-                        <DialogHeader>
-                            <DialogTitle className="text-base font-semibold">
-                                Détail du Bulletin —{' '}
-                                <span className="uppercase">
-                                    {bulletin.nom}
-                                </span>{' '}
-                                {bulletin.prenom}
-                                <span className="ml-2 text-sm font-normal text-muted-foreground">
-                                    {bulletin.moyenne_generale} -{' '}
-                                    {formatRang(bulletin.rang!)}
-                                </span>
+            <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0 gap-0 overflow-hidden">
+                {/* Header Modal */}
+                <DialogHeader className="p-6 pb-4 border-b">
+                    <div className="flex items-start justify-between gap-4">
+                        <div>
+                            <DialogTitle className="text-lg font-bold flex items-center gap-2">
+                                <User className="size-5 text-primary" />
+                                {bulletin.nom.toUpperCase()} {bulletin.prenom}
                             </DialogTitle>
-                        </DialogHeader>
-
-                        {/* Résumé en-tête */}
-                        {/* <div className="flex flex-wrap items-center gap-4 rounded-lg border bg-muted/40 px-4 py-3">
-                            <div className="flex flex-col">
-                                <span className="text-xs text-muted-foreground">
-                                    Moyenne Générale
-                                </span>
-                                <span
-                                    className={`text-xl font-bold ${getMoyenneColor(selectedEtudiant.moyenneGenerale)}`}
-                                >
-                                    {selectedEtudiant.moyenneGenerale.toFixed(
-                                        2,
-                                    )}
-                                    <span className="text-sm font-normal text-muted-foreground">
-                                        {' '}
-                                        / 20
-                                    </span>
-                                </span>
-                            </div>
-                            <Separator
-                                orientation="vertical"
-                                className="h-10"
-                            />
-                            <div className="flex flex-col">
-                                <span className="text-xs text-muted-foreground">
-                                    Rang
-                                </span>
-                                <span className="flex items-center gap-1 text-xl font-bold">
-                                    {getRangIcon(selectedEtudiant.rang)}
-                                    {formatRang(selectedEtudiant.rang)}
-                                    <span className="text-sm font-normal text-muted-foreground">
-                                        / {detailActif.totalEtudiants}
-                                    </span>
-                                </span>
-                            </div>
-                            <Separator
-                                orientation="vertical"
-                                className="h-10"
-                            />
-                            <div className="flex flex-col">
-                                <span className="text-xs text-muted-foreground">
-                                    Mention
-                                </span>
-                                <Badge
-                                    className={`mt-1 ${getMentionConfig(selectedEtudiant.mention).className}`}
-                                >
-                                    {
-                                        getMentionConfig(
-                                            selectedEtudiant.mention,
-                                        ).label
-                                    }
-                                </Badge>
-                            </div>
-                        </div> */}
-
-                        {/* Tableau des matières */}
-                        <div className="overflow-hidden rounded-lg border">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted/50">
-                                        <TableHead className="font-semibold">
-                                            Matière / Enseignement
-                                        </TableHead>
-                                        <TableHead className="w-20 text-center font-semibold">
-                                            Coeff
-                                        </TableHead>
-                                        <TableHead className="w-28 text-center font-semibold">
-                                            Moyenne / 20
-                                        </TableHead>
-                                     
-                                        <TableHead className="font-semibold">
-                                            Appréciation
-                                        </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {bulletin.enseignements?.map((ligne) => (
-                                        <TableRow key={ligne.id}>
-                                            <TableCell className="font-medium">
-                                                {ligne.cours.nom}
-                                            </TableCell>
-                                            <TableCell className="text-center text-muted-foreground">
-                                                {ligne.niveaux[0].pivot.coefficient}
-                                            </TableCell>
-                                            <TableCell className="text-center">
-                                                <span
-                                                    className={getMoyenneColor(
-                                                        ligne.pivot
-                                                            .moyenne_generale_matiere!,
-                                                    )}
-                                                >
-                                                    {ligne.pivot
-                                                        .moyenne_generale_matiere ??
-                                                        'NC'}
-                                                </span>
-                                            </TableCell>
-                                            {/* <TableCell className="text-sm text-muted-foreground italic">
-                                                {ligne.appreciation}
-                                            </TableCell>  */}
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Matricule : <span className="font-mono">{bulletin.etudiant_ip}</span>
+                            </p>
                         </div>
-
-                        {/* Appréciation générale */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">
-                                Appréciation Générale du Conseil
-                            </label>
-                            <Textarea
-                                id="appreciation-generale"
-                                value={appreciationEditable}
-                                onChange={(e) =>
-                                    onAppreciationEditable(e.target.value)
-                                }
-                                rows={3}
-                                placeholder="Saisissez l'appréciation générale du conseil de classe..."
-                                className="resize-none"
-                            />
+                        <div className="flex items-center gap-3 bg-muted/30 p-2.5 rounded-lg border">
+                            <div className="text-right">
+                                <p className="text-[10px] text-muted-foreground uppercase font-semibold">Moyenne</p>
+                                <p className={`text-base font-bold ${getMoyenneColor(bulletin.moyenne_generale!)}`}>
+                                    {bulletin.moyenne_generale?.toFixed(2)} / 20
+                                </p>
+                            </div>
+                            <div className="h-8 w-px bg-border" />
+                            <div className="text-left">
+                                <p className="text-[10px] text-muted-foreground uppercase font-semibold">Rang</p>
+                                <p className="text-base font-bold text-foreground">
+                                    {formatRang(bulletin.rang!)}
+                                </p>
+                            </div>
                         </div>
+                    </div>
+                </DialogHeader>
 
-                        <DialogFooter className="gap-2 sm:gap-2">
-                            <DialogClose asChild>
-                                <Button
-                                    variant="outline"
-                                    id="btn-modal-annuler"
-                                >
-                                    Annuler
-                                </Button>
-                            </DialogClose>
-                            <Button
-                                id="btn-modal-imprimer"
-                                variant="outline"
-                                onClick={onImprimerPDF}
-                                className="gap-2"
-                            >
-                                <Printer className="size-4" />
-                                Imprimer PDF
-                            </Button>
-                            <Button
-                                id="btn-modal-enregistrer"
-                                onClick={onEnregistrer}
-                                className="gap-2"
-                            >
-                                <Save className="size-4" />
-                                Enregistrer
-                            </Button>
-                        </DialogFooter>
-                    </>
-                )}
+                {/* Corps Modal */}
+                <div className="p-6 space-y-6 overflow-y-auto flex-1">
+                    {/* Appréciation Générale */}
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                            <Award className="size-3.5 text-primary" />
+                            Appréciation du Conseil de Classe
+                        </label>
+                        <Textarea
+                            value={appreciationEditable}
+                            onChange={(e) => onAppreciationEditable(e.target.value)}
+                            placeholder="Saisissez l'appréciation globale de l'étudiant..."
+                            className="text-sm min-h-[80px] resize-none"
+                        />
+                    </div>
+                </div>
+
+                {/* Footer Modal */}
+                <DialogFooter className="p-4 border-t bg-muted/20 flex items-center justify-between sm:justify-between">
+                    <Button variant="outline" size="sm" onClick={onImprimerPDF} className="gap-2">
+                        <Printer className="size-4" />
+                        Imprimer
+                    </Button>
+                    <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
+                            Fermer
+                        </Button>
+                        <Button size="sm" onClick={onEnregistrer} className="gap-2">
+                            <Save className="size-4" />
+                            Enregistrer l'appréciation
+                        </Button>
+                    </div>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 }
-
-export default ModalDetailBulletin;

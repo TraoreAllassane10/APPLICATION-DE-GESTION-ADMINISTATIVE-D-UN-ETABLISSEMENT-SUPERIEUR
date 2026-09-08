@@ -8,10 +8,11 @@ import { Bulletin } from '@/features/bulletin/types/bulletin.types';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DataNiveau, Periode } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { BookOpen, Loader } from 'lucide-react';
+import { BookOpen, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
     { title: 'Bulletins', href: '/bulletins' },
 ];
 
@@ -21,65 +22,48 @@ interface BulletinPageProps {
     [key: string]: unknown;
 }
 
-const Index = () => {
+export default function Index() {
     const { niveaux, periodes } = usePage<BulletinPageProps>().props;
 
     const [selectedPeriode, setSelectedPeriode] = useState<string>('');
     const [selectedClasse, setSelectedClasse] = useState<string>('');
 
-    // Modal détail
-    const [selectedBulletin, setSelectedBulletin] = useState<Bulletin | null>(
-        null,
-    );
-    const [appreciationEditable, setAppreciationEditable] =
-        useState<string>('');
+    const [selectedBulletin, setSelectedBulletin] = useState<Bulletin | null>(null);
+    const [appreciationEditable, setAppreciationEditable] = useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { getBulletins, bulletins, stats, loading } = useBulletin();
-    
+
     const handleRecalculer = async () => {
-        await getBulletins(Number(selectedClasse), Number(selectedPeriode));
+        if (selectedClasse && selectedPeriode) {
+            await getBulletins(Number(selectedClasse), Number(selectedPeriode));
+        }
     };
 
     const handleOpenDetail = (bulletin: Bulletin) => {
         setSelectedBulletin(bulletin);
-
-        // setAppreciationEditable(detail?.appreciationGenerale ?? '');
+        // setAppreciationEditable(bulletin.appreciationGenerale ?? '');
         setIsModalOpen(true);
     };
 
     const handleTelechargerPDF = (bulletin: Bulletin, e: React.MouseEvent) => {
         e.stopPropagation();
-        window.location.href = `bulletins/${bulletin.id}/telecharger-bulletin-pdf`
-        // alert(`Téléchargement du PDF de ${bulletin.prenom} ${bulletin.nom}`);
+        window.open(`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`, '_blank');
     };
 
     const handleTelechargerTous = () => {
-        alert('Téléchargement de tous les bulletins en ZIP/PDF...');
+        alert('Téléchargement du package complet en cours...');
     };
-
-    const handleEnregistrer = () => {
-        alert(`Appréciation enregistrée : "${appreciationEditable}"`);
-        setIsModalOpen(false);
-    };
-
-    const handleImprimerPDF = () => {
-        if (selectedBulletin) {
-            alert(
-                `Impression PDF du bulletin de ${selectedBulletin.prenom} ${selectedBulletin.nom}`,
-            );
-        }
-    };
-
-    const detailActif = selectedBulletin ? selectedBulletin.id : null;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Gestion des Bulletins" />
 
-            <div className="space-y-6 p-6">
+            <div className="space-y-6 p-4 sm:p-6 lg:p-8">
+                {/* En-tête */}
                 <HeaderSection />
 
+                {/* Section Filtres */}
                 <FilterSection
                     niveaux={niveaux}
                     periodes={periodes}
@@ -91,6 +75,7 @@ const Index = () => {
                     isRecalculating={loading}
                 />
 
+                {/* Section Statistiques */}
                 {stats && (
                     <StatistiqueSection
                         total_etudiant={stats.total_etudiants}
@@ -100,19 +85,22 @@ const Index = () => {
                     />
                 )}
 
+                {/* Affichage Table / Empty State / Loader */}
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center text-muted-foreground">
-                        <Loader className="h-10 w-10 animate-spin" />
-                    </div>
-                ) : bulletins?.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center text-muted-foreground">
-                        <BookOpen className="mb-3 h-12 w-12 opacity-20" />
-                        <p className="text-sm font-medium">
-                            Sélectionnez une classe et une période
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-24 text-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        <p className="mt-3 text-sm font-medium text-muted-foreground">
+                            Calcul des moyennes et génération des bulletins...
                         </p>
-                        <p className="mt-1 text-xs">
-                            Les etudiants et leur moyenne générale s'afficheront
-                            ici.
+                    </div>
+                ) : !bulletins || bulletins.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center bg-card/30">
+                        <div className="p-3 bg-muted rounded-full mb-3">
+                            <BookOpen className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-foreground">Aucun bulletin affiché</h3>
+                        <p className="mt-1 text-xs text-muted-foreground max-w-sm">
+                            Veuillez sélectionner une classe et une période ci-dessus pour afficher et gérer les résultats des étudiants.
                         </p>
                     </div>
                 ) : (
@@ -125,19 +113,17 @@ const Index = () => {
                 )}
             </div>
 
-            {/* ── Modal Détail Bulletin ── */}
+            {/* Modal de détail */}
             <ModalDetailBulletin
                 isModalOpen={isModalOpen}
                 onOpenChange={setIsModalOpen}
                 bulletin={selectedBulletin}
-                detailActif={detailActif}
-                onImprimerPDF={handleImprimerPDF}
-                onEnregistrer={handleEnregistrer}
+                detailActif={selectedBulletin?.id ?? null}
+                onImprimerPDF={() => alert('Impression...')}
+                onEnregistrer={() => setIsModalOpen(false)}
                 appreciationEditable={appreciationEditable}
                 onAppreciationEditable={setAppreciationEditable}
             />
         </AppLayout>
     );
-};
-
-export default Index;
+}

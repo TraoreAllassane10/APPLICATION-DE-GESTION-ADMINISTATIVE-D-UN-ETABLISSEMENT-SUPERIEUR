@@ -6,12 +6,12 @@ import { DataNiveau, Periode } from '@/types';
 interface MoyenneFilterSectionProps {
     niveaux: DataNiveau[];
     selectedClasseId: string;
-    onSelectedClasseId: React.Dispatch<React.SetStateAction<string>>;
+    onSelectedClasseId: (value: string) => void;
     selectedEnseignementId: string;
-    onSelectedEnseignementId: React.Dispatch<React.SetStateAction<string>>;
+    onSelectedEnseignementId: (value: string) => void;
     enseignements: Enseignement[];
     selectedPeriodeId: string;
-    onSelectedPeriodeId: React.Dispatch<React.SetStateAction<string>>;
+    onSelectedPeriodeId: (value: string) => void;
     periodes: Periode[];
 }
 
@@ -52,9 +52,7 @@ const MoyenneFilterSection = ({
 
                     {/* Enseignement */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium">
-                            Enseignement
-                        </label>
+                        <label className="text-sm font-medium">Enseignement</label>
                         <Select
                             value={selectedEnseignementId}
                             onValueChange={onSelectedEnseignementId}
@@ -64,11 +62,8 @@ const MoyenneFilterSection = ({
                                 <SelectValue placeholder="Choisir un enseignement" />
                             </SelectTrigger>
                             <SelectContent>
-                                {enseignements.map((ens: Enseignement) => (
-                                    <SelectItem
-                                        key={ens.id}
-                                        value={String(ens.id)}
-                                    >
+                                {enseignements.map((ens) => (
+                                    <SelectItem key={ens.id} value={String(ens.id)}>
                                         {ens.cours.nom}
                                     </SelectItem>
                                 ))}
@@ -78,9 +73,7 @@ const MoyenneFilterSection = ({
 
                     {/* Période académique */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium">
-                            Période académique
-                        </label>
+                        <label className="text-sm font-medium">Période académique</label>
                         <Select
                             value={selectedPeriodeId}
                             onValueChange={onSelectedPeriodeId}

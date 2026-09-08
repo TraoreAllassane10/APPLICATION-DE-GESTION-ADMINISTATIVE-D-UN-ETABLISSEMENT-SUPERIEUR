@@ -44,7 +44,7 @@
 <body>
 
     @php
-        use App\Enums\TypeEnseignement;
+        use App\Modules\Cours\Enums\TypeEnseignement;
 
         $etudiant    = $bulletin->inscription->etudiant;
         $niveau      = $bulletin->inscription->niveaux[0] ?? null;

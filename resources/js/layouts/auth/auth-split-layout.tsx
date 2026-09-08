@@ -33,7 +33,7 @@ export default function AuthSplitLayout({
 
                 {/* Contenu textuel central */}
                 <div className="relative z-20 my-auto max-w-xl space-y-4">
-                    <span className="inline-block rounded-full bg-red-500/20 px-3 py-1 text-xs font-medium text-red-200 backdrop-blur-sm">
+                    <span className="inline-block rounded-full bg-red-200/20 px-3 py-1 text-xs font-medium text-red-200 backdrop-blur-sm">
                         Institut National d'Intelligence Numérique, Economique et Commerciale
                     </span>
                     <h1 className="text-4xl font-extrabold tracking-tight leading-snug">
