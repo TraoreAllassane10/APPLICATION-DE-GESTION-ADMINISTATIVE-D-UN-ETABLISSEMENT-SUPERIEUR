@@ -11,13 +11,20 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import InscriptionSection from '@/features/etudiant/components/show/InscriptionSection';
+import { BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Etudiants', href: '/etudiants' },
+    { title: 'Dossier', href: '#' },
+];
 
 export default function Show() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
     const [activeTab, setActiveTab] = useState<Tab>('profil');
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`${etudiant.prenom} ${etudiant.nom}`} />
 
             <div className="space-y-6 p-6">

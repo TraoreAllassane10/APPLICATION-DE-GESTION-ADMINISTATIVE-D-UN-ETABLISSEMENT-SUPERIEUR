@@ -29,14 +29,9 @@ import { Head, usePage } from '@inertiajs/react';
 import { formatDate } from '@/utils/date';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Evaluations',
-        href: '/evaluations',
-    },
-    {
-        title: 'Saisie des notes',
-        href: '#',
-    },
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Evaluations', href: '/evaluations' },
+    { title: "Saisie des notes", href: '#' },
 ];
 
 function getAppreciation(note: number | null, absent: boolean) {

@@ -10,10 +10,16 @@ import {
     Tab,
 } from '@/features/inscription/types/inscription.types';
 import AppLayout from '@/layouts/app-layout';
-import { Auth } from '@/types';
+import { Auth, BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Lock } from 'lucide-react';
 import { useState } from 'react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Inscriptions', href: '/inscriptions' },
+    { title: 'Dossier d\inscription', href: '#' },
+];
 
 export default function Show() {
     const { inscription, auth } = usePage<{
@@ -28,7 +34,7 @@ export default function Show() {
     );
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head
                 title={`Inscription — ${inscription.etudiant?.prenom} ${inscription.etudiant?.nom}`}
             />

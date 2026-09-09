@@ -5,6 +5,7 @@ import { BreadcrumbItem, Periode } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
     { title: 'Evaluations', href: '/evaluations' },
     { title: "Création d'évaluation", href: '/evaluations/create' },
 ];
