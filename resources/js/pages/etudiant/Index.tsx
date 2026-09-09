@@ -1,12 +1,15 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, router, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
 import EtudiantFiltresSection from '@/features/etudiant/components/acceuil/EtudiantFiltresSection';
 import EtudiantHeaderSection from '@/features/etudiant/components/acceuil/EtudiantHeaderSection';
 import EtudiantTableauSection from '@/features/etudiant/components/acceuil/EtudiantTableauSection';
 import EtudiantStats from '@/features/etudiant/components/EtudiantStats';
 import useEtudiant from '@/features/etudiant/hooks/useEtudiant';
-import { EtudiantData, StatsEtudiant } from '@/features/etudiant/types/etudiant.types';
+import {
+    EtudiantData,
+    StatsEtudiant,
+} from '@/features/etudiant/types/etudiant.types';
+import AppLayout from '@/layouts/app-layout';
+import { Head, router, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
 interface EtudiantProps {
     stats: StatsEtudiant;
@@ -41,7 +44,7 @@ export default function Index() {
 
     const handleDelete = async (ip: string) => {
         if (ip) {
-           await deleteEtudiant(ip);
+            await deleteEtudiant(ip);
 
             router.visit('/etudiants');
         }

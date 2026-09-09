@@ -10,6 +10,7 @@ use App\Models\Niveau;
 use App\Models\Paiement;
 use App\Models\Professeur;
 use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -26,10 +27,23 @@ class DashboardController extends Controller
         }
 
         // Statitstiques globals
-        $totalEtudiants = Etudiant::count();
-        $totalInscriptions = Inscription::where("annee_universitaire_id", $anneeActive->id)->count();
-        $totalEnseignants = Professeur::count();
-        $totalFilieres = Filiere::count();
+        $stats = Cache::remember(
+            'dashboard:stats',
+            600, // 10s
+            function () use ($anneeActive) {
+                return [
+                    "totalEtudiants" => Etudiant::count(),
+                    "totalInscriptions" => Inscription::where("annee_universitaire_id", $anneeActive->id)->count(),
+                    "totalEnseignants" => Professeur::count(),
+                    "totalFilieres" => Filiere::count()
+                ];
+            }
+        );
+
+        // $totalEtudiants = ;
+        // $totalInscriptions = Inscription::where("annee_universitaire_id", $anneeActive->id)->count();
+        // $totalEnseignants = Professeur::count();
+        // $totalFilieres = Filiere::count();
 
 
         // Statistiques financiers
@@ -84,10 +98,10 @@ class DashboardController extends Controller
             "dashboard",
             [
                 "stats_globales" => [
-                    "totalEtudiants" => $totalEtudiants,
-                    "totalInscriptions" => $totalInscriptions,
-                    "totalEnseignants" => $totalEnseignants,
-                    "totalFilieres" => $totalFilieres
+                    "totalEtudiants" => $stats['totalEtudiants'],
+                    "totalInscriptions" => $stats['totalInscriptions'],
+                    "totalEnseignants" => $stats['totalEnseignants'],
+                    "totalFilieres" => $stats['totalFilieres']
                 ],
                 "stats_financiere" => [
                     "totalAttendu" => $totalAttendu,

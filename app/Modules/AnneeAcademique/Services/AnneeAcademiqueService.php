@@ -5,6 +5,7 @@ namespace App\Modules\AnneeAcademique\Services;
 use App\Models\AnneeUniversitaire;
 use App\Modules\AnneeAcademique\Repositories\AnneeAcademiqueRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class AnneeAcademiqueService
 {
@@ -15,7 +16,11 @@ class AnneeAcademiqueService
 
     public function all()
     {
-        return $this->anneeAcademiqueRepository->all();
+        $annees_academiques = Cache::remember("annees_academiques:all", 3600, function () {
+            return $this->anneeAcademiqueRepository->all();
+        });
+
+        return $annees_academiques;
     }
 
     public function find(string $id)
@@ -26,23 +31,39 @@ class AnneeAcademiqueService
     public function create(array $data)
     {
         //Creation d'une année scolaire
-        return $this->anneeAcademiqueRepository->create($data);
+        $annee = $this->anneeAcademiqueRepository->create($data);
+
+        Cache::forget('annees_academiques:all');
+
+        return $annee;
     }
 
     public function update(AnneeUniversitaire $annee, array $data)
     {
-        return  $this->anneeAcademiqueRepository->update($annee, $data);
+        $annee = $this->anneeAcademiqueRepository->update($annee, $data);
+        
+        Cache::forget('annees_academiques:all');
+
+        return $annee;
     }
 
     public function delete(AnneeUniversitaire $annee)
     {
-        return $this->anneeAcademiqueRepository->delete($annee);
+        $annee = $this->anneeAcademiqueRepository->delete($annee);
+
+        Cache::forget('annees_academiques:all');
+
+        return $annee;
     }
 
     // Recupere l'annee active
     public function getAnneeActive()
     {
-        return $this->anneeAcademiqueRepository->anneeActive();
+        $anneeActive = Cache::remember("annee_active", 3600, function() {
+            return $this->anneeAcademiqueRepository->anneeActive();
+        });
+
+        return $anneeActive;
     }
 
     public function editAnneeActive()
@@ -66,5 +87,6 @@ class AnneeAcademiqueService
             "annee_active" => $annee->id
         ]);
 
+        Cache::forget('annee_active');
     }
 }

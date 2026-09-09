@@ -3,9 +3,9 @@
 namespace App\Modules\PeriodeAcademique\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Annee\CreateAnneeScolaireRequest;
-use App\Http\Requests\Annee\UpdateAnneeScolaireRequest;
 use App\Models\PeriodeAcademique;
+use App\Modules\AnneeAcademique\Requests\CreateAnneeScolaireRequest;
+use App\Modules\AnneeAcademique\Requests\UpdateAnneeScolaireRequest;
 use App\Modules\PeriodeAcademique\Services\PeriodeAcademiqueService;
 use Carbon\Carbon;
 use Exception;

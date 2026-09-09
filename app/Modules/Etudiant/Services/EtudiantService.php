@@ -10,6 +10,7 @@ use App\Notifications\EtudiantCreatedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,6 +45,9 @@ class EtudiantService
 
         // Creer un etudiant
         $etudiant= $this->etudiantRepository->create($data);
+
+        // Vider le cache de statistique
+        Cache::forget('dashboard:stats');
 
         // Recuperer tous les admininstrateur
         $user = Auth::user();
@@ -85,7 +89,12 @@ class EtudiantService
 
     public function delete(Etudiant $etudiant)
     {
-        return $this->etudiantRepository->delete($etudiant);
+        $etudiantSupprime = $this->etudiantRepository->delete($etudiant);
+
+        // Vider le cache de statistique
+        Cache::forget('dashboard:stats');
+
+        return $etudiantSupprime;
     }
 
     public function ficheIdentification(string $etudiant)

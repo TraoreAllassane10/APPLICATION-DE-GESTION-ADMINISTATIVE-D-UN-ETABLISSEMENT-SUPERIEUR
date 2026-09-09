@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/react-starter-kit",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Application de gestion d'un etablissement ",
     "keywords": [
         "laravel",
         "framework"
@@ -18,6 +18,7 @@
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
         "maatwebsite/excel": "*",
+        "predis/predis": "^3.6",
         "spatie/laravel-permission": "^7.2"
     },
     "require-dev": {

@@ -41,10 +41,10 @@ export default function Create() {
         return true;
     };
 
-    const { createEtudiant } = useInscription();
+    const { createInscription } = useInscription();
 
     const handleSubmit = async () => {
-        await createEtudiant({
+        await createInscription({
             etudiant_ip: etudiant?.ip,
             annee_id: annee,
             niveaux: niveau,

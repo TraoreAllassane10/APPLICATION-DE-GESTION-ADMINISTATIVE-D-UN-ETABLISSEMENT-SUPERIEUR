@@ -4,6 +4,7 @@ namespace App\Modules\Enseignement\Services;
 
 use App\Models\Enseignement;
 use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
+use Illuminate\Support\Facades\Cache;
 
 
 class EnseignementService
@@ -14,7 +15,9 @@ class EnseignementService
 
     public function getEnseignements()
     {
-        return Enseignement::latest()->get();
+        return Cache::remember('enseignement:all', 3600, function () {
+            return Enseignement::latest()->get();
+        });
     }
 
     public function getEnseignement(string $id)
@@ -26,31 +29,47 @@ class EnseignementService
     {
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
-        return Enseignement::create([
+        $enseignement = Enseignement::create([
             "professeur_id" => $professeurId,
             "cours_id" => $coursId,
             "annee_universitaire_id" => $anneeActive->id
         ]);
+
+        Cache::forget('enseignement:all');
+
+        return $enseignement;
     }
 
     public function updateEnseignement(string $id, array $data)
     {
         $enseignement = Enseignement::find($id);
-        return $enseignement->niveaux()->sync($data['classes']);
+        $enseignementModifie = $enseignement->niveaux()->sync($data['classes']);
+
+        Cache::forget('enseignement:all');
+
+        return $enseignementModifie;
     }
 
     public function deleteEnseignement(string $id)
     {
         $enseignement = Enseignement::find($id);
-        return $enseignement->delete();
+        $enseignementSupprime = $enseignement->delete();
+
+        Cache::forget('enseignement:all');
+
+        return $enseignementSupprime;
     }
 
     public function updateCoefficentInClasse(string $id, array $data)
     {
         $enseignement = Enseignement::find($id);
 
-        return $enseignement->niveaux()->syncWithPivotValues($data['classeId'], [
+        $coefficientModifie = $enseignement->niveaux()->syncWithPivotValues($data['classeId'], [
             "coefficient" => $data['coefficient']
         ]);
+
+        Cache::forget('enseignement:all');
+
+        return $coefficientModifie;
     }
 }

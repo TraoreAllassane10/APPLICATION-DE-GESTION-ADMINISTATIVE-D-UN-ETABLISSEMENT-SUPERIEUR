@@ -37,7 +37,7 @@ export default function useInscription() {
     };
 
     // Création d'une inscription
-    const createEtudiant = async (data: CreateInscriptionData) => {
+    const createInscription = async (data: CreateInscriptionData) => {
         try {
             setIsLoading(true);
 
@@ -47,7 +47,7 @@ export default function useInscription() {
                     // Sucess
                     if (response.data.success) {
                         console.log(response);
-                        toast.success('Inscription effectuée !');
+                        toast.success(response.data.message ?? 'Inscription effectuée !');
 
                         router.visit('/inscriptions');
                     }
@@ -102,5 +102,5 @@ export default function useInscription() {
         }
     };
 
-    return { createEtudiant, deleteEtudiant, rechercheEtFiltrage, isLoading };
+    return { createInscription, deleteEtudiant, rechercheEtFiltrage, isLoading };
 }
