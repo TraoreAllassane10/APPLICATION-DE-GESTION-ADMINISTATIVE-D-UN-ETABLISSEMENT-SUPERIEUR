@@ -97,7 +97,7 @@ const Index = () => {
         setNom('');
 
         // Redirection vers la page d'affichage des filieres
-        router.visit(filiere());
+        router.visit("/filiere");
     };
 
     // Suppression d'une filiere

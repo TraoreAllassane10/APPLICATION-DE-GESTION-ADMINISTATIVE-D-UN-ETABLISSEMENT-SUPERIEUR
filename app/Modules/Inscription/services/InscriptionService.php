@@ -2,16 +2,17 @@
 
 namespace App\Modules\Inscription\services;
 
-use App\Enums\ScolariteType;
-use App\Enums\StatutEtudiant;
 use App\Models\FraisConfiguration;
 use App\Models\Inscription;
 use App\Models\Scolarite;
 use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
+use App\Modules\Etudiant\Enums\StatutEtudiant;
 use App\Modules\Etudiant\Services\EtudiantService;
 use App\Modules\Inscription\repositories\InscriptionRepository;
 use App\Modules\Niveau\Services\NiveauService;
+use App\Modules\Scolarite\Enums\ScolariteType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class InscriptionService
 {
@@ -114,12 +115,15 @@ class InscriptionService
             // Enregistrement de l'inscription
             $inscription = $this->inscriptionRepository->create($data, $frais_annexe, $scolariteApresReduction, $montantTotalScolarite, $etudiant, $anneeUniversitaire);
 
+            // Vider le cache de statistique
+            Cache::forget('dashboard:stats');
+
             if ($inscription) {
                 $inscription->niveaux()->attach($data['niveaux']);
 
                 return response()->json([
                     "success" => true,
-                    "message" => "Inscription éffectuée avec succès"
+                    "message" => "{$inscription->etudiant->nom} {$inscription->etudiant->prenom} Inscrit avec succès"
                 ]);
             }
         }
@@ -127,7 +131,12 @@ class InscriptionService
 
     public function delete(Inscription $inscription)
     {
-        return $this->inscriptionRepository->delete($inscription);
+       $inscriptionSupprimee = $this->inscriptionRepository->delete($inscription);
+
+        // Vider le cache de statistique
+        Cache::forget('dashboard:stats');
+
+        return $inscriptionSupprimee;
     }
 
     public function etudiantDejaInscriptionDurantAnneeSelectionnee($etudiantId, $anneeId)

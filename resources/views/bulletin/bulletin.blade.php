@@ -44,7 +44,7 @@
 <body>
 
     @php
-        use App\Enums\TypeEnseignement;
+        use App\Modules\Cours\Enums\TypeEnseignement;
 
         $etudiant    = $bulletin->inscription->etudiant;
         $niveau      = $bulletin->inscription->niveaux[0] ?? null;
@@ -212,7 +212,7 @@
                 <td class="center">{{ round($totalMoyCoef, 2) }}</td>
                 <td colspan="2">
                     {{-- champ non présent dans l'objet fourni --}}
-                    Heures d'Absence Semestrielle: {{ $bulletin->heures_absence ?? '0' }} heures
+                    Heures d'Absence Semestrielle: {{ $bulletin->heures_absence ?? "..." }} heures
                 </td>
             </tr>
         </tbody>

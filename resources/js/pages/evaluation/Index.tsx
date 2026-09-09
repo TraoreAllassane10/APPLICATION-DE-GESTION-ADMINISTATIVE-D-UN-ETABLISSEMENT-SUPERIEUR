@@ -1,15 +1,20 @@
 import { Enseignement } from '@/features/enseignement/types/enseignement.types';
 import EvaluationFiltresSection from '@/features/evaluations/components/evaluation-filtres-section';
 import EvaluationTableSection from '@/features/evaluations/components/evaluation-table-section';
-import { HeaderSection } from '@/features/evaluations/components/header-section';
+import HeaderSection from '@/features/evaluations/components/header-section';
 import { Evaluation } from '@/features/evaluations/types/evaluation.types';
 import AppLayout from '@/layouts/app-layout';
-import { Meta, Periode } from '@/types';
+import { BreadcrumbItem, Meta, Periode } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Évaluations', href: '/evaluations' },
+];
 
 export interface EvaluationData {
     data: Evaluation[];
     meta: Meta;
+    links?: Array<{ url: string | null; label: string; active: boolean }>;
 }
 
 interface EvaluationProps {
@@ -24,16 +29,16 @@ interface EvaluationProps {
     [key: string]: unknown;
 }
 
-function Index() {
+export default function Index() {
     const { evaluations, enseignements, periodes } =
         usePage<EvaluationProps>().props;
 
     return (
-        <AppLayout>
-            <Head title="Evaluations" />
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Gestion des évaluations" />
 
             <div className="space-y-6 p-6">
-                {/* Header  */}
+                {/* En-tête */}
                 <HeaderSection />
 
                 {/* Filtres */}
@@ -42,11 +47,9 @@ function Index() {
                     periodes={periodes}
                 />
 
-                {/* Table */}
+                {/* Liste des évaluations & Pagination */}
                 <EvaluationTableSection evaluations={evaluations} />
             </div>
         </AppLayout>
     );
 }
-
-export default Index;

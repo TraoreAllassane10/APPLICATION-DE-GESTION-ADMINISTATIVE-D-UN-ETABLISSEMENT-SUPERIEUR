@@ -7,6 +7,7 @@ use App\Models\Professeur;
 use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
 use App\Modules\Professeur\Repositories\ProfesseurRepository;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ProfesseurService
@@ -38,6 +39,9 @@ class ProfesseurService
             $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
             $professeur = $this->professeurRepository->create($data);
 
+            // Vider le cache de statistique
+            Cache::forget('dashboard:stats');
+
             if (!empty($data['cours_enseignes'])) {
                 foreach ($data['cours_enseignes'] as $coursId) {
                     $professeur->enseignements()->create([
@@ -60,7 +64,12 @@ class ProfesseurService
 
     public function deleteProfesseur(Professeur $professeur)
     {
-        return $this->professeurRepository->delete($professeur);
+        $professeurSupprime = $this->professeurRepository->delete($professeur);
+
+        // Vider le cache de statistique
+        Cache::forget('dashboard:stats');
+
+        return $professeurSupprime;
     }
 
     public function attribuerClassesProfesseur(array $data)

@@ -9,8 +9,8 @@ export default function Create() {
     const { createEtudiant, isLoading } = useEtudiant();
 
     // Creation d'un etudiant
-    const handleSubmit = (data: EtudiantFormData) => {
-        createEtudiant(data);
+    const handleSubmit = async (data: EtudiantFormData) => {
+        await createEtudiant(data);
     };
 
     return (

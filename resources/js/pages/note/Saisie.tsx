@@ -321,8 +321,6 @@ export default function Saisie() {
                                         <TableHead className="w-[120px] text-center">
                                             Absent
                                         </TableHead>
-
-                                        <TableHead>Appréciation</TableHead>
                                     </TableRow>
                                 </TableHeader>
 
@@ -399,23 +397,7 @@ export default function Saisie() {
                                                     </div>
                                                 </TableCell>
 
-                                                {/* Appréciation */}
-                                                <TableCell>
-                                                    <span
-                                                        className={
-                                                            student.absent
-                                                                ? 'text-muted-foreground'
-                                                                : student.note !==
-                                                                        null &&
-                                                                    student.note >=
-                                                                        10
-                                                                  ? 'font-medium'
-                                                                  : 'text-muted-foreground'
-                                                        }
-                                                    >
-                                                        {appreciation}
-                                                    </span>
-                                                </TableCell>
+                                            
                                             </TableRow>
                                         );
                                     })}
@@ -432,7 +414,7 @@ export default function Saisie() {
                             Moyenne de la classe :
                         </span>{' '}
                         <span className="font-semibold">
-                            {statistics.moyenne}/20
+                            {statistics.moyenne}/ {evaluation.note_maximale}
                         </span>
                     </div>
 

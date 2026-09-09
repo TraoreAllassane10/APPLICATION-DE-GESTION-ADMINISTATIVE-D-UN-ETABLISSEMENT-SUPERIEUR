@@ -1,25 +1,5 @@
-import { Award, FileText, TrendingUp, Users } from 'lucide-react';
-
-interface StatItemProps {
-    icon: React.ReactNode;
-    label: string;
-    value: string | number;
-    colorClass: string;
-}
-
-const StatItem = ({ icon, label, value, colorClass }: StatItemProps) => (
-    <div className="flex items-center gap-3 rounded-lg border bg-card px-4 py-3 shadow-sm">
-        <div
-            className={`flex size-9 items-center justify-center rounded-md ${colorClass}`}
-        >
-            {icon}
-        </div>
-        <div>
-            <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="text-lg font-bold">{value}</p>
-        </div>
-    </div>
-);
+import { Card, CardContent } from '@/components/ui/card';
+import { Award, CheckCircle2, TrendingUp, Users, XCircle } from 'lucide-react';
 
 interface StatistiqueSectionProps {
     total_etudiant: number;
@@ -28,35 +8,78 @@ interface StatistiqueSectionProps {
     moyenne_classe: number;
 }
 
-function StatistiqueSection({total_etudiant, total_admis, total_ajourne, moyenne_classe}: StatistiqueSectionProps) {
+export default function StatistiqueSection({
+    total_etudiant,
+    total_admis,
+    total_ajourne,
+    moyenne_classe,
+}: StatistiqueSectionProps) {
+    const tauxAdmission = total_etudiant > 0 
+        ? Math.round((total_admis / total_etudiant) * 100) 
+        : 0;
+
+    const stats = [
+        {
+            label: 'Total Étudiants',
+            value: total_etudiant,
+            subtext: 'Inscrits dans cette session',
+            icon: Users,
+            color: 'text-blue-600 dark:text-blue-400',
+            bgColor: 'bg-blue-500/10',
+        },
+        {
+            label: 'Admis (≥ 10/20)',
+            value: total_admis,
+            subtext: `${tauxAdmission}% de réussite`,
+            icon: CheckCircle2,
+            color: 'text-emerald-600 dark:text-emerald-400',
+            bgColor: 'bg-emerald-500/10',
+        },
+        {
+            label: 'Ajournés',
+            value: total_ajourne,
+            subtext: `${100 - tauxAdmission}% de la classe`,
+            icon: XCircle,
+            color: 'text-rose-600 dark:text-rose-400',
+            bgColor: 'bg-rose-500/10',
+        },
+        {
+            label: 'Moyenne de Promotion',
+            value: `${moyenne_classe.toFixed(2)}`,
+            subtext: '/ 20 points',
+            icon: TrendingUp,
+            color: 'text-indigo-600 dark:text-indigo-400',
+            bgColor: 'bg-indigo-500/10',
+        },
+    ];
+
     return (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <StatItem
-                icon={<Users className="size-4 text-blue-600" />}
-                label="Total étudiants"
-                value={total_etudiant}
-                colorClass="bg-blue-50 dark:bg-blue-900/20"
-            />
-            <StatItem
-                icon={<Award className="size-4 text-emerald-600" />}
-                label="Admis"
-                value={total_admis}
-                colorClass="bg-emerald-50 dark:bg-emerald-900/20"
-            />
-            <StatItem
-                icon={<FileText className="size-4 text-red-500" />}
-                label="Ajournés"
-                value={total_ajourne}
-                colorClass="bg-red-50 dark:bg-red-900/20"
-            />
-            <StatItem
-                icon={<TrendingUp className="size-4 text-violet-600" />}
-                label="Moy. classe"
-                value={`${moyenne_classe.toFixed(2)} / 20`} 
-                colorClass="bg-violet-50 dark:bg-violet-900/20"
-            />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {stats.map((stat, idx) => {
+                const Icon = stat.icon;
+                return (
+                    <Card key={idx} className="border-border/60 shadow-xs">
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-medium text-muted-foreground">
+                                    {stat.label}
+                                </span>
+                                <div className={`p-2 rounded-md ${stat.bgColor}`}>
+                                    <Icon className={`size-4 ${stat.color}`} />
+                                </div>
+                            </div>
+                            <div className="mt-2 flex items-baseline gap-2">
+                                <span className="text-2xl font-bold tracking-tight">
+                                    {stat.value}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                    {stat.subtext}
+                                </span>
+                            </div>
+                        </CardContent>
+                    </Card>
+                );
+            })}
         </div>
     );
 }
-
-export default StatistiqueSection;

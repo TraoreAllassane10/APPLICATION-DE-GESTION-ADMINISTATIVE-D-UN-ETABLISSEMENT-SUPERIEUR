@@ -81,7 +81,7 @@ class NiveauController extends Controller
     {
         try {
             //Suppression d'un niveau
-            $niveau->delete();
+            $this->niveauService->deleteNiveau($niveau);
 
             return response()->json([
                 "success" => true,

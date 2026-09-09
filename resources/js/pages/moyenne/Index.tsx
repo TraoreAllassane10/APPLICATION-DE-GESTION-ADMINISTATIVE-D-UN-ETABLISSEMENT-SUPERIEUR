@@ -24,18 +24,17 @@ interface MoyenneProps {
 export default function Index() {
     const { niveaux, periodes } = usePage<MoyenneProps>().props;
 
-    const [selectedEnseignementId, setSelectedEnseignementId] =
-        useState<string>('');
+    const [selectedEnseignementId, setSelectedEnseignementId] = useState<string>('');
     const [selectedClasseId, setSelectedClasseId] = useState<string>('');
     const [selectedPeriodeId, setSelectedPeriodeId] = useState<string>('');
     const [enseignements, setEnseignements] = useState<Enseignement[]>([]);
-    const [moyennes, setMoyennes] = useState<Moyenne[] | []>([]);
-    const [coefficient, setCoefficient] = useState('');
+    const [moyennes, setMoyennes] = useState<Moyenne[]>([]);
+    const [coefficient, setCoefficient] = useState<string>('');
 
     const { getMoyennes, loading } = useMoyenne();
     const { updateCoefficientEnseignementInclasse } = useEnseignement();
 
-    // Recupere l'enseignement de la classe selectionnée
+    // Récupère les enseignements de la classe sélectionnée
     useEffect(() => {
         setSelectedEnseignementId('');
         setEnseignements([]);
@@ -45,11 +44,11 @@ export default function Index() {
         )?.enseignements;
 
         if (enseignementClasseSelectionnee) {
-            setEnseignements(enseignementClasseSelectionnee as any);
+            setEnseignements(enseignementClasseSelectionnee as Enseignement[]);
         }
-    }, [selectedClasseId]);
+    }, [selectedClasseId, niveaux]);
 
-    // Recuperation de la moyenne des etudiants de la classe selectionné
+    // Récupération des moyennes des étudiants
     useEffect(() => {
         if (selectedClasseId && selectedEnseignementId && selectedPeriodeId) {
             async function loadMoyennes() {
@@ -59,8 +58,8 @@ export default function Index() {
                     Number(selectedPeriodeId),
                 );
 
-                setMoyennes(result.data);
-                setCoefficient(result.coefficient);
+                setMoyennes(result.data ?? []);
+                setCoefficient(String(result.coefficient ?? ''));
             }
 
             loadMoyennes();
@@ -68,8 +67,6 @@ export default function Index() {
     }, [selectedClasseId, selectedEnseignementId, selectedPeriodeId]);
 
     const handleUpdateCoefficient = async () => {
-        console.log(selectedClasseId);
-
         await updateCoefficientEnseignementInclasse(
             Number(selectedEnseignementId),
             Number(selectedClasseId),
@@ -82,10 +79,8 @@ export default function Index() {
             <Head title="Notes & Moyennes" />
 
             <div className="space-y-6 p-6">
-                {/* En-tête */}
                 <MoyenneHeaderSection />
 
-                {/* Sélecteurs */}
                 <MoyenneFilterSection
                     enseignements={enseignements}
                     niveaux={niveaux}
@@ -102,12 +97,11 @@ export default function Index() {
                     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center text-muted-foreground">
                         <Loader className="h-10 w-10 animate-spin" />
                     </div>
-                ) : moyennes?.length === 0 ? (
+                ) : moyennes.length === 0 ? (
                     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center text-muted-foreground">
                         <BookOpen className="mb-3 h-12 w-12 opacity-20" />
                         <p className="text-sm font-medium">
-                            Sélectionnez un enseignement, une classe et une
-                            période
+                            Sélectionnez un enseignement, une classe et une période
                         </p>
                         <p className="mt-1 text-xs">
                             Les notes et moyennes s'afficheront ici.

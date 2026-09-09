@@ -80,19 +80,20 @@ const Index = () => {
 
     const { createNiveau, deleteNiveau } = useNiveau();
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (nom === '' || filiere_id === '') {
             toast.error('Veuillez remplir tous les champs !');
             return;
         }
-        createNiveau({ nom, filiere_id });
+        
+        await createNiveau({ nom, filiere_id });
         setNom('');
         setFiliereId('');
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (selectedId) {
-            deleteNiveau(selectedId);
+            await deleteNiveau(selectedId);
             setSelectedId(null);
         }
     };

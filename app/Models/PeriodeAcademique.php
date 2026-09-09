@@ -12,6 +12,10 @@ class PeriodeAcademique extends Model
 
     protected $guarded = [];
 
+    public function anneeAcademique() {
+        return $this->belongsTo(AnneeUniversitaire::class);
+    }
+
      public function evaluations() {
         return $this->hasMany(Evaluation::class);
     }

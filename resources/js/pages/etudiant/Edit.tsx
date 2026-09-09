@@ -13,8 +13,8 @@ export default function Edit() {
     // On exclut created_at / updated_at pour correspondre à EtudiantFormData
     const { created_at, updated_at, ...initialData } = etudiant;
 
-    const handleSubmit = (data: EtudiantFormData) => {
-        updateEtudiant(data.ip, data);
+    const handleSubmit = async (data: EtudiantFormData) => {
+       await updateEtudiant(data.ip, data);
     };
 
     return (

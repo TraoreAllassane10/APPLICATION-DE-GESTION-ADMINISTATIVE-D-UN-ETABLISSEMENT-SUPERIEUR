@@ -8,6 +8,7 @@ use App\Models\Etudiant;
 use App\Models\Filiere;
 use App\Models\Inscription;
 use App\Models\Niveau;
+use App\Models\Note;
 use App\Models\Paiement;
 use App\Models\Scolarite;
 use App\Modules\AnneeAcademique\Observers\AnneeUniversitaireObserver;
@@ -18,6 +19,7 @@ use App\Modules\Filiere\Observers\FiliereObserver;
 use App\Modules\Inscription\Observers\InscriptionObserver;
 use App\Modules\Moyenne\Listeners\UpdateMoyenneEnseignement;
 use App\Modules\Niveau\Observers\NiveauObserver;
+use App\Modules\Note\Observers\NoteObserver;
 use App\Modules\Paiement\Observers\PaiementObserver;
 use App\Modules\Scolarite\Observers\ScolariteObserver;
 use Illuminate\Support\Facades\Event;
@@ -50,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         Scolarite::observe(ScolariteObserver::class);
         Filiere::observe(FiliereObserver::class);
         Niveau::observe(NiveauObserver::class);
+        Note::observe(NoteObserver::class);
 
         Event::listen(
             EvaluationNoteUpdated::class,
