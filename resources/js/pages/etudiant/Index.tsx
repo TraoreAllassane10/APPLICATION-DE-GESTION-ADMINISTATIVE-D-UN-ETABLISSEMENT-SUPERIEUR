@@ -8,8 +8,14 @@ import {
     StatsEtudiant,
 } from '@/features/etudiant/types/etudiant.types';
 import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Etudiants', href: '/etudiants' },
+];
 
 interface EtudiantProps {
     stats: StatsEtudiant;
@@ -62,7 +68,7 @@ export default function Index() {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Étudiants" />
 
             <div className="space-y-6 p-6">

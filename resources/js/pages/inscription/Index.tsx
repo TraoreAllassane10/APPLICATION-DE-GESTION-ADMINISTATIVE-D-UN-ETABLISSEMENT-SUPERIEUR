@@ -5,9 +5,14 @@ import InscriptionTable from '@/features/inscription/components/home/Inscription
 import { Inscription } from '@/features/inscription/types/inscription.types';
 import useInscription from '@/features/inscription/hooks/useInscription';
 import AppLayout from '@/layouts/app-layout';
-import { Annee, Auth, DataNiveau } from '@/types';
+import { Annee, Auth, BreadcrumbItem, DataNiveau } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Inscriptions', href: '/inscriptions' },
+];
 
 interface InscriptionProps {
     annees: Annee[];
@@ -75,7 +80,7 @@ export default function Index() {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Inscriptions" />
 
             <div className="space-y-6 p-6">

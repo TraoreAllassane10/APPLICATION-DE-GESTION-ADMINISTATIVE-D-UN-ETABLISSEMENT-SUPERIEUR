@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table';
 import Avatar from '@/features/etudiant/components/Avatar';
 import { Link } from '@inertiajs/react';
-import { ChevronDown, Eye, GraduationCap, Trash2 } from 'lucide-react';
+import { ChevronDown, Eye, Folder, GraduationCap, Trash2 } from 'lucide-react';
 import { Inscription } from '../../types/inscription.types';
 import ProgressFinanciere from '../ProgressFinancier';
 
@@ -171,8 +171,8 @@ const InscriptionTable = ({isAdmin, inscriptions, hasFilters, onReset, onChangeS
                                                             href={`/inscriptions/${ins.id}`}
                                                             className="flex cursor-pointer items-center gap-2"
                                                         >
-                                                            <Eye className="h-4 w-4" />{' '}
-                                                            Voir les détails
+                                                            <Folder className="h-4 w-4" />{' '}
+                                                            Dossier inscription
                                                         </Link>
                                                     </DropdownMenuItem>
                                                     {/* <DropdownMenuItem className="cursor-pointer gap-2">

@@ -2,8 +2,15 @@ import { EtudiantForm } from '@/features/etudiant/components/EtudiantForm';
 import useEtudiant from '@/features/etudiant/hooks/useEtudiant';
 import { EtudiantFormData } from '@/features/etudiant/types/etudiant.types';
 import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Etudiants', href: '/etudiants' },
+    { title: 'Création d\'un etudiant', href: '#' },
+];
 
 export default function Create() {
     const { createEtudiant, isLoading } = useEtudiant();
@@ -14,7 +21,7 @@ export default function Create() {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Nouvel étudiant" />
 
             <div className="p-6">

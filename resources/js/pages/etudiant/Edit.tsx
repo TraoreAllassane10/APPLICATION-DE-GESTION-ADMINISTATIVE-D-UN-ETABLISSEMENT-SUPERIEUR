@@ -4,6 +4,13 @@ import { ArrowLeft } from 'lucide-react';
 import useEtudiant from '@/features/etudiant/hooks/useEtudiant';
 import { EtudiantForm } from '@/features/etudiant/components/EtudiantForm';
 import { Etudiant, EtudiantFormData } from '@/features/etudiant/types/etudiant.types';
+import { BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Etudiants', href: '/etudiants' },
+    { title: 'Modification d\'un etudiant', href: '#' },
+];
 
 export default function Edit() {
     const { etudiant } = usePage<{ etudiant: Etudiant }>().props;
@@ -18,7 +25,7 @@ export default function Edit() {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Modifier — ${etudiant.nom} ${etudiant.prenom}`} />
 
             <div className="p-6">

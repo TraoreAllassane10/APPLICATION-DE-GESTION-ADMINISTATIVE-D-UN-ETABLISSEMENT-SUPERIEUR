@@ -18,6 +18,13 @@ import Stepper from '@/features/inscription/components/steps/Stepper';
 import useInscription from '@/features/inscription/hooks/useInscription';
 import { Etudiant } from '@/features/etudiant/types/etudiant.types';
 import { TypeInscription } from '@/features/inscription/types/inscription.types';
+import { BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
+    { title: 'Inscriptions', href: '/inscriptions' },
+    { title: 'Inscription d\'un etudiant', href: '#' },
+];
 
 interface CreateInscriptionProps {
     etudiants: Etudiant[];
@@ -54,7 +61,7 @@ export default function Create() {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Nouvelle inscription" />
 
             <div className="p-6">

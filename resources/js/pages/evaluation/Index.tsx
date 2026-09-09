@@ -8,6 +8,7 @@ import { BreadcrumbItem, Meta, Periode } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Tableau de bord', href: '/dashboard' },
     { title: 'Évaluations', href: '/evaluations' },
 ];
 

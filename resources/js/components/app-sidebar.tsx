@@ -116,7 +116,7 @@ export function AppSidebar() {
                       icon: CreditCard,
                   },
                   {
-                      title: 'Historiques des actions',
+                      title: 'Historiques des activités',
                       href: historique(),
                       icon: History,
                   },
