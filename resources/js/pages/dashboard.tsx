@@ -1,44 +1,27 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
-    ArrowRight,
-    BadgeDollarSign,
     BookOpen,
     GraduationCap,
     ReceiptText,
-    TrendingUp,
+    UserPlus,
     Users,
 } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-
 import StatCard from '@/components/dashboard/StatCardDashboard';
+import DashbaordScolarite from '@/features/dashboard/components/DashbaordScolarite';
+import DashboardAdmin from '@/features/dashboard/components/DashboardAdmin';
 import {
-    Annee,
-    Auth,
-    Inscription,
-    Paiement,
     RepartitionNiveau,
     StatFinanciere,
     StatGlobales,
-} from '@/types';
-import { fmt } from '@/utils/util';
+} from '@/features/dashboard/types/dashboard.types';
+import { Inscription } from '@/features/inscription/types/inscription.types';
+import { Paiement } from '@/features/paiement/types/paiement.types';
+import { Annee, Auth } from '@/types';
+import DashbaordPedagogie from '@/features/dashboard/components/DashbaordPedagogie';
 
 interface DashboardProps {
     anneeActive: Annee;
@@ -63,40 +46,60 @@ export default function Dashboard() {
     } = usePage<DashboardProps>().props;
 
     const taux = stats_financiere.tauxRecouvrement;
+
     const isAdmin = auth.user.roles?.some(
-        (role) => role.name == 'Administrateur',
+        (role) => role.name === 'Administrateur',
+    );
+
+    const isSecretaireScolarite = auth.user.roles?.some(
+        (role) => role.name === 'Secrétaire de scolarité',
+    );
+
+    const isInspecteurPedagogique = auth.user.roles?.some(
+        (role) => role.name === 'Inspecteur pedagogique',
     );
 
     return (
         <AppLayout>
             <Head title="Tableau de bord" />
 
-            <div className="space-y-6 p-6">
-                {/* ── Header ──────────────────────────────────────────────────── */}
-                <div className="flex items-start justify-between">
+            <div className="space-y-8 p-4 sm:p-6 lg:p-8">
+                {/*Header*/}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">
+                        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                             Tableau de bord
                         </h1>
-                        <p className="mt-0.5 text-sm text-muted-foreground">
-                            Année universitaire{' '}
-                            <span className="font-semibold text-foreground">
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Vue d'ensemble de l'année académique{' '}
+                            <Badge
+                                variant="secondary"
+                                className="font-semibold"
+                            >
                                 {anneeActive.libelle}
-                            </span>
+                            </Badge>
                         </p>
                     </div>
+
+                    {isAdmin && (
+                        <Button size="sm" asChild>
+                            <Link href="/inscriptions">
+                                <UserPlus className="mr-2 h-4 w-4" />
+                                Inscrire un étudiant
+                            </Link>
+                        </Button>
+                    )}
                 </div>
 
-                {/* ── Stats globales ───────────────────────────────────────────── */}
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                {/* ── Key Metrics Grid ────────────────────────────────────────── */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <StatCard
                         label="Alumnis"
                         value={stats_globales.totalEtudiants}
                         sub="Fichier général"
                         icon={Users}
                         color="text-blue-600"
-                        bg="bg-blue-50"
-                        // trend={{ label: '+12 ce mois', up: true }}
+                        bg="bg-blue-50 dark:bg-blue-950/40"
                     />
                     <StatCard
                         label="Inscriptions"
@@ -104,480 +107,49 @@ export default function Dashboard() {
                         sub={anneeActive.libelle}
                         icon={GraduationCap}
                         color="text-violet-600"
-                        bg="bg-violet-50"
-                        // trend={{ label: '+5 ce mois', up: true }}
+                        bg="bg-violet-50 dark:bg-violet-950/40"
                     />
                     <StatCard
                         label="Enseignants"
                         value={stats_globales.totalEnseignants}
                         icon={BookOpen}
                         color="text-cyan-600"
-                        bg="bg-cyan-50"
+                        bg="bg-cyan-50 dark:bg-cyan-950/40"
                     />
                     <StatCard
                         label="Filières actives"
                         value={stats_globales.totalFilieres}
                         icon={ReceiptText}
                         color="text-slate-600"
-                        bg="bg-slate-100"
+                        bg="bg-slate-100 dark:bg-slate-800/50"
                     />
                 </div>
 
-                {isAdmin ? (
-                    <div className="space-y-6">
-                        {/* ── Situation financière et niveaux ─────────────────────────────────────── */}
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                            {/* Recouvrement */}
-                            <Card className="shadow-sm">
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                                        <TrendingUp className="h-4 w-4 text-primary" />
-                                        Recouvrement global
-                                    </CardTitle>
-                                    <CardDescription className="text-xs">
-                                        {anneeActive.libelle}
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-5">
-                                    {/* Jauge circulaire SVG */}
-                                    <div className="flex justify-center">
-                                        <div className="relative h-32 w-32">
-                                            <svg
-                                                viewBox="0 0 100 100"
-                                                className="h-full w-full -rotate-90"
-                                            >
-                                                <circle
-                                                    cx="50"
-                                                    cy="50"
-                                                    r="38"
-                                                    fill="none"
-                                                    stroke="hsl(var(--muted))"
-                                                    strokeWidth="10"
-                                                />
-                                                <circle
-                                                    cx="50"
-                                                    cy="50"
-                                                    r="38"
-                                                    fill="none"
-                                                    stroke={
-                                                        taux >= 80
-                                                            ? '#10b981'
-                                                            : taux >= 50
-                                                              ? '#3b82f6'
-                                                              : '#f59e0b'
-                                                    }
-                                                    strokeWidth="10"
-                                                    strokeDasharray={`${taux * 2.388} 238.8`}
-                                                    strokeLinecap="round"
-                                                />
-                                            </svg>
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                                <span className="text-2xl font-bold">
-                                                    {taux}%
-                                                </span>
-                                                <span className="text-[10px] text-muted-foreground">
-                                                    recouvré
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+                {isAdmin && (
+                    <DashboardAdmin
+                        anneeActive={anneeActive.libelle}
+                        taux={taux}
+                        stats_financiere={stats_financiere}
+                        repartitionNiveaux={repartitionNiveaux}
+                        dernieres_inscriptions={dernieres_inscriptions}
+                        derniers_paiements={derniers_paiements}
+                    />
+                )}
 
-                                    <div className="space-y-0 divide-y">
-                                        {[
-                                            {
-                                                label: 'Total attendu',
-                                                value: fmt(
-                                                    stats_financiere.totalAttendu,
-                                                ),
-                                                color: 'text-foreground',
-                                            },
-                                            {
-                                                label: 'Montant payé',
-                                                value: fmt(
-                                                    stats_financiere.totalPaye,
-                                                ),
-                                                color: 'text-emerald-600',
-                                            },
-                                            {
-                                                label: 'Reste à payer',
-                                                value: fmt(
-                                                    stats_financiere.resteAPayer,
-                                                ),
-                                                color: 'text-rose-600',
-                                            },
-                                        ].map(({ label, value, color }) => (
-                                            <div
-                                                key={label}
-                                                className="flex items-center justify-between py-2.5 text-sm"
-                                            >
-                                                <span className="text-muted-foreground">
-                                                    {label}
-                                                </span>
-                                                <span
-                                                    className={`font-bold tabular-nums ${color}`}
-                                                >
-                                                    {value}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
+                {isSecretaireScolarite && (
+                    <DashbaordScolarite
+                        anneeActive={anneeActive.libelle}
+                        repartitionNiveaux={repartitionNiveaux}
+                        dernieres_inscriptions={dernieres_inscriptions}
+                    />
+                )}
 
-                            {/* Graphique mensuel */}
-                            <Card className="shadow-sm">
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="text-sm font-semibold">
-                                        Inscriptions par niveau
-                                    </CardTitle>
-                                    <CardDescription className="text-xs">
-                                        {anneeActive.libelle}
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
-                                    {(() => {
-                                        const max = Math.max(
-                                            ...repartitionNiveaux.map(
-                                                (r) => r.inscrits,
-                                            ),
-                                        );
-                                        return repartitionNiveaux.map(
-                                            ({ niveau, inscrits, couleur }) => (
-                                                <div
-                                                    key={niveau}
-                                                    className="space-y-1"
-                                                >
-                                                    <div className="flex justify-between text-sm">
-                                                        <span className="font-medium">
-                                                            {niveau}
-                                                        </span>
-                                                        <span className="text-xs text-muted-foreground tabular-nums">
-                                                            {inscrits} étudiants
-                                                        </span>
-                                                    </div>
-                                                    <div className="h-2 overflow-hidden rounded-full bg-muted">
-                                                        <div
-                                                            className="h-full rounded-full transition-all duration-700"
-                                                            style={{
-                                                                width: `${Math.round((inscrits / max) * 100)}%`,
-                                                                background:
-                                                                    couleur,
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ),
-                                        );
-                                    })()}
-                                </CardContent>
-                            </Card>
-                        </div>
-
-                        {/* ── Derniers paiements + Dernières inscriptions ──────────────── */}
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                            {/* Derniers paiements */}
-                            <Card className="overflow-hidden shadow-sm">
-                                <CardHeader className="pb-2">
-                                    <div className="flex items-center justify-between">
-                                        <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                                            <BadgeDollarSign className="h-4 w-4 text-emerald-600" />
-                                            Derniers paiements
-                                        </CardTitle>
-
-                                          <Link href="/paiements">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-7 gap-1 text-xs text-muted-foreground"
-                                            >
-                                                Tout voir{' '}
-                                                <ArrowRight className="h-3 w-3" />
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                </CardHeader>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-muted/30 hover:bg-muted/30">
-                                            <TableHead className="py-2 text-xs">
-                                                Étudiant
-                                            </TableHead>
-                                            <TableHead className="py-2 text-xs">
-                                                Montant
-                                            </TableHead>
-                                            <TableHead className="py-2 text-xs">
-                                                Date
-                                            </TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {derniers_paiements.map((p) => (
-                                            <TableRow key={p.id}>
-                                                <TableCell className="py-2.5">
-                                                    <p className="text-sm leading-none font-medium">
-                                                        {
-                                                            p.inscription
-                                                                ?.etudiant.nom
-                                                        }{' '}
-                                                        {
-                                                            p.inscription
-                                                                ?.etudiant
-                                                                .prenom
-                                                        }
-                                                    </p>
-                                                    <p className="mt-0.5 text-xs text-muted-foreground">
-                                                        <code className="font-mono text-[11px]">
-                                                            {
-                                                                p.inscription
-                                                                    ?.etudiant
-                                                                    .ip
-                                                            }
-                                                        </code>
-                                                        {' · '}
-                                                        {p.inscription?.niveaux.map(
-                                                            (niveau) => (
-                                                                <span>
-                                                                    {niveau.nom}
-                                                                </span>
-                                                            ),
-                                                        )}
-                                                    </p>
-                                                </TableCell>
-                                                <TableCell className="py-2.5">
-                                                    <span className="text-sm font-bold text-emerald-600 tabular-nums">
-                                                        +{p.montant} FCFA
-                                                    </span>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        {p.methode_paiement}
-                                                    </p>
-                                                </TableCell>
-                                                <TableCell className="py-2.5 text-xs text-muted-foreground tabular-nums">
-                                                    {new Date(
-                                                        p.date_paiement,
-                                                    ).toLocaleDateString(
-                                                        'fr-FR',
-                                                        {
-                                                            day: '2-digit',
-                                                            month: 'short',
-                                                        },
-                                                    )}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Card>
-
-                            {/* Dernières inscriptions */}
-                            <Card className="overflow-hidden shadow-sm">
-                                <CardHeader className="pb-2">
-                                    <div className="flex items-center justify-between">
-                                        <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                                            <GraduationCap className="h-4 w-4 text-violet-600" />
-                                            Dernières inscriptions
-                                        </CardTitle>
-                                        <Link href="/inscriptions">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-7 gap-1 text-xs text-muted-foreground"
-                                            >
-                                                Tout voir{' '}
-                                                <ArrowRight className="h-3 w-3" />
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                </CardHeader>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-muted/30 hover:bg-muted/30">
-                                            <TableHead className="py-2 text-xs">
-                                                Étudiant
-                                            </TableHead>
-                                            <TableHead className="py-2 text-xs">
-                                                Niveau
-                                            </TableHead>
-                                            <TableHead className="py-2 text-xs">
-                                                Date
-                                            </TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {dernieres_inscriptions.map((ins) => (
-                                            <TableRow key={ins.id}>
-                                                <TableCell className="py-2.5">
-                                                    <p className="text-sm leading-none font-medium">
-                                                        {ins.etudiant.nom}{' '}
-                                                        {ins.etudiant.prenom}
-                                                    </p>
-                                                    <p className="mt-0.5 text-xs text-muted-foreground">
-                                                        {
-                                                            ins.niveaux[0]
-                                                                .filiere.nom
-                                                        }
-                                                    </p>
-                                                </TableCell>
-                                                <TableCell className="py-2.5">
-                                                    <Badge
-                                                        variant="secondary"
-                                                        className="text-xs font-bold"
-                                                    >
-                                                        {ins.niveaux.map(
-                                                            (niveau) => (
-                                                                <span>
-                                                                    {niveau.nom}
-                                                                </span>
-                                                            ),
-                                                        )}
-                                                    </Badge>
-                                                    <p className="mt-0.5 text-xs text-muted-foreground">
-                                                        {ins.annee.libelle}
-                                                    </p>
-                                                </TableCell>
-                                                <TableCell className="py-2.5 text-xs text-muted-foreground tabular-nums">
-                                                    {new Date(
-                                                        ins.date,
-                                                    ).toLocaleDateString(
-                                                        'fr-FR',
-                                                        {
-                                                            day: '2-digit',
-                                                            month: 'short',
-                                                        },
-                                                    )}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </Card>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {/* Graphique mensuel */}
-                        <Card className="shadow-sm">
-                            <CardHeader className="pb-3">
-                                <CardTitle className="text-sm font-semibold">
-                                    Inscriptions par niveau
-                                </CardTitle>
-                                <CardDescription className="text-xs">
-                                    {anneeActive.libelle}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                {(() => {
-                                    const max = Math.max(
-                                        ...repartitionNiveaux.map(
-                                            (r) => r.inscrits,
-                                        ),
-                                    );
-                                    return repartitionNiveaux.map(
-                                        ({ niveau, inscrits, couleur }) => (
-                                            <div
-                                                key={niveau}
-                                                className="space-y-1"
-                                            >
-                                                <div className="flex justify-between text-sm">
-                                                    <span className="font-medium">
-                                                        {niveau}
-                                                    </span>
-                                                    <span className="text-xs text-muted-foreground tabular-nums">
-                                                        {inscrits} étudiants
-                                                    </span>
-                                                </div>
-                                                <div className="h-2 overflow-hidden rounded-full bg-muted">
-                                                    <div
-                                                        className="h-full rounded-full transition-all duration-700"
-                                                        style={{
-                                                            width: `${Math.round((inscrits / max) * 100)}%`,
-                                                            background: couleur,
-                                                        }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ),
-                                    );
-                                })()}
-                            </CardContent>
-                        </Card>
-
-                        {/* Dernières inscriptions */}
-                        <Card className="overflow-hidden shadow-sm">
-                            <CardHeader className="pb-2">
-                                <div className="flex items-center justify-between">
-                                    <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                                        <GraduationCap className="h-4 w-4 text-violet-600" />
-                                        Dernières inscriptions
-                                    </CardTitle>
-                                    <Link href="/inscriptions">
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="h-7 gap-1 text-xs text-muted-foreground"
-                                        >
-                                            Tout voir{' '}
-                                            <ArrowRight className="h-3 w-3" />
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </CardHeader>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted/30 hover:bg-muted/30">
-                                        <TableHead className="py-2 text-xs">
-                                            Étudiant
-                                        </TableHead>
-                                        <TableHead className="py-2 text-xs">
-                                            Niveau
-                                        </TableHead>
-                                        <TableHead className="py-2 text-xs">
-                                            Date
-                                        </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {dernieres_inscriptions.map((ins) => (
-                                        <TableRow key={ins.id}>
-                                            <TableCell className="py-2.5">
-                                                <p className="text-sm leading-none font-medium">
-                                                    {ins.etudiant.nom}{' '}
-                                                    {ins.etudiant.prenom}
-                                                </p>
-                                                <p className="mt-0.5 text-xs text-muted-foreground">
-                                                    {ins.niveaux[0].filiere.nom}
-                                                </p>
-                                            </TableCell>
-                                            <TableCell className="py-2.5">
-                                                <Badge
-                                                    variant="secondary"
-                                                    className="text-xs font-bold"
-                                                >
-                                                    {ins.niveaux.map(
-                                                        (niveau) => (
-                                                            <span>
-                                                                {niveau.nom}
-                                                            </span>
-                                                        ),
-                                                    )}
-                                                </Badge>
-                                                <p className="mt-0.5 text-xs text-muted-foreground">
-                                                    {ins.annee.libelle}
-                                                </p>
-                                            </TableCell>
-                                            <TableCell className="py-2.5 text-xs text-muted-foreground tabular-nums">
-                                                {new Date(
-                                                    ins.date,
-                                                ).toLocaleDateString('fr-FR', {
-                                                    day: '2-digit',
-                                                    month: 'short',
-                                                })}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Card>
-                    </div>
+                {isInspecteurPedagogique && (
+                    <DashbaordPedagogie
+                        anneeActive={anneeActive.libelle}
+                        repartitionNiveaux={repartitionNiveaux}
+                        dernieres_inscriptions={dernieres_inscriptions}
+                    />
                 )}
             </div>
         </AppLayout>

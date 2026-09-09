@@ -18,7 +18,7 @@ export default function StatCard({
     trend?: { label: string; up: boolean };
 }) {
     return (
-        <Card className="shadow-sm">
+        <Card className="shadow-sm border-border/30">
             <CardContent className="p-5">
                 <div className="mb-3 flex items-start justify-between">
                     <div className={`rounded-xl p-2.5 ${bg}`}>

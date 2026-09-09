@@ -148,26 +148,7 @@ export interface Scolarite {
 }
 
 // Types Dashboard
-export interface StatFinanciere {
-    totalAttendu: number;
-    totalPaye: number;
-    resteAPayer: number;
-    tauxRecouvrement: number;
-}
 
-export interface StatGlobales {
-    totalEtudiants: 247;
-    totalInscriptions: 231;
-    totalEnseignants: 34;
-    totalFilieres: 8;
-    anneeEnCours: '2024-2025';
-}
-
-export interface RepartitionNiveau {
-    niveau: string;
-    inscrits: number;
-    couleur: string;
-}
 
 // Paiement
 export interface Paiement {
