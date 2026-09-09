@@ -15,6 +15,7 @@ import {
 } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { Bell } from 'lucide-react';
+import { Badge } from './ui/badge';
 
 export function AppSidebarHeader({
     breadcrumbs = [],
@@ -90,9 +91,9 @@ export function AppSidebarHeader({
                     </PopoverContent>
                 </Popover>
 
-                <span className="flex items-center rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-sm font-bold text-red-700 shadow">
+                <Badge variant="destructive">
                     Année Académique: {anneeActive.libelle ?? '-'}
-                </span>
+                </Badge>
             </div>
         </header>
     );

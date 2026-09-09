@@ -17,7 +17,7 @@ export interface Inscription {
     type_inscription: TypeInscription;
     paiements: Paiement[];
     total_paiements: string;
-
+    created_at: string;
 }
 
 export type Tab = 'general' | 'financier' | 'resultats';
