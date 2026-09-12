@@ -1,4 +1,4 @@
-import Avatar from '@/components/etudiant/Avatar';
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -9,8 +9,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import Avatar from '@/features/etudiant/components/Avatar';
+import { Etudiant } from '@/features/etudiant/types/etudiant.types';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, DataNiveau, Etudiant } from '@/types';
+import { BreadcrumbItem, DataNiveau } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Folder, GraduationCap, Printer } from 'lucide-react';
 
