@@ -55,7 +55,7 @@ export const emptyForm = (): EtudiantFormData => ({
 
 export type Civilite = 'M.' | 'Mme' | 'Mlle';
 export type Genre = 'Masculin' | 'Féminin';
-export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert';
+export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert' | 'AP';
 export type NaturePiece =
     | 'CNI'
     | 'Passeport'
@@ -84,6 +84,10 @@ export const statutConfig: Record<
         className: 'bg-amber-50 text-amber-700 border border-amber-200',
         dotClass: 'bg-amber-500',
     },
+    AP: {
+          className: 'bg-purple-50 text-amber-700 border border-amber-200',
+        dotClass: 'bg-amber-500',
+    }
 };
 
 export const CIVILITES: Civilite[] = ['M.', 'Mme', 'Mlle'];
@@ -93,6 +97,7 @@ export const STATUTS: StatutEtudiant[] = [
     'Naff',
     'Réaffecté',
     'Transfert',
+    'AP'
 ];
 export const SERIES_BAC = [
     'A1',
@@ -106,6 +111,7 @@ export const SERIES_BAC = [
     'G3',
     'T1',
     'T2',
+    'BT'
 ];
 export const NATURES_PIECE: NaturePiece[] = [
     'CNI',
