@@ -9,7 +9,8 @@ interface CreateInscriptionData {
     annee_id: string;
     niveaux: string[];
     type_inscription: string;
-    taux_reduction: number;
+    taux_reduction: number | null;
+    montant_reduction: number | null;
 }
 
 export default function useInscription() {

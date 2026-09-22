@@ -10,6 +10,7 @@ export interface Inscription {
     niveaux: DataNiveau[];
     date: string;
     taux_reduction: number;
+    montant_reduction: number | null;
     frais_annexe: number;
     montant_scolarite: number;
     montant_total: number;
