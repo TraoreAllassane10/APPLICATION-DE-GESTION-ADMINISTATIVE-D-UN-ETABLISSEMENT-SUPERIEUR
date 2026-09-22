@@ -1,7 +1,3 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowLeft, CheckCircle2, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -11,19 +7,23 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Etudiant } from '@/features/etudiant/types/etudiant.types';
 import StepAcademique from '@/features/inscription/components/steps/StepAcademique';
 import StepEtudiant from '@/features/inscription/components/steps/StepEtudiant';
 import StepFinancier from '@/features/inscription/components/steps/StepFinancier';
 import Stepper from '@/features/inscription/components/steps/Stepper';
 import useInscription from '@/features/inscription/hooks/useInscription';
-import { Etudiant } from '@/features/etudiant/types/etudiant.types';
 import { TypeInscription } from '@/features/inscription/types/inscription.types';
+import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { ArrowLeft, CheckCircle2, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tableau de bord', href: '/dashboard' },
     { title: 'Inscriptions', href: '/inscriptions' },
-    { title: 'Inscription d\'un etudiant', href: '#' },
+    { title: "Inscription d'un etudiant", href: '#' },
 ];
 
 interface CreateInscriptionProps {
@@ -40,7 +40,9 @@ export default function Create() {
     const [niveau, setNiveau] = useState([]);
     const [typeInscription, setTypeInscription] =
         useState<TypeInscription>('Nouvelle');
-    const [taux_reduction, setTauxReduction] = useState(0);
+    // Chaînes pour pouvoir gérer l'état vide ("") qui déverrouille l'autre champ
+    const [taux_reduction, setTauxReduction] = useState('');
+    const [montant_reduction, setMontantReduction] = useState('');
 
     const canNext = () => {
         if (step === 1) return !!etudiant;
@@ -56,7 +58,11 @@ export default function Create() {
             annee_id: annee,
             niveaux: niveau,
             type_inscription: typeInscription,
-            taux_reduction: Number(taux_reduction),
+            // Envoie null si le champ est vide (aucune réduction saisie)
+            taux_reduction:
+                taux_reduction !== '' ? Number(taux_reduction) : null,
+            montant_reduction:
+                montant_reduction !== '' ? Number(montant_reduction) : null,
         });
     };
 
@@ -123,8 +129,9 @@ export default function Create() {
                         {step === 3 && etudiant && (
                             <StepFinancier
                                 taux_reduction={taux_reduction}
-                                setTauxReduction={setTauxReduction}
-                                niveau={niveau}
+                                montant_reduction={montant_reduction}
+                                onTauxReduction={setTauxReduction}
+                                onMontantReduction={setMontantReduction}
                             />
                         )}
                     </CardContent>

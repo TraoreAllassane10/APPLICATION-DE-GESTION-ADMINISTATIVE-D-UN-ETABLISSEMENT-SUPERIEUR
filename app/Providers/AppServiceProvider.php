@@ -33,7 +33,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Plusieurs migrations existantes référencent des enums via App\Enums\
+        // alors que les enums réels sont dans leurs modules respectifs.
+        // Ces alias évitent de modifier les migrations existantes.
+        if (!class_exists(\App\Enums\StatutEtudiant::class)) {
+            class_alias(
+                \App\Modules\Etudiant\Enums\StatutEtudiant::class,
+                \App\Enums\StatutEtudiant::class
+            );
+        }
+
+        if (!class_exists(\App\Enums\ScolariteType::class)) {
+            class_alias(
+                \App\Modules\Scolarite\Enums\ScolariteType::class,
+                \App\Enums\ScolariteType::class
+            );
+        }
     }
 
     /**

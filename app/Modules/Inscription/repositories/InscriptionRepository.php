@@ -65,14 +65,15 @@ class InscriptionRepository
     public function create(array $data, $frais_annexe, $scolariteApresReduction, $montantTotalScolarite, $etudiant, $anneeUniversitaire)
     {
         return Inscription::create([
-            "date" => now(),
-            "status" => StatutInscription::BON,
-            "type_inscription" => $data["type_inscription"],
-            "taux_reduction" => $data['taux_reduction'] > 0 ? $data['taux_reduction'] : 0,
-            "frais_annexe" => $frais_annexe->montant,
-            "montant_scolarite" => $scolariteApresReduction,
-            "montant_total" => $montantTotalScolarite,
-            "etudiant_ip" => $etudiant->ip,
+            "date"               => now(),
+            "status"             => StatutInscription::BON,
+            "type_inscription"   => $data["type_inscription"],
+            "taux_reduction"     => isset($data['taux_reduction']) && $data['taux_reduction'] > 0 ? $data['taux_reduction'] : 0,
+            "montant_reduction"  => isset($data['montant_reduction']) && $data['montant_reduction'] > 0 ? $data['montant_reduction'] : null,
+            "frais_annexe"       => $frais_annexe->montant,
+            "montant_scolarite"  => $scolariteApresReduction,
+            "montant_total"      => $montantTotalScolarite,
+            "etudiant_ip"        => $etudiant->ip,
             "annee_universitaire_id" => $anneeUniversitaire->id
         ]);
     }
