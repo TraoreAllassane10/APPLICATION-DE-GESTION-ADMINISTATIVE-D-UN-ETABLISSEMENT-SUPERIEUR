@@ -1,10 +1,11 @@
-import { EtudiantFormData } from "@/types";
+
 import TextInput from "./TextInput";
 import { SERIES_BAC } from "../EtudiantForm";
 import SelectInput from "@/components/Entreprise/Personnel/SelectInput";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { BookOpen } from "lucide-react";
 import Field from "./Field";
+import { EtudiantFormData } from "../../types/etudiant.types";
 
 export default function Step2({
     data,

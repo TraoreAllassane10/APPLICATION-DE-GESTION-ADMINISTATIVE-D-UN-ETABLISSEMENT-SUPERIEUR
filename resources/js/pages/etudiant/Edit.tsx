@@ -21,7 +21,7 @@ export default function Edit() {
     const { created_at, updated_at, ...initialData } = etudiant;
 
     const handleSubmit = async (data: EtudiantFormData) => {
-       await updateEtudiant(data.ip, data);
+       await updateEtudiant(etudiant.ip, data);
     };
 
     return (

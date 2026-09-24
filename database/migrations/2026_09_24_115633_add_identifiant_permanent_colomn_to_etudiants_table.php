@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('horaires', function (Blueprint $table) {
-            $table->id();
-            $table->time("heure_debut");
-            $table->time("heure_fin");
-            $table->integer('index_order');
-            $table->timestamps();
+        Schema::table('etudiants', function (Blueprint $table) {
+            $table->string('identifiant_permanent')->nullable()->unique()->after('ip');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('horaires');
+        Schema::table('etudiants', function (Blueprint $table) {
+            $table->dropColumn('identifiant_permanent');
+        });
     }
 };

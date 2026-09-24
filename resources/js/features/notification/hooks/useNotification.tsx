@@ -14,7 +14,7 @@ export default function useNotification() {
         try {
             setLoading(true);
 
-            const response = await axios.get('notifications/dernieres');
+            const response = await axios.get('/notifications/dernieres');
 
             if (response.data.success) {
                 setDernieresNotifications(response.data.data);

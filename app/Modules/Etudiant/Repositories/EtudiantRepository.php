@@ -47,7 +47,8 @@ class EtudiantRepository
     public function create(array $data)
     {
         return Etudiant::create([
-            "ip" => $data['ip'],
+            "ip" => $data['ip'] ?? "ETU". now()->format('d-m-Y-H:i:s'),
+            "identifiant_permanent" => $data['ip'] ?? null, 
             "civilite" => $data['civilite'],
             "genre" => $data['genre'],
             "nom" => $data['nom'],
@@ -81,7 +82,7 @@ class EtudiantRepository
     public function update(Etudiant $etudiant, array $data)
     {
         return  $etudiant->update([
-            "ip" => $data['ip'],
+            "identifiant_permanent" => $data['ip'] ?? null,
             "civilite" => $data['civilite'],
             "genre" => $data['genre'],
             "nom" => $data['nom'],

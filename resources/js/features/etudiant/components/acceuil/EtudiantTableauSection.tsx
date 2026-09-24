@@ -1,4 +1,13 @@
+import PaginationLinks from '@/components/Pagination';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
     Table,
     TableBody,
@@ -7,23 +16,26 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import Avatar from '../Avatar';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, Folder, Pencil, Trash2, Users } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import StatutBadge from '../StatutBadge';
+import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
-import PaginationLinks from '@/components/Pagination';
+import { ChevronDown, Folder, Pencil, Trash2, Users } from 'lucide-react';
 import { EtudiantData } from '../../types/etudiant.types';
+import Avatar from '../Avatar';
+import StatutBadge from '../StatutBadge';
 
 interface EtudiantTableauSectionProps {
     etudiants: EtudiantData;
     hasFilters: string | boolean;
-    onRest: () => void; 
+    onRest: () => void;
     onDelete: (ip: string) => void;
 }
 
-const EtudiantTableauSection = ({etudiants, hasFilters, onRest, onDelete } : EtudiantTableauSectionProps) => {
+const EtudiantTableauSection = ({
+    etudiants,
+    hasFilters,
+    onRest,
+    onDelete,
+}: EtudiantTableauSectionProps) => {
     return (
         <Card className="overflow-hidden shadow-sm">
             <Table>
@@ -87,8 +99,16 @@ const EtudiantTableauSection = ({etudiants, hasFilters, onRest, onDelete } : Etu
                                 </TableCell>
 
                                 <TableCell>
-                                    <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                                        {e.ip}
+                                    <code
+                                        className={cn(
+                                            'rounded px-1.5 py-0.5 font-mono text-xs',
+                                            e.identifiant_permanent
+                                                ? 'bg-muted'
+                                                : 'bg-destructive/70 text-white',
+                                        )}
+                                    >
+                                        {e.identifiant_permanent ??
+                                            'Identifant permanent requis'}
                                     </code>
                                 </TableCell>
 

@@ -1,7 +1,7 @@
 import { Calendar, Clock, Globe, Hash, MapPin, User } from 'lucide-react';
+import { Etudiant } from '../../types/etudiant.types';
 import InfoRow from '../InfoRow';
 import Section from '../Section';
-import { Etudiant } from '../../types/etudiant.types';
 
 const ProfilSection = ({ etudiant }: { etudiant: Etudiant }) => {
     return (
@@ -40,7 +40,7 @@ const ProfilSection = ({ etudiant }: { etudiant: Etudiant }) => {
                 <InfoRow
                     icon={Hash}
                     label="IP (identifiant permanent)"
-                    value={etudiant.ip}
+                    value={etudiant.identifiant_permanent ?? 'Aucun'}
                 />
                 <InfoRow
                     icon={Hash}

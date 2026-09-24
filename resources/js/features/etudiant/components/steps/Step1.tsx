@@ -1,5 +1,5 @@
 import SelectInput from '@/components/Entreprise/Personnel/SelectInput';
-import { EtudiantFormData } from '@/types';
+
 import {
     CIVILITES,
     GENRES,
@@ -10,6 +10,7 @@ import {
 import Field from './Field';
 import TextInput from './TextInput';
 import ImageUploader from './ImageUploader';
+import { EtudiantFormData } from '../../types/etudiant.types';
 
 export default function Step1({
     data,
@@ -60,7 +61,7 @@ export default function Step1({
                         field="nom"
                         data={data}
                         setData={setData}
-                        placeholder="En majuscules"
+                        placeholder="Traore"
                     />
                 </Field>
                 <Field label="Prénom" required>
@@ -68,7 +69,7 @@ export default function Step1({
                         field="prenom"
                         data={data}
                         setData={setData}
-                        placeholder="Prénom(s)"
+                        placeholder="Allassane"
                     />
                 </Field>
             </div>
@@ -113,19 +114,15 @@ export default function Step1({
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="IP (identifiant permanent)" required>
+                <Field label="IP (identifiant permanent)">
                     <TextInput
                         field="ip"
                         data={data}
                         setData={setData}
                         placeholder="ETU-2024-XXX"
-                        disabled={isEdit}
+                    
                     />
-                    {isEdit && (
-                        <p className="mt-1 text-xs text-muted-foreground">
-                            L'identifiant permanent ne peut pas être modifié.
-                        </p>
-                    )}
+                   
                 </Field>
                 <Field label="Matricule secondaire">
                     <TextInput
