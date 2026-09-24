@@ -27,14 +27,14 @@ interface EtudiantTableauSectionProps {
     etudiants: EtudiantData;
     hasFilters: string | boolean;
     onRest: () => void;
-    onDelete: (ip: string) => void;
+    onChangeSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const EtudiantTableauSection = ({
     etudiants,
     hasFilters,
     onRest,
-    onDelete,
+    onChangeSelectedId,
 }: EtudiantTableauSectionProps) => {
     return (
         <Card className="overflow-hidden shadow-sm">
@@ -165,16 +165,14 @@ const EtudiantTableauSection = ({
                                                 </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuItem className="cursor-pointer gap-2 text-destructive focus:text-destructive">
-                                                <Link
-                                                    onClick={() =>
-                                                        onDelete(e.ip)
-                                                    }
-                                                    className="flex cursor-pointer items-center gap-2"
-                                                >
-                                                    <Trash2 className="h-4 w-4" />{' '}
-                                                    Supprimer
-                                                </Link>
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    onChangeSelectedId(e.ip)
+                                                }
+                                                className="flex cursor-pointer items-center gap-2 text-destructive focus:text-destructive"
+                                            >
+                                                <Trash2 className="h-4 w-4" />{' '}
+                                                Supprimer
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

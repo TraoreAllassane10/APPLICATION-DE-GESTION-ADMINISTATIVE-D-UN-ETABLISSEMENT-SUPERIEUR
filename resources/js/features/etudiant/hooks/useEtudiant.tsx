@@ -126,6 +126,7 @@ export default function useEtudiant() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Etudiant supprimé !');
+                        router.visit('/etudiants')
                     }
                 })
                 .catch((error) => {
