@@ -5,6 +5,7 @@ export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert';
 
 export interface Etudiant {
     ip: string;
+    identifiant_permanent: string | null;
     civilite: string;
     genre: string;
     nom: string;

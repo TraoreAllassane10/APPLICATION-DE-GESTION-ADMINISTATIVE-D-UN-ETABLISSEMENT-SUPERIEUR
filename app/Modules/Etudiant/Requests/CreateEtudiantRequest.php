@@ -22,7 +22,7 @@ class CreateEtudiantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "ip" => "required|string|min:10|unique:etudiants,ip",
+            "ip" => "nullable|string|min:10|unique:etudiants,ip",
             "photo" => "nullable|image|max:2048",
             "civilite" => "required|string",
             "genre" => "required|string",

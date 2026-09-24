@@ -207,7 +207,6 @@ export function EtudiantForm({
         // !! (...) renvoie true si la condition est verifie sinon false
         if (step === 1)
             return !!(
-                data.ip &&
                 data.nom &&
                 data.prenom &&
                 data.date_naissance &&

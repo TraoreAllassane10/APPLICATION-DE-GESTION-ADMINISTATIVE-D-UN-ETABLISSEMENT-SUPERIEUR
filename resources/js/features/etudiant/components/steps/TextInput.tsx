@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { EtudiantFormData } from "@/types";
+import { EtudiantFormData } from "../../types/etudiant.types";
 
 type StrKey = keyof EtudiantFormData;
 

@@ -50,7 +50,7 @@ const EtudiantShowHeader = ({ etudiant }: { etudiant: Etudiant }) => {
                             <span className="flex items-center gap-1">
                                 <Hash className="h-3 w-3" />
                                 <code className="font-mono text-xs">
-                                    {etudiant.ip}
+                                    {etudiant.identifiant_permanent ?? etudiant.ip}
                                 </code>
                             </span>
                             {etudiant.email && (
