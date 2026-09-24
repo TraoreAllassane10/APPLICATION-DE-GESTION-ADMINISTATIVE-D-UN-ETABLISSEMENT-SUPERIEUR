@@ -1,3 +1,5 @@
+
+import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationSuppression';
 import EtudiantFiltresSection from '@/features/etudiant/components/acceuil/EtudiantFiltresSection';
 import EtudiantHeaderSection from '@/features/etudiant/components/acceuil/EtudiantHeaderSection';
 import EtudiantTableauSection from '@/features/etudiant/components/acceuil/EtudiantTableauSection';
@@ -34,6 +36,7 @@ export default function Index() {
     const [search, setSearch] = useState(filters.search ?? '');
     const [filtreStatut, setFiltreStatut] = useState(filters.statut ?? 'all');
     const [filtreGenre, setFiltreGenre] = useState(filters.genre ?? 'all');
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
     const hasFilters =
         search || filtreStatut !== 'all' || filtreGenre !== 'all';
@@ -48,11 +51,11 @@ export default function Index() {
 
     const { deleteEtudiant, rechercheEtFiltrage } = useEtudiant();
 
-    const handleDelete = async (ip: string) => {
-        if (ip) {
-            await deleteEtudiant(ip);
-
-            router.visit('/etudiants');
+    const handleDelete = async () => {
+        if (selectedId) {
+            console.log("delete");
+            await deleteEtudiant(selectedId);
+            setSelectedId(null);
         }
     };
 
@@ -61,7 +64,8 @@ export default function Index() {
         setSearch(filters.search ?? '');
         setFiltreStatut(filters.statut ?? 'all');
         setFiltreGenre(filters.genre ?? 'all');
-    }, [filters]);
+
+    }, [filters.genre, filters.search, filters.statut]);
 
     const handleSearch = () => {
         rechercheEtFiltrage(search, filtreStatut, filtreGenre);
@@ -97,7 +101,17 @@ export default function Index() {
                     etudiants={etudiants}
                     hasFilters={hasFilters}
                     onRest={reset}
-                    onDelete={handleDelete}
+                    onChangeSelectedId={setSelectedId}
+                />
+
+                {/* Dialog confirmation suppression */}
+                <ModalConfirmationSuppression
+                    title="Supprimer cet étudiant ?"
+                    content="Cette action est irréversible. La suppression cet étudiant peut entraîner
+                    la perte de toute ses données. Toutefois la suppression peut echouer si l'étudiant a fait l'objet d'au moins une inscription."
+                    selectedId={selectedId}
+                    setSelectedId={setSelectedId}
+                    handleDelete={handleDelete}
                 />
             </div>
         </AppLayout>

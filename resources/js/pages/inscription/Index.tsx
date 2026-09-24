@@ -115,7 +115,7 @@ export default function Index() {
 
                 {/* Dialog confirmation suppression */}
                 <ModalConfirmationSuppression
-                    title="Supprimer cette année academique ?"
+                    title="Supprimer cette inscription ?"
                     content="Cette action est irréversible. La suppression de
                                 cette inscription peut entraîner une perte de
                                 données liées (paiements, historique, etc)."

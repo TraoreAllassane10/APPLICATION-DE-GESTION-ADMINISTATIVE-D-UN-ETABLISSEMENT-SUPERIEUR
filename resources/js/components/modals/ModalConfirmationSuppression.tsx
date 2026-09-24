@@ -10,8 +10,8 @@ import {
 } from '../ui/alert-dialog';
 
 interface ModalConfirmationSuppressionProps {
-    selectedId: number | null;
-    setSelectedId: (value: React.SetStateAction<number | null>) => void;
+    selectedId: number | null | any;
+    setSelectedId: (value: React.SetStateAction<number | null> | any) => void;
     title: string;
     content: string;
     handleDelete: () => Promise<void>;
