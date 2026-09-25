@@ -93,7 +93,7 @@
                 style="font-weight: bold">{{ \Carbon\Carbon::parse($etudiant['date_naissance'])->format('d/m/Y') }}</span>
             à <span style="font-weight: bold; text-transform: uppercase;">{{ $etudiant['lieu_naissance'] }}</span>
         </p>
-        <p><span style="font-weight: bold">IP : {{ $etudiant['ip'] }}</span></p>
+        <p><span style="font-weight: bold">IP : {{ $etudiant['identifiant_permanent'] ?? '-' }}</span></p>
         <p>est inscrit(e) sur le registre de l'Etablissement et suit les cours dans les conditions ci-dessous
             mentionnées
             : </p>

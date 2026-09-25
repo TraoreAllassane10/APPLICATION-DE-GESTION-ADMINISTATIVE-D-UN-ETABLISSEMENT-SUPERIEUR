@@ -81,7 +81,7 @@ export function AppSidebar() {
         },
         {
             title: 'Cours',
-            href: 'cours',
+            href: '/cours',
             icon: Presentation,
         },
 
