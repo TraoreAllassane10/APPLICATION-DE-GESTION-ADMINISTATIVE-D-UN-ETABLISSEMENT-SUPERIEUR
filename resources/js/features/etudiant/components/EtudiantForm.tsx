@@ -111,6 +111,8 @@ export const SERIES_BAC = [
     'G3',
     'T1',
     'T2',
+    'F1',
+    'F2',
     'BT'
 ];
 export const NATURES_PIECE: NaturePiece[] = [

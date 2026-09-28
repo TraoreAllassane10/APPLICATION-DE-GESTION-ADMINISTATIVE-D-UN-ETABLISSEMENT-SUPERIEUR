@@ -53,4 +53,8 @@ class User extends Authenticatable
     }
 
     protected $with = ["roles"];
+
+    public function professeur() {
+        return $this->hasOne(Professeur::class);
+    }
 }

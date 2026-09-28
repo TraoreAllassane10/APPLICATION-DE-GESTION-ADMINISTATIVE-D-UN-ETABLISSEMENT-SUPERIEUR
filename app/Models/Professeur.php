@@ -22,4 +22,8 @@ class Professeur extends Model
     {
         return $this->hasMany(Enseignement::class);
     }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
