@@ -2,8 +2,13 @@
 
 namespace App\Modules\Professeur\Repositories;
 
+use App\Enums\RoleUser;
 use App\Models\Professeur;
+use App\Models\User;
 use App\Modules\AnneeAcademique\Repositories\AnneeAcademiqueRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ProfesseurRepository
 {
@@ -19,7 +24,7 @@ class ProfesseurRepository
         })->with(["anneeAcademiques" => function ($query) use ($anneeActive) {
             $query->where("annee_universitaire_id", $anneeActive->id);
         }])
-        ->latest()->paginate(10);
+            ->latest()->paginate(10);
 
         return $professeurs;
     }
@@ -34,22 +39,35 @@ class ProfesseurRepository
         // Option 1 : Nouvel enseignant
         // Option 2 : Enseignant existant
 
-        if ($data['option'] === 2) {
-            // Recuperation de l'enseignement existant
-            $professeur = Professeur::where("matricule", $data["matricule"])
-                ->where('nom_prenom', $data['nom_prenom'])
-                ->where('date_naissance', $data['date_naissance'])
-                ->first();
+        return DB::transaction(function () use ($data) {
 
-            $this->EnregistrerInformationDeLaFonction($professeur, $data);
-        } else {
-            // CReation d'un nouvel enseignant
-            $professeur = Professeur::create($data);
+            if ($data['option'] === 2) {
+                $professeur = Professeur::where('matricule', $data['matricule'])
+                    ->where('nom_prenom', $data['nom_prenom'])
+                    ->where('date_naissance', $data['date_naissance'])
+                    ->firstOrFail();
 
-            $this->EnregistrerInformationDeLaFonction($professeur, $data);
-        }
+                $this->EnregistrerInformationDeLaFonction($professeur, $data);
+            } else {
+                $professeur = Professeur::create($data);
 
-        return $professeur;
+                $this->EnregistrerInformationDeLaFonction($professeur, $data);
+            }
+
+            $user = User::create([
+                'name' => $professeur->nom_prenom,
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
+
+            $user->assignRole(RoleUser::PROFESSEUR->value);
+
+            $professeur->update([
+                'user_id' => $user->id,
+            ]);
+
+            return $professeur;
+        });
     }
 
     public function update(Professeur $professeur, array $data)
@@ -95,6 +113,27 @@ class ProfesseurRepository
         })->latest()->get();
 
         return $professeurs;
+    }
+
+    private function creerCompteProfesseur(Professeur $professeur, array $data): ?User
+    {
+        if ($professeur->user) {
+            return $professeur->user;
+        }
+
+        $user = User::create([
+            'name' => $professeur->nom_prenom,
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        $user->assignRole(RoleUser::PROFESSEUR->value);
+
+        $professeur->update([
+            'user_id' => $user->id,
+        ]);
+
+        return $user;
     }
 
     public function EnregistrerInformationDeLaFonction($professeur, array $data)

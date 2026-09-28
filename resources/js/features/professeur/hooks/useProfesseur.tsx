@@ -9,9 +9,11 @@ interface Data {
     nom_prenom: string;
     sexe: string;
     date_naissance: string;
+    email: string;
     pays: string;
     specialite: string;
     telephone: string;
+    password: string;
     diplome: string;
     grade: number;
     statut: number;
@@ -88,7 +90,7 @@ export default function useProfesseur() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Enseignant supprimé !');
-                        router.visit(professeur());
+                        router.reload();
                     }
                 })
                 .catch((error) => {

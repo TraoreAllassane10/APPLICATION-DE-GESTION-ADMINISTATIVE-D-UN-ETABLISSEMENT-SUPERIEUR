@@ -29,6 +29,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Cours } from '@/features/cours/types/cours.types';
 import useProfesseur from '@/features/professeur/hooks/useProfesseur';
 import { Professeur } from '@/features/professeur/types/professeur.types';
 import {
@@ -36,7 +37,7 @@ import {
     ProfesseurData,
 } from '@/features/professeur/validations/createProfesseurSchema';
 import AppLayout from '@/layouts/app-layout';
-import { Cours, DataNiveau } from '@/types';
+import { DataNiveau } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
@@ -76,9 +77,11 @@ function Create() {
             nom_prenom: '',
             sexe: 'M',
             date_naissance: '',
+            email: '',
             pays: '',
             specialite: '',
             telephone: '',
+            password: '',
             diplome: '',
             grade: '',
             statut: '',
@@ -102,8 +105,10 @@ function Create() {
             nom_prenom: data.nom_prenom,
             sexe: data.sexe,
             date_naissance: data.date_naissance,
+            email: data.email,
             pays: data.pays,
             specialite: data.specialite,
+            password: data.password,
             telephone: data.telephone,
             diplome: data.diplome,
             grade: Number(data.grade),
@@ -291,7 +296,9 @@ function Create() {
                                                 control={control}
                                                 render={({ field }) => (
                                                     <Select
-                                                        onValueChange={field.onChange}
+                                                        onValueChange={
+                                                            field.onChange
+                                                        }
                                                         value={field.value}
                                                         disabled={
                                                             selectOption == '2'
@@ -376,6 +383,31 @@ function Create() {
                                             {errors.telephone && (
                                                 <span className="mt-0.5 text-sm text-destructive">
                                                     {errors.telephone.message}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <Label>
+                                                Email {champObligatoire()}
+                                            </Label>
+                                            <Input {...register('email')} />
+                                            {errors.email && (
+                                                <span className="mt-0.5 text-sm text-destructive">
+                                                    {errors.email.message}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <Label>
+                                                Mot de passe{' '}
+                                                {champObligatoire()}
+                                            </Label>
+                                            <Input {...register('password')} />
+                                            {errors.password && (
+                                                <span className="mt-0.5 text-sm text-destructive">
+                                                    {errors.password.message}
                                                 </span>
                                             )}
                                         </div>
@@ -527,7 +559,7 @@ function Create() {
                                     Disciplines enseignées
                                 </FieldLabel>
 
-                                <div className="grid grid-cols-2 gap-4">
+                                <div>
                                     <Combobox
                                         items={cours}
                                         multiple

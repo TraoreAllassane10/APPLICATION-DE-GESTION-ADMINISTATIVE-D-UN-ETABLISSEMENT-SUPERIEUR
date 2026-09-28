@@ -44,67 +44,52 @@ import { NavMain } from './nav-main';
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    const isAuthorize = auth.user?.roles?.some(
+    const isAdmin = auth.user?.roles?.some(
         (role) => role.name == 'Administrateur',
     );
 
+    const isSecretaireScolarite = auth.user?.roles?.some(
+        (role) => role.name == 'Secrétaire de scolarité',
+    );
+
+    const isProfesseur = auth.user?.roles?.some(
+        (role) => role.name == 'Professeur',
+    );
+
+    const isInspecteurPedagogie = auth.user?.roles?.some(
+        (role) => role.name == 'Inspecteur pedagogique',
+    );
+
     const mainNavItems: NavItem[] = [
-        {
-            title: 'Dashboard',
-            href: dashboard(),
-            icon: LayoutDashboard,
-        },
-        {
-            title: 'Etudiant',
-            href: '/etudiants',
-            icon: Users,
-        },
-        {
-            title: 'Inscriptions',
-            href: '/inscriptions',
-            icon: ClipboardList,
-        },
-        {
-            title: 'Filières',
-            href: filiere(),
-            icon: Layers,
-        },
-        {
-            title: 'Classes',
-            href: niveau(),
-            icon: GraduationCap,
-        },
-        {
-            title: 'Enseignants',
-            href: professeur(),
-            icon: UserCheck,
-        },
-        {
-            title: 'Cours',
-            href: '/cours',
-            icon: Presentation,
-        },
-
-        {
-            title: 'Evaluations',
-            href: evaluations(),
-            icon: ClipboardPen,
-        },
-        {
-            title: 'Moyennes',
-            href: '/moyennes',
-            icon: TrendingUp,
-        },
-
-        {
-            title: 'Bulletins',
-            href: bulletins(),
-            icon: Sheet,
-        },
-
-        // Onglets disponible que pour les administrateur
-        ...(isAuthorize
+        // Onglets disponible que pour les administrateurs
+        ...(isAdmin
             ? [
+                  {
+                      title: 'Dashboard',
+                      href: dashboard(),
+                      icon: LayoutDashboard,
+                  },
+                  {
+                      title: 'Etudiant',
+                      href: '/etudiants',
+                      icon: Users,
+                  },
+
+                  {
+                      title: 'Inscriptions',
+                      href: '/inscriptions',
+                      icon: ClipboardList,
+                  },
+                  {
+                      title: 'Filières',
+                      href: filiere(),
+                      icon: Layers,
+                  },
+                  {
+                      title: 'Classes',
+                      href: niveau(),
+                      icon: GraduationCap,
+                  },
                   {
                       title: 'Scolarités',
                       href: '/scolarite',
@@ -119,6 +104,105 @@ export function AppSidebar() {
                       title: 'Historiques des activités',
                       href: historique(),
                       icon: History,
+                  },
+              ]
+            : []),
+
+        // Onglets disponible que pour les administrateurs
+        ...(isSecretaireScolarite
+            ? [
+                  {
+                      title: 'Dashboard',
+                      href: dashboard(),
+                      icon: LayoutDashboard,
+                  },
+                  {
+                      title: 'Etudiant',
+                      href: '/etudiants',
+                      icon: Users,
+                  },
+
+                  {
+                      title: 'Inscriptions',
+                      href: '/inscriptions',
+                      icon: ClipboardList,
+                  },
+                  {
+                      title: 'Filières',
+                      href: filiere(),
+                      icon: Layers,
+                  },
+                  {
+                      title: 'Classes',
+                      href: niveau(),
+                      icon: GraduationCap,
+                  },
+                  {
+                      title: 'Enseignants',
+                      href: professeur(),
+                      icon: UserCheck,
+                  },
+              ]
+            : []),
+
+        // Onglets disponible pour inspecteur pédagogique
+        ...(isInspecteurPedagogie
+            ? [
+                  {
+                      title: 'Dashboard',
+                      href: dashboard(),
+                      icon: LayoutDashboard,
+                  },
+                  {
+                      title: 'Classes',
+                      href: niveau(),
+                      icon: GraduationCap,
+                  },
+                  {
+                      title: 'Cours',
+                      href: '/cours',
+                      icon: Presentation,
+                  },
+                  {
+                      title: 'Enseignants',
+                      href: professeur(),
+                      icon: UserCheck,
+                  },
+                  {
+                      title: 'Evaluations',
+                      href: evaluations(),
+                      icon: ClipboardPen,
+                  },
+                  {
+                      title: 'Moyennes',
+                      href: '/moyennes',
+                      icon: TrendingUp,
+                  },
+                  {
+                      title: 'Bulletins',
+                      href: bulletins(),
+                      icon: Sheet,
+                  },
+              ]
+            : []),
+
+        // Onglets disponible pour les professeurs
+        ...(isProfesseur
+            ? [
+                  {
+                      title: 'Evaluations',
+                      href: '/evaluations',
+                      icon: ClipboardPen,
+                  },
+                  {
+                      title: 'Moyennes',
+                      href: '/moyennes',
+                      icon: TrendingUp,
+                  },
+                  {
+                      title: 'Bulletins',
+                      href: bulletins(),
+                      icon: Sheet,
                   },
               ]
             : []),
@@ -170,7 +254,7 @@ export function AppSidebar() {
 
             <SidebarContent className="overflow-y-auto px-2 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <NavMain items={mainNavItems} title="Gestion académique" />
-                {isAuthorize && (
+                {isAdmin && (
                     <NavMain items={mainNavItemsPersonnel} title="Personnel" />
                 )}
             </SidebarContent>
