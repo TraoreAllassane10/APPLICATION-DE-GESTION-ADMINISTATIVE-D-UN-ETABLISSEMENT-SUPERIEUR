@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnseignantMiddleware
+class ProfesseurMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,10 +18,10 @@ class EnseignantMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !$user->hasRole(RoleUser::ENSEIGNANT->value)) {
+        if (!$user || !$user->hasRole(RoleUser::PROFESSEUR->value)) {
             abort(403);
         }
-        
+
         return $next($request);
     }
 }

@@ -127,11 +127,7 @@ export function AppSidebar() {
                       href: '/inscriptions',
                       icon: ClipboardList,
                   },
-                  {
-                      title: 'Filières',
-                      href: filiere(),
-                      icon: Layers,
-                  },
+
                   {
                       title: 'Classes',
                       href: niveau(),
@@ -152,6 +148,11 @@ export function AppSidebar() {
                       title: 'Dashboard',
                       href: dashboard(),
                       icon: LayoutDashboard,
+                  },
+                  {
+                      title: 'Filières',
+                      href: filiere(),
+                      icon: Layers,
                   },
                   {
                       title: 'Classes',
@@ -190,6 +191,16 @@ export function AppSidebar() {
         ...(isProfesseur
             ? [
                   {
+                      title: 'Dashboard',
+                      href: '/professeur/dashboard',
+                      icon: LayoutDashboard,
+                  },
+                  {
+                      title: 'Mes étudiants',
+                      href: '/professeur/etudiants',
+                      icon: ClipboardPen,
+                  },
+                  {
                       title: 'Evaluations',
                       href: '/evaluations',
                       icon: ClipboardPen,
@@ -198,11 +209,6 @@ export function AppSidebar() {
                       title: 'Moyennes',
                       href: '/moyennes',
                       icon: TrendingUp,
-                  },
-                  {
-                      title: 'Bulletins',
-                      href: bulletins(),
-                      icon: Sheet,
                   },
               ]
             : []),

@@ -10,7 +10,7 @@ class Professeur extends Model
     /** @use HasFactory<\Database\Factories\ProfesseurFactory> */
     use HasFactory;
 
-    protected $fillable = ["matricule", "nom_prenom", "sexe", "date_naissance", "pays", "specialite", "telephone"];
+    protected $fillable = ["matricule", "nom_prenom", "sexe", "date_naissance", "pays", "specialite", "telephone", 'email', 'user_id'];
 
     public function anneeAcademiques()
     {

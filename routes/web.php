@@ -5,6 +5,7 @@ use App\Modules\AnneeAcademique\controllers\AnneeAcademiqueController;
 use App\Modules\Bulletin\Controllers\BulletinController;
 use App\Modules\Cours\Controllers\CoursController;
 use App\Modules\Dashboard\Controllers\DashboardController;
+use App\Modules\Dashboard\Controllers\ProfesseurDashboardController;
 use App\Modules\Enseignement\Controllers\EnseignementController;
 use App\Modules\Etudiant\Controllers\EtudiantController;
 use App\Modules\Evaluation\Controllers\EvaluationController;
@@ -73,6 +74,42 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get("/inscriptions/{inscription}", "show")->name("inscriptions.show");
         Route::delete("/inscriptions/{inscription}/delete", "delete")->name("inscriptions.delete");
+    });
+
+    // Routes Professeur
+    Route::controller(ProfesseurController::class)->group(function () {
+        Route::get("professeur", "index")->name("professeur");
+        Route::get("professeur/create", "create")->name("professeur.create");
+        Route::post("professeur", "store")->name("professeur.store");
+        Route::get("professeur/{professeur}/show", "show")->name("professeur.show");
+        Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
+        Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
+        Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
+        Route::get("professeur/export", "export")->name("professeur.export");
+        Route::get("professeur/{professeur}/assigner-classe", "createAssigner")->name("professeur.assigner.create");
+        Route::post("professeur/{professeur}/assigner-classe", "assigner")->name("professeur.assigner.store");
+    });
+
+    // Routes Niveau
+    Route::controller(NiveauController::class)->group(function () {
+        Route::get("niveau", "index")->name("niveau");
+        Route::post("niveau", "store")->name("niveau.store");
+        Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
+        Route::put("niveau/{niveau}/update", "update")->name("niveau.update");
+        Route::delete("niveau/{niveau}/delete", "delete")->name("niveau.delete");
+
+        Route::get("/niveau/{niveau}/emploi-du-temps", "emploiParNiveau")->name("niveau.emploi");
+        Route::get("/niveau/{niveau}/liste-de-classe", "listeDeClasse")->name("niveau.liste");
+        Route::get("/niveau/{niveau}/liste-de-classe/imprimer", "downloadListeDeClase")->name("niveau.liste.download");
+    });
+
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('notifications', 'index')->name('notifications');
+        Route::get('notifications/dernieres', 'dernieresNotifications')->name('notifications.dernieres');
+        Route::put('notifications/{notification}/marquer-comme-lue', 'marquerNotificationCommeLue')->name('notifications.marquerNotificationCommeLue');
+        Route::put('notifications/marquer-tout-comme-lue', 'marquerTouteNotificationCommeLue')->name('notifications.marquerTouteNotificationCommeLue');
+        Route::delete('notifications/{notification}/delete', 'delete')->name('notifications.delete');
+        Route::delete('notifications/clear', 'clear')->name('notifications.clear');
     });
 
     // ADMINISTRATEUR
@@ -155,20 +192,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete("cours/{cours}/delete", "delete")->name("cours.delete");
         });
 
-        // Routes Professeur
-        Route::controller(ProfesseurController::class)->group(function () {
-            Route::get("professeur", "index")->name("professeur");
-            Route::get("professeur/create", "create")->name("professeur.create");
-            Route::post("professeur", "store")->name("professeur.store");
-            Route::get("professeur/{professeur}/show", "show")->name("professeur.show");
-            Route::get("professeur/{professeur}/edit", "edit")->name("professeur.edit");
-            Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
-            Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
-            Route::get("professeur/export", "export")->name("professeur.export");
-            Route::get("professeur/{professeur}/assigner-classe", "createAssigner")->name("professeur.assigner.create");
-            Route::post("professeur/{professeur}/assigner-classe", "assigner")->name("professeur.assigner.store");
-        });
-
         // Routes Enseignement
         Route::controller(EnseignementController::class)->group(function () {
             Route::post("/enseignements", "store")->name("enseigenement.store");
@@ -209,26 +232,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    // Routes Niveau
-    Route::controller(NiveauController::class)->group(function () {
-        Route::get("niveau", "index")->name("niveau");
-        Route::post("niveau", "store")->name("niveau.store");
-        Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
-        Route::put("niveau/{niveau}/update", "update")->name("niveau.update");
-        Route::delete("niveau/{niveau}/delete", "delete")->name("niveau.delete");
-
-        Route::get("/niveau/{niveau}/emploi-du-temps", "emploiParNiveau")->name("niveau.emploi");
-        Route::get("/niveau/{niveau}/liste-de-classe", "listeDeClasse")->name("niveau.liste");
-        Route::get("/niveau/{niveau}/liste-de-classe/imprimer", "downloadListeDeClase")->name("niveau.liste.download");
-    });
-
-    Route::controller(NotificationController::class)->group(function () {
-        Route::get('notifications', 'index')->name('notifications');
-        Route::get('notifications/dernieres', 'dernieresNotifications')->name('notifications.dernieres');
-        Route::put('notifications/{notification}/marquer-comme-lue', 'marquerNotificationCommeLue')->name('notifications.marquerNotificationCommeLue');
-        Route::put('notifications/marquer-tout-comme-lue', 'marquerTouteNotificationCommeLue')->name('notifications.marquerTouteNotificationCommeLue');
-        Route::delete('notifications/{notification}/delete', 'delete')->name('notifications.delete');
-        Route::delete('notifications/clear', 'clear')->name('notifications.clear');
+    // PROFESSEUR
+    Route::middleware('professeur')->group(function () {
+        // Dashboard
+        Route::get('/professeur/dashboard', [ProfesseurDashboardController::class, 'index'])->name('professeur.dashboard');
     });
 });
 
