@@ -145,19 +145,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete("filiere/{filiere}/delete", "delete")->name("filiere.delete");
         });
 
-        // Routes Niveau
-        Route::controller(NiveauController::class)->group(function () {
-            Route::get("niveau", "index")->name("niveau");
-            Route::post("niveau", "store")->name("niveau.store");
-            Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
-            Route::put("niveau/{niveau}/update", "update")->name("niveau.update");
-            Route::delete("niveau/{niveau}/delete", "delete")->name("niveau.delete");
-
-            Route::get("/niveau/{niveau}/emploi-du-temps", "emploiParNiveau")->name("niveau.emploi");
-            Route::get("/niveau/{niveau}/liste-de-classe", "listeDeClasse")->name("niveau.liste");
-            Route::get("/niveau/{niveau}/liste-de-classe/imprimer", "downloadListeDeClase")->name("niveau.liste.download");
-        });
-
         //Routes Cours
         Route::controller(CoursController::class)->group(function () {
             Route::get("cours", "index")->name("cours");
@@ -219,7 +206,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('bulletins/search', "getBulletins")->name('bulletins.getBulletins');
             Route::get('bulletins/{bulletin}/telecharger-bulletin-pdf', "telechargerBulletin")->name('bulletins.telechargerBulletinPdf');
             Route::get('/classes/{classe}/periodes/{periode}/download-zip', 'telechargerZip')->name('bulletins.download-zip');
-            });
+        });
+    });
+
+    // Routes Niveau
+    Route::controller(NiveauController::class)->group(function () {
+        Route::get("niveau", "index")->name("niveau");
+        Route::post("niveau", "store")->name("niveau.store");
+        Route::get("niveau/{niveau}/edit", "edit")->name("niveau.edit");
+        Route::put("niveau/{niveau}/update", "update")->name("niveau.update");
+        Route::delete("niveau/{niveau}/delete", "delete")->name("niveau.delete");
+
+        Route::get("/niveau/{niveau}/emploi-du-temps", "emploiParNiveau")->name("niveau.emploi");
+        Route::get("/niveau/{niveau}/liste-de-classe", "listeDeClasse")->name("niveau.liste");
+        Route::get("/niveau/{niveau}/liste-de-classe/imprimer", "downloadListeDeClase")->name("niveau.liste.download");
     });
 
     Route::controller(NotificationController::class)->group(function () {

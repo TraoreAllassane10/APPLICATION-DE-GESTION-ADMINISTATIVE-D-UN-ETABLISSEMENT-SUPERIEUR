@@ -41,12 +41,12 @@ class ProfesseurRepository
                 ->where('date_naissance', $data['date_naissance'])
                 ->first();
 
-            $this->informationDeLaFonction($professeur, $data);
+            $this->EnregistrerInformationDeLaFonction($professeur, $data);
         } else {
             // CReation d'un nouvel enseignant
             $professeur = Professeur::create($data);
 
-            $this->informationDeLaFonction($professeur, $data);
+            $this->EnregistrerInformationDeLaFonction($professeur, $data);
         }
 
         return $professeur;
@@ -97,7 +97,7 @@ class ProfesseurRepository
         return $professeurs;
     }
 
-    public function informationDeLaFonction($professeur, array $data)
+    public function EnregistrerInformationDeLaFonction($professeur, array $data)
     {
         $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
 
