@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { Annee } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
     Award,
@@ -124,10 +124,14 @@ export default function DashboardProfesseur() {
                                     attribuée(s) aujourd'hui.
                                 </p>
                                 <div className="pt-2">
+                                    <Link href={"/professeur/evaluations"}>
                                     <Button className="flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 font-semibold text-blue-600 shadow-md transition-all hover:bg-blue-50">
+                                       
                                         <span>Consulter mes évaluations</span>
                                         <ArrowRight className="h-4 w-4" />
+                                     
                                     </Button>
+                                      </Link>
                                 </div>
                             </div>
 

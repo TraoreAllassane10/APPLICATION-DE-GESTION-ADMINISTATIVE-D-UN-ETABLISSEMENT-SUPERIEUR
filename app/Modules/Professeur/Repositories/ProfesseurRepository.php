@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Modules\AnneeAcademique\Repositories\AnneeAcademiqueRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class ProfesseurRepository
 {
@@ -32,6 +31,12 @@ class ProfesseurRepository
     public function find(Professeur $professeur)
     {
         return $professeur->anneeAcademiques()->first();
+    }
+
+    public function findByUserId(string $userId)
+    {
+        return Professeur::where("user_id", $userId)
+            ->first();
     }
 
     public function create(array $data)
@@ -114,28 +119,6 @@ class ProfesseurRepository
 
         return $professeurs;
     }
-
-    private function creerCompteProfesseur(Professeur $professeur, array $data): ?User
-    {
-        if ($professeur->user) {
-            return $professeur->user;
-        }
-
-        $user = User::create([
-            'name' => $professeur->nom_prenom,
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-
-        $user->assignRole(RoleUser::PROFESSEUR->value);
-
-        $professeur->update([
-            'user_id' => $user->id,
-        ]);
-
-        return $user;
-    }
-
     public function EnregistrerInformationDeLaFonction($professeur, array $data)
     {
         $anneeActive = $this->anneeAcademiqueRepository->anneeActive();

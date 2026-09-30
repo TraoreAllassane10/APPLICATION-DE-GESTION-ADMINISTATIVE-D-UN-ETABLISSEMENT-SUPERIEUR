@@ -9,6 +9,7 @@ use App\Modules\Dashboard\Controllers\ProfesseurDashboardController;
 use App\Modules\Enseignement\Controllers\EnseignementController;
 use App\Modules\Etudiant\Controllers\EtudiantController;
 use App\Modules\Evaluation\Controllers\EvaluationController;
+use App\Modules\Evaluation\Controllers\ProfesseurEvaluationController;
 use App\Modules\Filiere\Controllers\FiliereController;
 use App\Modules\HistoriqueActivite\Controllers\ActivityLogController;
 use App\Modules\Inscription\Controllers\InscriptionController;
@@ -236,6 +237,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('professeur')->group(function () {
         // Dashboard
         Route::get('/professeur/dashboard', [ProfesseurDashboardController::class, 'index'])->name('professeur.dashboard');
+
+        // Routes Evaluations
+        Route::controller(ProfesseurEvaluationController::class)->group(function () {
+            Route::get('/professeur/evaluations', 'index')->name('professeur.evaluations');
+            Route::post('/professeur/evaluations', 'store')->name('professeur.evaluations.store');
+            Route::get("/professeur/evaluations/create", "create")->name("professeur.evaluations.create");
+            Route::get("/professeur/evaluations/{evaluation}/edit", "edit")->name("professeur.evaluations.edit");
+            Route::put("/professeur/evaluations/{evaluation}/update", "update")->name("professeur.evaluations.update");
+            Route::delete('/professeur/evaluations/{evaluation}/delete', "destroy")->name('professeur.evaluations.destroy');
+        });
+
+        // Routes Note
+        Route::controller(NoteController::class)->group(function () {
+            Route::get("/professeur/notes/{evaluation}/create-note", "create")->name("notes.create");
+            Route::put('/professeur/notes/update', "update")->name('notes.update');
+        });
     });
 });
 

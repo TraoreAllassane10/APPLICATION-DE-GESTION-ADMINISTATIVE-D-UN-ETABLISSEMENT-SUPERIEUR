@@ -202,7 +202,7 @@ export function AppSidebar() {
                   },
                   {
                       title: 'Evaluations',
-                      href: '/evaluations',
+                      href: '/professeur/evaluations',
                       icon: ClipboardPen,
                   },
                   {

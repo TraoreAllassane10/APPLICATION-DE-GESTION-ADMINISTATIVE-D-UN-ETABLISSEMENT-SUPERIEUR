@@ -13,6 +13,7 @@ import { router } from '@inertiajs/react';
 import { BookOpen, Calendar, Search, X } from 'lucide-react';
 import { useState } from 'react';
 import useEvaluation from '../hooks/useEvaluation';
+import useEvaluationProfesseur from '../hooks/useEvaluationProfesseur';
 
 interface EvaluationFiltresSectionProps {
     enseignements: Enseignement[];
@@ -29,14 +30,29 @@ const EvaluationFiltresSection = ({
     const hasFilters = filtreEnseignement !== 'all' || filtrePeriode !== 'all';
 
     const { filterEvaluation } = useEvaluation();
+    const {filterEvaluation: filterEvaluationProfesseur} = useEvaluationProfesseur();
+
+    const pathname = window.location.pathname;
 
     const handleSearch = () => {
+        if (pathname.startsWith('/professeur')) {
+            filterEvaluationProfesseur(filtreEnseignement, filtrePeriode);
+            return ;
+        }
+
         filterEvaluation(filtreEnseignement, filtrePeriode);
     };
 
     const handleReset = () => {
         setFiltreEnseignement('all');
         setFiltrePeriode('all');
+
+        if (pathname.startsWith('/professeur'))
+        {
+            router.visit('/professeur/evaluations');
+            return ;
+        }
+
         router.visit('/evaluations');
     };
 

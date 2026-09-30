@@ -3,6 +3,10 @@ import { Link } from '@inertiajs/react';
 import { PlusCircle } from 'lucide-react';
 
 const HeaderSection = () => {
+    const pathname = window.location.pathname;
+
+    const link = pathname.startsWith('/professeur') ? "/professeur/evaluations/create" : "/evaluations/create";
+
     return (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -13,7 +17,7 @@ const HeaderSection = () => {
                     Planifiez, modifiez et saisissez les notes de vos évaluations académiques.
                 </p>
             </div>
-            <Link href="/evaluations/create">
+            <Link href={link}>
                 <Button className="w-full gap-2 sm:w-auto">
                     <PlusCircle className="h-4 w-4" />
                     Nouvelle évaluation

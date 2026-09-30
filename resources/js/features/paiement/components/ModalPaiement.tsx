@@ -38,7 +38,7 @@ export default function ModalPaiement({
         resteAPayer <= 0 ||
         Number(montant) > resteAPayer;
 
-    const {createPaiement} = usePaiement();
+    const {createPaiement, loading} = usePaiement();
 
     const handlePayment = async () => {
        await createPaiement(inscriptionId, {date_paiement, methode_paiement, reference, montant: Number(montant)});
@@ -109,7 +109,7 @@ export default function ModalPaiement({
                     </Button>
                     <Button
                         onClick={handlePayment}
-                        disabled={desactiveButtonSumbit}
+                        disabled={desactiveButtonSumbit || loading}
                         className="gap-2"
                     >
                         <CheckCircle2 className="h-4 w-4" /> Confirmer

@@ -9,7 +9,7 @@ use App\Modules\AnneeAcademique\Repositories\AnneeAcademiqueRepository;
 class EvaluationRepository
 {
     public function __construct(
-        protected AnneeAcademiqueRepository $anneeAcademiqueRepository
+        public AnneeAcademiqueRepository $anneeAcademiqueRepository
     ) {}
     public function all()
     {
