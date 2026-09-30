@@ -8,7 +8,7 @@ use Exception;
 class EvaluationService
 {
     public function __construct(
-        protected EvaluationRepository $evaluationRepository
+        public EvaluationRepository $evaluationRepository
     ) {}
 
     public function getEvaluationsPaginate(mixed $filtreEnseignement, mixed $filtrePeriode) {

@@ -8,9 +8,11 @@ export const createProfesseurSchema = z.object({
         .min(2, 'Le nom et prénom doit contenir au moins 2 caractères'),
     sexe: z.enum(["M", "F"]),
     date_naissance: z.string().min(1, 'La date de naissance est requise'),
+    email: z.string().email("L'email est requis"),
     pays: z.string().min(1, 'Le pays est requis'),
     specialite: z.string().min(1, 'La spécialité est requise'),
     telephone: z.string().min(8, 'Numéro de téléphone invalide'),
+    password: z.string().min(6, 'Mot de passe trop court'),
     diplome: z.string().min(1, 'Le diplôme est requis'),
     grade: z.string().min(1, 'Le grade est requis'), // number().int().nonnegative()
     statut: z.string().min(1, 'Le statut est requis'), // number().int().nonnegative()

@@ -127,6 +127,11 @@ function Show() {
                                 ).toLocaleDateString('fr-FR')}
                             />
                             <InfoLigne
+                                icon={User}
+                                label="email"
+                                value={professeur.email}
+                            />
+                            <InfoLigne
                                 icon={Globe}
                                 label="Pays"
                                 value={professeur.pays}

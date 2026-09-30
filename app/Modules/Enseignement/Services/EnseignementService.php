@@ -25,6 +25,10 @@ class EnseignementService
         return Enseignement::where("id", $id)->first();
     }
 
+    public function getEnseignementByProfesseurId(string $professeurId) {
+        return Enseignement::where('professeur_id', $professeurId)->get();
+    }
+
     public function createEnseignement(string $coursId, string $professeurId)
     {
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();

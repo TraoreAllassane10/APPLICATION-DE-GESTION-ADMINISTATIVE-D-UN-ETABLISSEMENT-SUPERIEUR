@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Middleware\AdministrateurMiddleware;
-use App\Http\Middleware\EnseignantMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\InspecteurPedagogiqueMiddleware;
+use App\Http\Middleware\ProfesseurMiddleware;
 use App\Http\Middleware\ServiceScolariteMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             "administrateur" => AdministrateurMiddleware::class,
             "inspecteur_pedagogique" => InspecteurPedagogiqueMiddleware::class,
             "service_scolarite" => ServiceScolariteMiddleware::class,
-            "enseignant" => EnseignantMiddleware::class
+            "professeur" => ProfesseurMiddleware::class
         ]);
 
         $middleware->web(append: [

@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import axios from 'axios';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface Data {
@@ -10,8 +11,12 @@ interface Data {
 }
 
 export default function usePaiement() {
+    const [loading, setLoading] = useState(false);
+
     // Création d'un paiement
     const createPaiement = async (inscriptionId: number, data: Data) => {
+        setLoading(true);
+
         try {
             await axios
                 .post(`/inscriptions/${inscriptionId}/paiement`, data)
@@ -29,6 +34,10 @@ export default function usePaiement() {
         } catch (error) {
             toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
+        }
+        finally
+        {
+            setLoading(false);
         }
     };
 
@@ -50,5 +59,5 @@ export default function usePaiement() {
         }
     };
 
-    return { createPaiement, rechercheEtFiltrage };
+    return { createPaiement, rechercheEtFiltrage, loading };
 }

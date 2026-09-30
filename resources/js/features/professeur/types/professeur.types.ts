@@ -8,6 +8,7 @@ export interface Professeur {
     date_naissance: string;
     pays: string;
     specialite: string;
+    email: string;
     telephone: string;
     diplome: string;
     grade: number;

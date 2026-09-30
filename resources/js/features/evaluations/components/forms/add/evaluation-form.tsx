@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Enseignement } from '@/features/enseignement/types/enseignement.types';
 import useEvaluation from '@/features/evaluations/hooks/useEvaluation';
+import useEvaluationProfesseur from '@/features/evaluations/hooks/useEvaluationProfesseur';
 import {
     createEvaluationData,
     createEvaluationSchema,
@@ -51,9 +52,28 @@ const EvaluationForm = ({
     );
 
     const { createEvaluation, loading } = useEvaluation();
+    const {
+        createEvaluation: professeurCreateEvaluation,
+        loading: ProfesseurLoading,
+    } = useEvaluationProfesseur();
+    const pathname = window.location.pathname;
 
     const onSubmit = async (data: createEvaluationData) => {
         const formattedDate = daysjs(new Date(data.date)).format('YYYY-MM-DD');
+
+        if (pathname.startsWith('/professeur')) {
+            await professeurCreateEvaluation({
+                enseignement_id: Number(data.enseignement_id),
+                periode_academique_id: Number(data.periode),
+                coefficient: data.coefficient,
+                titre: data.titre,
+                note_maximale: data.note_maximale,
+                type: data.type,
+                date: formattedDate,
+            });
+
+            return;
+        }
 
         await createEvaluation({
             enseignement_id: Number(data.enseignement_id),
@@ -93,12 +113,12 @@ const EvaluationForm = ({
                 </Button>
 
                 <Button type="submit" disabled={loading}>
-                    {loading ? (
+                    {loading || ProfesseurLoading ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                         <CheckCircle2 className="mr-2 h-4 w-4" />
                     )}
-                    {loading
+                    {loading || ProfesseurLoading
                         ? "Création d'evaluation..."
                         : "Créer l'évaluation"}
                 </Button>

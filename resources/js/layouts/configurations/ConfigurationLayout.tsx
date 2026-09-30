@@ -11,8 +11,20 @@ const ConfigurationLayout = ({ children }: PropsWithChildren) => {
     const currentPath = window.location.pathname;
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    const isAuthorize = auth.user?.roles?.some(
+    const isAdmin = auth.user?.roles?.some(
         (role) => role.name == 'Administrateur',
+    );
+
+    const isSecretaireScolarite = auth.user?.roles?.some(
+        (role) => role.name == 'Secrétaire de scolarité',
+    );
+
+    const isProfesseur = auth.user?.roles?.some(
+        (role) => role.name == 'Professeur',
+    );
+
+    const isInspecteurPedagogie = auth.user?.roles?.some(
+        (role) => role.name == 'Inspecteur pedagogique',
     );
 
     const sidebarNavItems: NavItem[] = [
@@ -21,23 +33,34 @@ const ConfigurationLayout = ({ children }: PropsWithChildren) => {
             href: '/configurations',
             icon: null,
         },
-        {
-            title: 'Annne academiques',
-            href: annee(),
-            icon: null,
-        },
-        {
-            title: 'Période academiques',
-            href: periodes(),
-            icon: null,
-        },
 
-        // Onglets disponible que pour les administrateur
-        ...(isAuthorize
+        // Onglets disponible que pour les administrateurs
+        ...(isAdmin
             ? [
+                  {
+                      title: 'Annne academiques',
+                      href: annee(),
+                      icon: null,
+                  },
+                  {
+                      title: 'Période academiques',
+                      href: periodes(),
+                      icon: null,
+                  },
                   {
                       title: 'Utilisateurs',
                       href: '/utilisateurs',
+                      icon: null,
+                  },
+              ]
+            : []),
+
+        // Onglets disponible que pour les inspecteurs pedagogique
+        ...(isInspecteurPedagogie
+            ? [
+                  {
+                      title: 'Période academiques',
+                      href: periodes(),
                       icon: null,
                   },
               ]

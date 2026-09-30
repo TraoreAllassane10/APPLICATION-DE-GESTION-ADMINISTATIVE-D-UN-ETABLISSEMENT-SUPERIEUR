@@ -74,7 +74,7 @@ class ProfesseurController extends Controller
             //Creation d'un professeur
             $this->professeurService->createProfesseur($data);
 
-            return response()->json(["success" => true]);
+            return response()->json(["success" => true, "message" => "Professeur enregistré avec succès"]);
         } catch (Exception $e) {
             Log::info("Erreur survenue lors de la création de l'enseignant", ["erreur" => $e->getMessage()]);
             return response()->json(["message" => "Erreur survenue lors de l'enregistrement de l'enseignant"]);

@@ -1,34 +1,34 @@
 import PaginationLinks from '@/components/Pagination';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-} from '@/components/ui/card';
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { EvaluationData } from '@/pages/evaluation/Index';
 import { Link } from '@inertiajs/react';
 import {
     BookOpen,
-    Calendar,
+    ChevronDown,
     GraduationCap,
+    Pen,
+    PenBox,
     Pencil,
     Trash2,
-    User,
 } from 'lucide-react';
 import useEvaluation from '../hooks/useEvaluation';
-import { EvaluationData } from '@/pages/evaluation/Index';
+import useEvaluationProfesseur from '../hooks/useEvaluationProfesseur';
 
 interface EvaluationTableSectionProps {
     evaluations: EvaluationData;
@@ -38,8 +38,19 @@ const EvaluationTableSection = ({
     evaluations,
 }: EvaluationTableSectionProps) => {
     const { deleteEvaluation, loading } = useEvaluation();
+    const {
+        deleteEvaluation: professeurDeleteEvaluation,
+        loading: loadingProfesseur,
+    } = useEvaluationProfesseur();
+
+    const pathname = window.location.pathname;
 
     const handleDelete = async (id: number) => {
+        if (pathname.startsWith('/professeur')) {
+            await professeurDeleteEvaluation(id);
+
+            return;
+        }
         await deleteEvaluation(id);
     };
 
@@ -56,154 +67,152 @@ const EvaluationTableSection = ({
     }
 
     return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {evaluations.data.map((evaluation) => (
-                    <Card
-                        key={evaluation.id}
-                        className="flex flex-col justify-between shadow-sm transition-shadow hover:shadow-md"
-                    >
-                        <CardHeader className="p-4 pb-2">
-                            <div className="flex items-start justify-between gap-2">
-                                <div className="flex min-w-0 items-center gap-2.5">
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                        <BookOpen className="h-5 w-5" />
-                                    </div>
-                                    <h2
-                                        title={
-                                            evaluation.enseignement.cours.nom
-                                        }
-                                        className="truncate text-sm font-semibold text-foreground"
-                                    >
-                                        {evaluation.enseignement.cours.nom}
-                                    </h2>
-                                </div>
+        <>
+            <Card className="overflow-hidden shadow-sm">
+                <Table>
+                    <TableHeader>
+                        <TableRow className="bg-muted/40 hover:bg-muted/40">
+                            <TableHead>Titre</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Note maximale</TableHead>
+                            <TableHead>Coefficient</TableHead>
+                            <TableHead>Matière</TableHead>
+                            <TableHead>Période</TableHead>
 
-                                <div className="flex shrink-0 items-center gap-1">
-                                    <Link
-                                        href={`/evaluations/${evaluation.id}/edit`}
-                                    >
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                                        >
-                                            <Pencil className="h-4 w-4" />
-                                        </Button>
-                                    </Link>
-
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                disabled={loading}
-                                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>
-                                                    Supprimer l'évaluation ?
-                                                </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    Cette action est
-                                                    irréversible. Les notes
-                                                    associées à cette évaluation
-                                                    seront également impactées.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>
-                                                    Annuler
-                                                </AlertDialogCancel>
-                                                <AlertDialogAction
-                                                    onClick={() =>
-                                                        handleDelete(
-                                                            evaluation.id,
-                                                        )
-                                                    }
-                                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                                >
-                                                    Supprimer
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </div>
-                            </div>
-                        </CardHeader>
-
-                        <CardContent className="space-y-3 p-4 pt-2">
-                            <p className="line-clamp-2 min-h-[32px] text-xs font-medium text-muted-foreground">
-                                {evaluation.titre}
-                            </p>
-
-                            <div className="space-y-1.5 text-xs text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="h-3.5 w-3.5 shrink-0" />
-                                    <span>{evaluation.date}</span>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <GraduationCap className="h-3.5 w-3.5 shrink-0" />
-                                    <span className="truncate">
-                                        {evaluation.enseignement.niveaux
-                                            .map((niveau) => niveau.nom)
-                                            .join(', ')}
-                                    </span>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <User className="h-3.5 w-3.5 shrink-0" />
-                                    <span className="truncate">
-                                        {
-                                            evaluation.enseignement.professeur
-                                                .nom_prenom
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between border-t pt-2 text-xs">
-                                <span className="text-muted-foreground">
-                                    Coeff :{' '}
-                                    <strong className="text-foreground">
-                                        {evaluation.coefficient}
-                                    </strong>
-                                </span>
-                                <Badge variant="outline">
-                                    Sur {evaluation.note_maximale}
-                                </Badge>
-                            </div>
-                        </CardContent>
-
-                        <CardFooter className="p-4 pt-0">
-                            <Link
-                                href={`/notes/${evaluation.id}/create-note`}
-                                className="w-full"
-                            >
-                                <Button
-                                    size="sm"
-                                    variant="default"
-                                    className="w-full"
+                            <TableHead className="w-[100px]" />
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {evaluations.data.length === 0 ? (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={7}
+                                    className="h-48 text-center"
                                 >
-                                    Saisir les notes
-                                </Button>
-                            </Link>
-                        </CardFooter>
-                    </Card>
-                ))}
-            </div>
+                                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                        <GraduationCap className="h-10 w-10 opacity-20" />
+                                        <p className="text-sm">
+                                            Aucune evaluation trouvée.
+                                        </p>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            evaluations.data.map((evaluation) => {
+                                const lienModification = pathname.startsWith(
+                                    '/professeur',
+                                )
+                                    ? `/professeur/evaluations/${evaluation.id}/edit`
+                                    : `/evaluations/${evaluation.id}/edit`;
 
-            {evaluations.links && (
-                <div className="flex justify-center pt-4">
-                    <PaginationLinks links={evaluations.links} />
-                </div>
-            )}
-        </div>
+                                const lienSaisieNote = pathname.startsWith(
+                                    '/professeur',
+                                )
+                                    ? `/professeur/notes/${evaluation.id}/create-note`
+                                    : `/notes/${evaluation.id}/create-note`;
+
+                                return (
+                                    <TableRow
+                                        key={evaluation.id}
+                                        className="group"
+                                    >
+                                        <TableCell className="space-x-1">
+                                            {evaluation.titre}
+                                        </TableCell>
+
+                                        <TableCell>{evaluation.type}</TableCell>
+
+                                        <TableCell>{evaluation.date}</TableCell>
+
+                                        <TableCell>
+                                            {evaluation.note_maximale}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {evaluation.coefficient}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {evaluation.enseignement.cours.nom}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {
+                                                evaluation.periode_academique
+                                                    .libelle
+                                            }
+                                        </TableCell>
+
+                                        <TableCell>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+                                                    >
+                                                        Actions{' '}
+                                                        <ChevronDown className="h-3 w-3" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent
+                                                    align="end"
+                                                    className="w-48"
+                                                >
+                                                      <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={
+                                                                lienSaisieNote
+                                                            }
+                                                            className="w-full"
+                                                        >
+                                                            <Pencil />
+                                                            Saisir les notes
+                                                        </Link>
+                                                    </DropdownMenuItem>
+                                                    
+                                                    <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={
+                                                                lienModification
+                                                            }
+                                                        >
+                                                            <PenBox className="h-4 w-4" />
+                                                            Modifier
+                                                        </Link>
+                                                    </DropdownMenuItem>
+
+                                                    <DropdownMenuSeparator />
+
+                                                    <DropdownMenuItem
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                evaluation.id,
+                                                            )
+                                                        }
+                                                        className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                        disabled={
+                                                            loadingProfesseur ||
+                                                            loading
+                                                        }
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />{' '}
+                                                        Supprimer
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })
+                        )}
+                    </TableBody>
+
+                    <PaginationLinks links={evaluations.links!} />
+                </Table>
+            </Card>
+        </>
     );
 };
 

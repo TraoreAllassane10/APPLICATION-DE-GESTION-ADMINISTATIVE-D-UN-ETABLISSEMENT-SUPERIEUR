@@ -28,6 +28,12 @@ class ProfesseurService
         return $this->professeurRepository->find($professeur);
     }
 
+
+    public function getProfesseurByUserId(string $userId)
+    {
+        return $this->professeurRepository->findByUserId($userId);
+    }
+
     public function getProfesseurNonEnregistreDabord()
     {
         return $this->professeurRepository->professeurNonEnregistreDabord();

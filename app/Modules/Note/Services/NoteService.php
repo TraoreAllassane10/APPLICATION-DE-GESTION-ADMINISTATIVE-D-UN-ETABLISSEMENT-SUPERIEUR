@@ -5,7 +5,7 @@ namespace App\Modules\Note\Services;
 use App\Modules\Evaluation\Events\EvaluationNoteUpdated;
 use App\Modules\Evaluation\Services\EvaluationService;
 use Exception;
-
+use Illuminate\Support\Facades\Log;
 
 class NoteService
 {
@@ -22,12 +22,13 @@ class NoteService
         }
 
         foreach ($data['notes'] as $note) {
+
             $evaluation->notes()->updateOrCreate(
                 [
                     "inscription_id" => $note['inscription_id'],
                 ],
                 [
-                    "valeur" => $note['est_absent'] ? null : $note['valeur'] * $evaluation->coefficient,
+                    "valeur" => $note['est_absent'] ? null : (int) $note['valeur'] * $evaluation->coefficient,
                     "est_absent" => $note['est_absent']
                 ]
             );

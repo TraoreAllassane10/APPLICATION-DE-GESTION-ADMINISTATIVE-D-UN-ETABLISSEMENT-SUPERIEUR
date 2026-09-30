@@ -73,7 +73,7 @@ class UpdateMoyenneEnseignement
 
                     $totalGenerale += $noteEtudiant->valeur ?? 0;
 
-                    if ($noteEtudiant->valeur) {
+                    if ($noteEtudiant && $noteEtudiant->valeur) {
                         // Calculer le diviseur
                         if ($evaluation->note_maximale === 10) {
                             // Si la note porte sur 10 , il faut ajouter 0.5 au diviseur car c'est la note qui porte sur 

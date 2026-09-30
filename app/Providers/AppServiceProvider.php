@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Enums\RoleUser;
 use App\Models\AnneeUniversitaire;
 use App\Models\Etudiant;
+use App\Models\Evaluation;
 use App\Models\Filiere;
 use App\Models\Inscription;
 use App\Models\Niveau;
@@ -15,6 +16,7 @@ use App\Modules\AnneeAcademique\Observers\AnneeUniversitaireObserver;
 use App\Modules\Etudiant\Observes\EtudiantObserver;
 use App\Modules\Evaluation\Events\EvaluationNoteUpdated;
 use App\Modules\Evaluation\Events\EvaluationUpdated;
+use App\Modules\Evaluation\Policies\ProfesseurEvaluationPolicy;
 use App\Modules\Filiere\Observers\FiliereObserver;
 use App\Modules\Inscription\Observers\InscriptionObserver;
 use App\Modules\Moyenne\Listeners\UpdateMoyenneEnseignement;
@@ -60,6 +62,10 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole(RoleUser::ADMINISTRATEUR->value) ? true : null;
         });
 
+        // Enregistrement des policies
+        Gate::policy(Evaluation::class, ProfesseurEvaluationPolicy::class);
+
+        // Enregistrement des observers
         Etudiant::observe(EtudiantObserver::class);
         Inscription::observe(InscriptionObserver::class);
         Paiement::observe(PaiementObserver::class);
@@ -69,6 +75,7 @@ class AppServiceProvider extends ServiceProvider
         Niveau::observe(NiveauObserver::class);
         Note::observe(NoteObserver::class);
 
+        // Enregistrement des events
         Event::listen(
             EvaluationNoteUpdated::class,
             UpdateMoyenneEnseignement::class

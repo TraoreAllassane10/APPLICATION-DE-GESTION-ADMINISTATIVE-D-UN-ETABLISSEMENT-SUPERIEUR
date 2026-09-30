@@ -40,12 +40,6 @@ class DashboardController extends Controller
             }
         );
 
-        // $totalEtudiants = ;
-        // $totalInscriptions = Inscription::where("annee_universitaire_id", $anneeActive->id)->count();
-        // $totalEnseignants = Professeur::count();
-        // $totalFilieres = Filiere::count();
-
-
         // Statistiques financiers
         $totalAttendu = Inscription::where("annee_universitaire_id", $anneeActive->id)->sum("montant_total");
         $totalPaye = Paiement::whereHas("inscription", function ($query) use ($anneeActive) {
