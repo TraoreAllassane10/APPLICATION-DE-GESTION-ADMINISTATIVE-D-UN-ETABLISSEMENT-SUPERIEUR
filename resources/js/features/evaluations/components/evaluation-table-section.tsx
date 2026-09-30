@@ -1,23 +1,6 @@
 import PaginationLinks from '@/components/Pagination';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -37,13 +20,12 @@ import { EvaluationData } from '@/pages/evaluation/Index';
 import { Link } from '@inertiajs/react';
 import {
     BookOpen,
-    Calendar,
     ChevronDown,
     GraduationCap,
     Pen,
+    PenBox,
     Pencil,
     Trash2,
-    User,
 } from 'lucide-react';
 import useEvaluation from '../hooks/useEvaluation';
 import useEvaluationProfesseur from '../hooks/useEvaluationProfesseur';
@@ -56,15 +38,18 @@ const EvaluationTableSection = ({
     evaluations,
 }: EvaluationTableSectionProps) => {
     const { deleteEvaluation, loading } = useEvaluation();
-    const { deleteEvaluation: professeurDeleteEvaluation, loading: loadingProfesseur } = useEvaluationProfesseur();
+    const {
+        deleteEvaluation: professeurDeleteEvaluation,
+        loading: loadingProfesseur,
+    } = useEvaluationProfesseur();
 
     const pathname = window.location.pathname;
 
     const handleDelete = async (id: number) => {
         if (pathname.startsWith('/professeur')) {
-              await professeurDeleteEvaluation(id);
+            await professeurDeleteEvaluation(id);
 
-              return ;
+            return;
         }
         await deleteEvaluation(id);
     };
@@ -114,86 +99,113 @@ const EvaluationTableSection = ({
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            evaluations.data.map((evaluation) => (
-                                <TableRow key={evaluation.id} className="group">
-                                    <TableCell className="space-x-1">
-                                        {evaluation.titre}
-                                    </TableCell>
+                            evaluations.data.map((evaluation) => {
+                                const lienModification = pathname.startsWith(
+                                    '/professeur',
+                                )
+                                    ? `/professeur/evaluations/${evaluation.id}/edit`
+                                    : `/evaluations/${evaluation.id}/edit`;
 
-                                    <TableCell>{evaluation.type}</TableCell>
+                                const lienSaisieNote = pathname.startsWith(
+                                    '/professeur',
+                                )
+                                    ? `/professeur/notes/${evaluation.id}/create-note`
+                                    : `/notes/${evaluation.id}/create-note`;
 
-                                    <TableCell>{evaluation.date}</TableCell>
+                                return (
+                                    <TableRow
+                                        key={evaluation.id}
+                                        className="group"
+                                    >
+                                        <TableCell className="space-x-1">
+                                            {evaluation.titre}
+                                        </TableCell>
 
-                                    <TableCell>
-                                        {evaluation.note_maximale}
-                                    </TableCell>
+                                        <TableCell>{evaluation.type}</TableCell>
 
-                                    <TableCell>
-                                        {evaluation.coefficient}
-                                    </TableCell>
+                                        <TableCell>{evaluation.date}</TableCell>
 
-                                    <TableCell>
-                                        {evaluation.enseignement.cours.nom}
-                                    </TableCell>
+                                        <TableCell>
+                                            {evaluation.note_maximale}
+                                        </TableCell>
 
-                                    <TableCell>
-                                        {evaluation.periode_academique.libelle}
-                                    </TableCell>
+                                        <TableCell>
+                                            {evaluation.coefficient}
+                                        </TableCell>
 
-                                    <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
-                                                >
-                                                    Actions{' '}
-                                                    <ChevronDown className="h-3 w-3" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent
-                                                align="end"
-                                                className="w-48"
-                                            >
-                                                <DropdownMenuItem asChild>
-                                                    <Link
-                                                        href={`/professeur/evaluations/${evaluation.id}/edit`}
+                                        <TableCell>
+                                            {evaluation.enseignement.cours.nom}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {
+                                                evaluation.periode_academique
+                                                    .libelle
+                                            }
+                                        </TableCell>
+
+                                        <TableCell>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-8 gap-1 opacity-0 transition-opacity group-hover:opacity-100"
                                                     >
-                                                        <Pencil className="h-4 w-4" />
-                                                        Modifier
-                                                    </Link>
-                                                </DropdownMenuItem>
-
-                                                <DropdownMenuItem asChild>
-                                                    <Link
-                                                        href={`/notes/${evaluation.id}/create-note`}
-                                                        className="w-full"
-                                                    >
-                                                        <Pen />
-                                                        Saisir les notes
-                                                    </Link>
-                                                </DropdownMenuItem>
-
-                                                <DropdownMenuSeparator />
-
-                                                <DropdownMenuItem
-                                                    onClick={() =>
-                                                        handleDelete(
-                                                            evaluation.id,
-                                                        )
-                                                    }
-                                                    className="cursor-pointer gap-2 text-destructive focus:text-destructive"
-                                                    disabled={loadingProfesseur || loading}
+                                                        Actions{' '}
+                                                        <ChevronDown className="h-3 w-3" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent
+                                                    align="end"
+                                                    className="w-48"
                                                 >
-                                                    <Trash2 className="h-4 w-4" />{' '}
-                                                    Supprimer
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            ))
+                                                    <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={
+                                                                lienModification
+                                                            }
+                                                        >
+                                                            <PenBox className="h-4 w-4" />
+                                                            Modifier
+                                                        </Link>
+                                                    </DropdownMenuItem>
+
+                                                    <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={
+                                                                lienSaisieNote
+                                                            }
+                                                            className="w-full"
+                                                        >
+                                                            <Pencil />
+                                                            Saisir les notes
+                                                        </Link>
+                                                    </DropdownMenuItem>
+
+                                                    <DropdownMenuSeparator />
+
+                                                    <DropdownMenuItem
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                evaluation.id,
+                                                            )
+                                                        }
+                                                        className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+                                                        disabled={
+                                                            loadingProfesseur ||
+                                                            loading
+                                                        }
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />{' '}
+                                                        Supprimer
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })
                         )}
                     </TableBody>
 

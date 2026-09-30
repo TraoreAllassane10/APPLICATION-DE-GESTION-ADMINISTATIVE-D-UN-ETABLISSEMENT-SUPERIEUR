@@ -16,6 +16,7 @@ use App\Modules\Inscription\Controllers\InscriptionController;
 use App\Modules\Moyenne\Controllers\MoyenneController;
 use App\Modules\Niveau\Controllers\NiveauController;
 use App\Modules\Note\Controllers\NoteController;
+use App\Modules\Note\Controllers\ProfesseurNoteController;
 use App\Modules\Notification\Controllers\NotificationController;
 use App\Modules\Paiement\Controllers\PaiementController;
 use App\Modules\PeriodeAcademique\Controllers\PeriodeAcdemiqueController;
@@ -249,9 +250,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // Routes Note
-        Route::controller(NoteController::class)->group(function () {
-            Route::get("/professeur/notes/{evaluation}/create-note", "create")->name("notes.create");
-            Route::put('/professeur/notes/update', "update")->name('notes.update');
+        Route::controller(ProfesseurNoteController::class)->group(function () {
+            Route::get("/professeur/notes/{evaluation}/create-note", "create")->name("professeur.notes.create");
+            Route::put('/professeur/evaluation/notes/update', "update")->name('professeur.notes.update');
         });
     });
 });

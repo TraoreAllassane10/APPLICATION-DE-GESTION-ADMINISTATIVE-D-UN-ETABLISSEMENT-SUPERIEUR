@@ -4,14 +4,14 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { NoteUpdate } from '../types/note.types';
 
-export default function useNote() {
+export default function useProfesseurNote() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const updateNotes = async (data: NoteUpdate) => {
         try {
             setLoading(true);
 
-            const response = await axios.put(`/notes/update`, data);
+            const response = await axios.put(`/professeur/evaluation/notes/update`, data);
 
             if (response.data.success) {
                 toast.success(

@@ -27,10 +27,11 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { formatDate } from '@/utils/date';
+import useProfesseurNote from '@/features/note/hooks/useProfesseurNote';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Tableau de bord', href: '/dashboard' },
-    { title: 'Evaluations', href: '/evaluations' },
+    { title: 'Tableau de bord', href: '/professeur/dashboard' },
+    { title: 'Evaluations', href: '/professeur/evaluations' },
     { title: "Saisie des notes", href: '#' },
 ];
 
@@ -170,7 +171,7 @@ export default function Saisie() {
         };
     }, [etudiants]);
 
-    const { updateNotes, loading } = useNote();
+    const { updateNotes, loading } = useProfesseurNote();
 
     const handleSave = async () => {
         const payload = etudiants.map((etudiant) => ({
