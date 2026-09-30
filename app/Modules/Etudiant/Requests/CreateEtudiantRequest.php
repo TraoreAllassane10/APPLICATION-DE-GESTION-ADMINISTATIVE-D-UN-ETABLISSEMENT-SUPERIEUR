@@ -31,7 +31,7 @@ class CreateEtudiantRequest extends FormRequest
             "date_naissance" => "required|date",
             "lieu_naissance" => "required|string",
             "nationnalite" => "required|string",
-            "statut" => "required|in:Affecté,Naff,Réaffecté,Transfert",
+            "statut" => "required|in:Affecté,Naff,Réaffecté,Transfert,AP",
             "email" => "nullable|email",
             "pays_residence" => "nullable|string",
             "etablissement_origine" => "nullable|string",

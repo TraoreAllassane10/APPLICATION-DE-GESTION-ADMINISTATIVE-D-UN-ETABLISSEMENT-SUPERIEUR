@@ -1,7 +1,7 @@
 import { Inscription } from "@/features/inscription/types/inscription.types";
 import { Meta } from "@/types";
 
-export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert';
+export type StatutEtudiant = 'Affecté' | 'Naff' | 'Réaffecté' | 'Transfert' | "AP";
 
 export interface Etudiant {
     ip: string;
