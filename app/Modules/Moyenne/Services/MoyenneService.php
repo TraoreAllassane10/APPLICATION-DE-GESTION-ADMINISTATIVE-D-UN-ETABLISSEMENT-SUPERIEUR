@@ -34,7 +34,7 @@ class MoyenneService
 
             foreach ($enseignement->evaluations as $evaluation) {
                 $noteObj = $evaluation->notes->firstWhere('inscription_id', $inscrit->id);
-                $valeurNote = $noteObj?->valeur ? (float) $noteObj->valeur : null;
+                $valeurNote = $noteObj?->valeur ?  $noteObj->valeur : null;
 
                 $note = null;
                 if ($valeurNote) {

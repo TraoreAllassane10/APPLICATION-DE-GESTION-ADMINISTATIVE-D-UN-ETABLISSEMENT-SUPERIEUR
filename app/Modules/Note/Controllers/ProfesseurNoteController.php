@@ -29,15 +29,15 @@ class ProfesseurNoteController extends Controller
 
     public function update(UpdateNoteRequest $request)
     {
+        $data = $request->validated();
+
+        // Recupere l'evaluation
+        $evaluation = $this->evaluationService->getEvaluation($data['evaluation_id']);
+
+        // Verifie si l'evaluation appartient au professeur connecté
+        Gate::authorize('update', $evaluation);
+
         try {
-            $data = $request->validated();
-
-            // Recupere l'evaluation
-            $evaluation = $this->evaluationService->getEvaluation($data['evaluation_id']);
-
-            // Verifie si l'evaluation appartient au professeur connecté
-            Gate::authorize('update', $evaluation);
-
             $this->noteService->createOrUpdateNote($data);
 
             return response()->json([

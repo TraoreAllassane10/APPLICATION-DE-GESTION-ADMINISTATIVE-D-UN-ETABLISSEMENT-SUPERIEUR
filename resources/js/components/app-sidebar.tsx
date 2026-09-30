@@ -207,7 +207,7 @@ export function AppSidebar() {
                   },
                   {
                       title: 'Moyennes',
-                      href: '/moyennes',
+                      href: '/professeur/moyennes',
                       icon: TrendingUp,
                   },
               ]

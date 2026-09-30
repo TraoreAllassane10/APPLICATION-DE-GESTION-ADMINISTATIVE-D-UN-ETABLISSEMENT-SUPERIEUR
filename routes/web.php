@@ -14,6 +14,7 @@ use App\Modules\Filiere\Controllers\FiliereController;
 use App\Modules\HistoriqueActivite\Controllers\ActivityLogController;
 use App\Modules\Inscription\Controllers\InscriptionController;
 use App\Modules\Moyenne\Controllers\MoyenneController;
+use App\Modules\Moyenne\Controllers\ProfesseurMoyenneController;
 use App\Modules\Niveau\Controllers\NiveauController;
 use App\Modules\Note\Controllers\NoteController;
 use App\Modules\Note\Controllers\ProfesseurNoteController;
@@ -253,6 +254,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(ProfesseurNoteController::class)->group(function () {
             Route::get("/professeur/notes/{evaluation}/create-note", "create")->name("professeur.notes.create");
             Route::put('/professeur/evaluation/notes/update', "update")->name('professeur.notes.update');
+        });
+
+         // Routes Moyenne
+        Route::controller(ProfesseurMoyenneController::class)->group(function () {
+            Route::get('/professeur/moyennes', 'index')->name('professeur.moyennes');
+            Route::get('/professeur/moyennes/search', "getMoyennes")->name('professeur.moyennes.getMoyennes');
         });
     });
 });

@@ -160,18 +160,7 @@ const EvaluationTableSection = ({
                                                     align="end"
                                                     className="w-48"
                                                 >
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={
-                                                                lienModification
-                                                            }
-                                                        >
-                                                            <PenBox className="h-4 w-4" />
-                                                            Modifier
-                                                        </Link>
-                                                    </DropdownMenuItem>
-
-                                                    <DropdownMenuItem asChild>
+                                                      <DropdownMenuItem asChild>
                                                         <Link
                                                             href={
                                                                 lienSaisieNote
@@ -180,6 +169,17 @@ const EvaluationTableSection = ({
                                                         >
                                                             <Pencil />
                                                             Saisir les notes
+                                                        </Link>
+                                                    </DropdownMenuItem>
+                                                    
+                                                    <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={
+                                                                lienModification
+                                                            }
+                                                        >
+                                                            <PenBox className="h-4 w-4" />
+                                                            Modifier
                                                         </Link>
                                                     </DropdownMenuItem>
 
