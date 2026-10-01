@@ -27,6 +27,8 @@ use App\Modules\Scolarite\Observers\ScolariteObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
+use Inertia\ExceptionResponse;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -81,9 +83,17 @@ class AppServiceProvider extends ServiceProvider
             UpdateMoyenneEnseignement::class
         );
 
-         Event::listen(
+        Event::listen(
             EvaluationUpdated::class,
             UpdateMoyenneEnseignement::class
         );
+
+        // Inertia::handleExceptionsUsing(function (ExceptionResponse $response) {
+        //     if (in_array($response->statusCode(), [403, 404, 500, 503])) {
+        //         return $response->render('ErrorPage', [
+        //             'status' => $response->statusCode(),
+        //         ])->withSharedData();
+        //     }
+        // });
     }
 }
