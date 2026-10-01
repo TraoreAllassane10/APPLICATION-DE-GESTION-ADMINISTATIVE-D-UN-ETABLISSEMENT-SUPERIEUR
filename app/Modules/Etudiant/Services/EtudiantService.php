@@ -8,6 +8,7 @@ use App\Modules\Etudiant\Resources\EtudiantRessource;
 use App\Modules\Utilisateur\Services\UserService;
 use App\Notifications\EtudiantCreatedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -43,8 +44,20 @@ class EtudiantService
             $data['photo'] = $data['photo']->store('etudiants', 'public');
         }
 
+        // Je fais cette veriification parce qu'il y a certain etudiant qui n'ont pas de ip au debut de l'année
+        // Donc on ne peut pas se basé sur l'ip pour savoir si l'etudiant existe ou pas
+        $etudiantExiste = Etudiant::where('nom', $data['nom'])
+            ->where('prenom', $data['prenom'])
+            ->where('date_naissance', $data['date_naissance'])
+            ->where('lieu_naissance', $data['lieu_naissance'])
+            ->exists();
+
+        if ($etudiantExiste) {
+            throw new Exception('Cet étudiant existe déjà');
+        }
+
         // Creer un etudiant
-        $etudiant= $this->etudiantRepository->create($data);
+        $etudiant = $this->etudiantRepository->create($data);
 
         // Vider le cache de statistique
         Cache::forget('dashboard:stats');

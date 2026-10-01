@@ -8,4 +8,5 @@ enum StatutEtudiant: string
     case NAFF = "Naff";
     case REAFFECTE = "Réaffecté";
     case TRANSFERT = "Transfert";
+    case AP = "AP";
 }

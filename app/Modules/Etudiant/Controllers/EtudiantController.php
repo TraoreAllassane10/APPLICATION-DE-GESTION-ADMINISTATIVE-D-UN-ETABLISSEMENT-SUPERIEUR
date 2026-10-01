@@ -61,13 +61,13 @@ class EtudiantController extends Controller
 
     public function store(CreateEtudiantRequest $request)
     {
+        // Validation des entrées
+        $data = $request->validated();
+        
         try {
-            // Validation des entrées
-            $data = $request->validated();
-
             //Creation d'un etudiant
             $this->etudiantService->create($data);
-  
+
             return response()->json(["success" => true, "message" => "Etudiant enregistré avec succès !"]);
         } catch (Exception $e) {
             Log::error("Erreur lors de la création d'un etudiant", ["erreur" => $e->getMessage()]);
