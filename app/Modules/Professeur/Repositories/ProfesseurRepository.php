@@ -23,6 +23,20 @@ class ProfesseurRepository
         })->with(["anneeAcademiques" => function ($query) use ($anneeActive) {
             $query->where("annee_universitaire_id", $anneeActive->id);
         }])
+            ->latest()->get();
+
+        return $professeurs;
+    }
+
+    public function paginate()
+    {
+        $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        $professeurs = Professeur::whereHas("anneeAcademiques", function ($query) use ($anneeActive) {
+            $query->where("annee_universitaire_id", $anneeActive->id);
+        })->with(["anneeAcademiques" => function ($query) use ($anneeActive) {
+            $query->where("annee_universitaire_id", $anneeActive->id);
+        }])
             ->latest()->paginate(10);
 
         return $professeurs;

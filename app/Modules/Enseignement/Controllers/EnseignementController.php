@@ -4,16 +4,39 @@ namespace App\Modules\Enseignement\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Niveau;
+use App\Modules\Cours\Services\CoursService;
 use App\Modules\Enseignement\Services\EnseignementService;
+use App\Modules\Niveau\Services\NiveauService;
+use App\Modules\Professeur\Services\ProfesseurService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class EnseignementController extends Controller
 {
     public function __construct(
-        protected EnseignementService $enseignementService
+        protected EnseignementService $enseignementService,
+        protected ProfesseurService $professeurService,
+        protected CoursService $coursService,
+        protected NiveauService $niveauService
     ) {}
+
+    public function index()
+    {
+        $professeurs = $this->professeurService->getAllProfesseurs();
+        $cours = $this->coursService->getAllCours();
+        $niveaux = $this->niveauService->getAllNiveaux();
+        $enseignements = $this->enseignementService->getEnseignementPaginate();
+
+        return Inertia::render('enseignement/Index', [
+            'professeurs' => $professeurs,
+            'cours' => $cours,
+            'niveaux' => $niveaux,
+            'enseignements' => $enseignements
+        ]);
+    }
+
     public function findEnseignement(string $enseignement)
     {
         $enseignement = $this->enseignementService->getEnseignement($enseignement);

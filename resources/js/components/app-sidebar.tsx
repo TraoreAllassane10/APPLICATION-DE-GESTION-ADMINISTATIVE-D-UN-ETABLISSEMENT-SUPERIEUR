@@ -12,6 +12,7 @@ import {
 import {
     bulletins,
     dashboard,
+    enseignements,
     evaluations,
     filiere,
     historique,
@@ -29,6 +30,7 @@ import {
     History,
     Layers,
     LayoutDashboard,
+    ListRestart,
     Presentation,
     Receipt,
     Settings2,
@@ -170,6 +172,11 @@ export function AppSidebar() {
                       icon: UserCheck,
                   },
                   {
+                      title: 'Enseignements',
+                      href: enseignements(),
+                      icon: ListRestart,
+                  },
+                  {
                       title: 'Evaluations',
                       href: evaluations(),
                       icon: ClipboardPen,
@@ -194,11 +201,6 @@ export function AppSidebar() {
                       title: 'Dashboard',
                       href: '/professeur/dashboard',
                       icon: LayoutDashboard,
-                  },
-                  {
-                      title: 'Mes étudiants',
-                      href: '/professeur/etudiants',
-                      icon: ClipboardPen,
                   },
                   {
                       title: 'Evaluations',

@@ -30,7 +30,7 @@ class ProfesseurController extends Controller
     public function index()
     {
         try {
-            $professeurs = ProfesseurResource::collection($this->professeurService->getAllProfesseurs());
+            $professeurs = ProfesseurResource::collection($this->professeurService->getAllProfesseursPaginate());
 
             return Inertia::render("professeur/Index", [
                 "professeurs" => $professeurs,
