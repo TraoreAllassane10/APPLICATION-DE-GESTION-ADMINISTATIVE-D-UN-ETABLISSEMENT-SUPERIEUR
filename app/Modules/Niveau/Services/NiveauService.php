@@ -84,6 +84,8 @@ class NiveauService
             "filiere" => $niveau->nom
         ]);
 
-        return $pdf->stream("liste_de_classe_{$niveau->nom}.pdf");
+        $nom_classe = str_replace('/', '_', $niveau->nom);
+
+        return $pdf->stream("liste_de_classe_{$nom_classe}.pdf");
     }
 }

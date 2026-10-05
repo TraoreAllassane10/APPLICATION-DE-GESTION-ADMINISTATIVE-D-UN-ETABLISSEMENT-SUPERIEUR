@@ -18,6 +18,11 @@ class ProfesseurService
         protected AnneeAcademiqueService $anneeAcademiqueService
     ) {}
 
+     public function getAllProfesseursPaginate()
+    {
+        return $this->professeurRepository->paginate();
+    }
+
     public function getAllProfesseurs()
     {
         return $this->professeurRepository->all();

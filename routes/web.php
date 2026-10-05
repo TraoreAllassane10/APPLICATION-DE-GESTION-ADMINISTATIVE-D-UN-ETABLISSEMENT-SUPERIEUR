@@ -8,6 +8,7 @@ use App\Modules\Dashboard\Controllers\DashboardController;
 use App\Modules\Dashboard\Controllers\ProfesseurDashboardController;
 use App\Modules\Enseignement\Controllers\EnseignementController;
 use App\Modules\Etudiant\Controllers\EtudiantController;
+use App\Modules\Etudiant\Controllers\ProfesseurEtudiantController;
 use App\Modules\Evaluation\Controllers\EvaluationController;
 use App\Modules\Evaluation\Controllers\ProfesseurEvaluationController;
 use App\Modules\Filiere\Controllers\FiliereController;
@@ -77,7 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get("/inscriptions/{inscription}", "show")->name("inscriptions.show");
         Route::delete("/inscriptions/{inscription}/delete", "delete")->name("inscriptions.delete");
-    });
+    })->middleware(["administrateur", "service_scolarite"]);
 
     // Routes Professeur
     Route::controller(ProfesseurController::class)->group(function () {
@@ -197,10 +198,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Routes Enseignement
         Route::controller(EnseignementController::class)->group(function () {
-            Route::post("/enseignements", "store")->name("enseigenement.store");
-            Route::get("/enseignements/{enseignement}", "findEnseignement")->name("enseigenement.findEnseignement");
-            Route::put("/enseignements/{enseignement}/update", "update")->name("enseigenement.update");
-            Route::delete("/enseignements/{enseignement}/delete", "destroy")->name("enseigenement.delete");
+            Route::get('/enseignements', 'index')->name('enseignements');
+            Route::post("/enseignements", "store")->name("enseignement.store");
+            Route::get("/enseignements/{enseignement}", "findEnseignement")->name("enseignement.findEnseignement");
+            Route::put("/enseignements/{enseignement}/update", "update")->name("enseignement.update");
+            Route::delete("/enseignements/{enseignement}/delete", "destroy")->name("enseignement.delete");
             Route::put('/enseignement/{enseignement}/update-coefficient-in-classe', 'updateCoefficentInClasse');
         });
 

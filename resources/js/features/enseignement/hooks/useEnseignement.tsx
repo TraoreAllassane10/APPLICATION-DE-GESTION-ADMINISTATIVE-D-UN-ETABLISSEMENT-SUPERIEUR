@@ -1,3 +1,4 @@
+import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -23,8 +24,36 @@ export default function useEnseignement() {
         }
     };
 
+    // Filtrage d'enseignements
+    const filtrageEnseignement = (
+        filtreProfesseur: string,
+        filtreCours: string,
+        filtreNiveau: string,
+    ) => {
+        try {
+            return router.get(
+                `/enseignements`,
+                {
+                    professeur: filtreProfesseur,
+                    cours: filtreCours,
+                    niveau: filtreNiveau,
+                    page: 1,
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                },
+            );
+        } catch (error) {
+            console.log('Erreur lors du filtarge : ', error);
+        }
+    };
+
     // Creation d'un enseignement
-    const createEnseignement = async (data: {cours: number, professeurId: number}) => {
+    const createEnseignement = async (data: {
+        cours: number;
+        professeurId: number;
+    }) => {
         try {
             setLoading(true);
 
@@ -32,9 +61,7 @@ export default function useEnseignement() {
 
             return response.data.data;
         } catch (error) {
-            toast.error(
-                "Erreur survenue lors de la l'attribution d'un cours",
-            );
+            toast.error("Erreur survenue lors de la l'attribution d'un cours");
             console.log(error);
         } finally {
             setLoading(false);
@@ -51,7 +78,7 @@ export default function useEnseignement() {
                 data,
             );
 
-           return response.data.data;
+            return response.data.data;
         } catch (error) {
             toast.error('Erreur survenue lors de la mise à jour');
             console.log(error);
@@ -80,18 +107,35 @@ export default function useEnseignement() {
     };
 
     // Mettre à jour le coefficient d'un enseignement dans une classe donnée
-    const updateCoefficientEnseignementInclasse = async (enseignementId: number, classeId: number, coefficient: number) => {
+    const updateCoefficientEnseignementInclasse = async (
+        enseignementId: number,
+        classeId: number,
+        coefficient: number,
+    ) => {
         try {
-            const response = await axios.put(`/enseignement/${enseignementId}/update-coefficient-in-classe`, {classeId, coefficient});
-            
+            const response = await axios.put(
+                `/enseignement/${enseignementId}/update-coefficient-in-classe`,
+                { classeId, coefficient },
+            );
+
             if (response.data.success) {
                 toast.success('Coefficient mis à jour avec succès');
             }
         } catch (error) {
-            toast.error('Erreur survenue lors de la mise à jour du coefficient');
+            toast.error(
+                'Erreur survenue lors de la mise à jour du coefficient',
+            );
             console.log(error);
         }
-    }
+    };
 
-    return {createEnseignement, getEnseignement, updateEnseignement, deleteEnseignement, updateCoefficientEnseignementInclasse, loading };
+    return {
+        createEnseignement,
+        getEnseignement,
+        updateEnseignement,
+        deleteEnseignement,
+        updateCoefficientEnseignementInclasse,
+        filtrageEnseignement,
+        loading,
+    };
 }

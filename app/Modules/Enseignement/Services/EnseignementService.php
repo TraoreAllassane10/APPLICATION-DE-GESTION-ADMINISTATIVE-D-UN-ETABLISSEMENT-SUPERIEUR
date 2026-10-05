@@ -20,12 +20,20 @@ class EnseignementService
         });
     }
 
+    public function getEnseignementPaginate()
+    {
+        return Cache::remember('enseignement:all', 3600, function () {
+            return Enseignement::latest()->paginate(20);
+        });
+    }
+
     public function getEnseignement(string $id)
     {
         return Enseignement::where("id", $id)->first();
     }
 
-    public function getEnseignementByProfesseurId(string $professeurId) {
+    public function getEnseignementByProfesseurId(string $professeurId)
+    {
         return Enseignement::where('professeur_id', $professeurId)->get();
     }
 
