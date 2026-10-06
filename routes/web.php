@@ -90,8 +90,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put("professeur/{professeur}/update", "update")->name("professeur.update");
         Route::delete("professeur/{professeur}/delete", "delete")->name("professeur.delete");
         Route::get("professeur/export", "export")->name("professeur.export");
-        Route::get("professeur/{professeur}/assigner-classe", "createAssigner")->name("professeur.assigner.create");
-        Route::post("professeur/{professeur}/assigner-classe", "assigner")->name("professeur.assigner.store");
     });
 
     // Routes Niveau
@@ -258,7 +256,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/professeur/evaluation/notes/update', "update")->name('professeur.notes.update');
         });
 
-         // Routes Moyenne
+        // Routes Moyenne
         Route::controller(ProfesseurMoyenneController::class)->group(function () {
             Route::get('/professeur/moyennes', 'index')->name('professeur.moyennes');
             Route::get('/professeur/moyennes/search', "getMoyennes")->name('professeur.moyennes.getMoyennes');

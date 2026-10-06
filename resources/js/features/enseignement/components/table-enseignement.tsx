@@ -1,3 +1,4 @@
+import PaginationLinks from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -6,6 +7,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
 import {
     Table,
     TableBody,
@@ -14,18 +16,23 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { ChevronDown, Trash2, Users } from 'lucide-react';
+import { ChevronDown, Sliders, Trash2, Users } from 'lucide-react';
 import { EnseignementData } from '../types/enseignement.types';
-import PaginationLinks from '@/components/Pagination';
 
 const TableEnseignement = ({
     enseignements,
     hasFilters,
     onReset,
+    onOpenModal,
+    onGererEnseignement,
+    onDelete,
 }: {
     enseignements: EnseignementData;
     hasFilters: boolean | string;
     onReset: () => void;
+    onOpenModal: () => void;
+    onGererEnseignement: React.Dispatch<React.SetStateAction<number | null>>;
+    onDelete?: (id: number) => void;
 }) => {
     return (
         <Card className="overflow-hidden shadow-sm">
@@ -35,7 +42,6 @@ const TableEnseignement = ({
                         <TableHead>Professeur</TableHead>
                         <TableHead>Cours</TableHead>
                         <TableHead>Classe</TableHead>
-                        <TableHead>Actions</TableHead>
                         <TableHead className="w-[80px]" />
                     </TableRow>
                 </TableHeader>
@@ -91,12 +97,23 @@ const TableEnseignement = ({
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent
                                             align="end"
-                                            className="w-44"
+                                            className="w-52"
                                         >
                                             <DropdownMenuItem
-                                                // onClick={() =>
-                                                //     onChangeSelectedId(e.id)
-                                                // }
+                                                onClick={() => {
+                                                    onOpenModal();
+                                                    onGererEnseignement(e.id);
+                                                }}
+                                                className="flex cursor-pointer items-center gap-2 text-muted-foreground"
+                                            >
+                                                <Sliders className="h-4 w-4" />{' '}
+                                                Gérer cet enseignement
+                                            </DropdownMenuItem>
+
+                                            <Separator />
+
+                                            <DropdownMenuItem
+                                                onClick={() => onDelete?.(e.id)}
                                                 className="flex cursor-pointer items-center gap-2 text-destructive focus:text-destructive"
                                             >
                                                 <Trash2 className="h-4 w-4" />{' '}

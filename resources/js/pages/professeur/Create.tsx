@@ -95,7 +95,7 @@ function Create() {
     // Surveille le Option choisir
     const selectOption = watch('option');
 
-    const { createProfesseur } = useProfesseur();
+    const { createProfesseur, loading } = useProfesseur();
 
     // Creation d'un enseignant
     const onSubmit = async (data: ProfesseurData) => {
@@ -619,6 +619,7 @@ function Create() {
                         <Button
                             type="submit"
                             className="transition hover:bg-red-800"
+                            disabled={loading}
                         >
                             <CheckCircle />
                             Enregistrer

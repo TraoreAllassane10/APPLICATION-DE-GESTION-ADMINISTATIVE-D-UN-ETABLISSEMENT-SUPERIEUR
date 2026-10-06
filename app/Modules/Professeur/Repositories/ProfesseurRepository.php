@@ -28,7 +28,7 @@ class ProfesseurRepository
         return $professeurs;
     }
 
-    public function paginate()
+    public function paginate(string $search)
     {
         $anneeActive = $this->anneeAcademiqueRepository->anneeActive();
 
@@ -36,10 +36,13 @@ class ProfesseurRepository
             $query->where("annee_universitaire_id", $anneeActive->id);
         })->with(["anneeAcademiques" => function ($query) use ($anneeActive) {
             $query->where("annee_universitaire_id", $anneeActive->id);
-        }])
-            ->latest()->paginate(10);
+        }]);
 
-        return $professeurs;
+        $professeurs->when($search, function ($q) use ($search) {
+            $q->where('nom_prenom', 'like', '%' . $search . '%');
+        });
+
+        return $professeurs->latest()->paginate(10);
     }
 
     public function find(Professeur $professeur)

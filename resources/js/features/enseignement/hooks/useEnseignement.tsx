@@ -68,20 +68,36 @@ export default function useEnseignement() {
         }
     };
 
-    // Création d'un professeur
-    const updateEnseignement = async (id: number, data: any) => {
+    const updateEnseignement = async (
+        id: number,
+        payloadOrNiveau: { classes: Array<{ niveauId: number; coefficient: number }> } | any,
+        coefficient?: number,
+    ) => {
         try {
             setLoading(true);
 
-            const response = await axios.put(
-                `/enseignements/${id}/update`,
-                data,
-            );
+            let body: any;
+            if (typeof payloadOrNiveau === 'object' && payloadOrNiveau !== null) {
+                body = payloadOrNiveau;
+            } else {
+                body = {
+                    niveau: payloadOrNiveau,
+                    coefficient: coefficient,
+                };
+            }
 
-            return response.data.data;
-        } catch (error) {
-            toast.error('Erreur survenue lors de la mise à jour');
+            const response = await axios.put(`/enseignements/${id}/update`, body);
+
+            if (response.data?.success) {
+                toast.success(response.data?.message || 'Mise à jour effectuée avec succès');
+            }
+
+            return response.data;
+        } catch (error: any) {
+            const message = error?.response?.data?.message || 'Erreur survenue lors de la mise à jour';
+            toast.error(message);
             console.log(error);
+            throw error;
         } finally {
             setLoading(false);
         }
@@ -94,13 +110,21 @@ export default function useEnseignement() {
 
             const response = await axios.delete(`/enseignements/${id}/delete`);
 
-            return response.data.data;
-        } catch (error) {
-            toast.error(
-                "Erreur survenue lors de la suppression de l'enseignement",
-            );
+            if (response.data?.success) {
+                toast.success(
+                    response.data?.message ||
+                        'Enseignement supprimé avec succès',
+                );
+            }
 
+            return response.data;
+        } catch (error: any) {
+            const message =
+                error?.response?.data?.message ||
+                "Erreur survenue lors de la suppression de l'enseignement";
+            toast.error(message);
             console.log(error);
+            throw error;
         } finally {
             setLoading(false);
         }

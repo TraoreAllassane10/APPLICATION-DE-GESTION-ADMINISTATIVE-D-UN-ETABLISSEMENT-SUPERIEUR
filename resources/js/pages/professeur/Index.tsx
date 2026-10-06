@@ -1,12 +1,13 @@
 import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationSuppression';
 import { Button } from '@/components/ui/button';
+import FiltreProfesseur from '@/features/professeur/components/Filtre-professeur';
 import TableProfesseur from '@/features/professeur/components/TableProfesseur';
 
 import useProfesseur from '@/features/professeur/hooks/useProfesseur';
 import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { PlusCircle, Sheet } from 'lucide-react';
 import { useState } from 'react';
 
@@ -26,14 +27,20 @@ export interface ProfesseurProps {
         data: Professeur[];
         meta: Meta;
     };
+    filtre: string;
     [key: string]: unknown;
 }
 
 const Index = () => {
-    const { professeurs } = usePage<ProfesseurProps>().props;
+    const { professeurs, filtre } = usePage<ProfesseurProps>().props;
     const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [search, setSearch] = useState<string>(filtre ?? "");
 
-    const { deleteProfesseur } = useProfesseur();
+    const { deleteProfesseur, searchProfesseur } = useProfesseur();
+
+    const handleSearch = () => {
+        searchProfesseur(search);
+    };
 
     const handleDelete = async () => {
         if (selectedId) {
@@ -41,6 +48,10 @@ const Index = () => {
             setSelectedId(null);
         }
     };
+
+    const handleReset = () => {
+        router.get('/professeur')
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -52,10 +63,7 @@ const Index = () => {
                             Gestion des enseignants
                         </h1>
                         <p className="mt-0.5 text-sm text-muted-foreground">
-                            {professeurs.data.length} professeur
-                            {professeurs.data.length !== 1 ? 's' : ''}{' '}
-                            enregistré
-                            {professeurs.data.length !== 1 ? 's' : ''}
+                            Visualiser et Gerer tous les enseignants
                         </p>
                     </div>
 
@@ -80,6 +88,17 @@ const Index = () => {
                     </div>
                 </div>
 
+                {/* Recherche d'enseignant */}
+                <FiltreProfesseur
+                    search={search}
+                    onChangeSearch={setSearch}
+                    onSearch={handleSearch}
+                    hasFilters={search}
+                    totalProfesseur={professeurs.data.length}
+                    onReset={handleReset}
+                />
+
+                {/* Table d'afichages des enseignants */}
                 <TableProfesseur
                     professeurs={professeurs}
                     setSelectedId={setSelectedId}

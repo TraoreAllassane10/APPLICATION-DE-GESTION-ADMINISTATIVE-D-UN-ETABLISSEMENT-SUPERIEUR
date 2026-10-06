@@ -13,6 +13,7 @@ export default function useCours() {
 
     // Création d'un cours
     const createCours = async (data: Data) => {
+        setLoading(true)
         try {
             await axios
                 .post('/cours', data)
@@ -32,11 +33,14 @@ export default function useCours() {
             toast.error('Erreur survenue au cours du serveur');
             console.log(error);
         }
+        finally {
+            setLoading(false)
+        }
     };
 
     const getCours = async () => {
+        setLoading(true)
         try {
-            setLoading(true);
             const response = await axios.get('/cours/liste');
             return response.data.data;
         } catch (error) {
@@ -49,6 +53,7 @@ export default function useCours() {
 
     // Modification d'un cours
     const updateCours = async (id: number, data: Data) => {
+        setLoading(true)
         try {
             await axios
                 .put(`/cours/${id}/update`, data)
@@ -68,10 +73,14 @@ export default function useCours() {
             toast.error('Erreur survenue au cours du serveur');
             console.log(error);
         }
+         finally {
+            setLoading(false)
+        }
     };
 
     // Suppression d'un cours
     const deleteCours = async (id: number) => {
+        setLoading(true)
         try {
             await axios
                 .delete(`/cours/${id}/delete`)
@@ -88,6 +97,9 @@ export default function useCours() {
         } catch (error) {
             toast.error('Erreur survenue au cours du serveur');
             console.log(error);
+        }
+         finally {
+            setLoading(false)
         }
     };
 

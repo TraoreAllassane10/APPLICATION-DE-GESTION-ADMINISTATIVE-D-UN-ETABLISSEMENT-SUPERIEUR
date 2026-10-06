@@ -1,6 +1,7 @@
 import { professeur } from '@/routes';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface Data {
@@ -32,8 +33,19 @@ interface DataAssigner {
 }
 
 export default function useProfesseur() {
+    const [loading, setLoading] = useState(false);
+
+    const searchProfesseur = (search: string) => {
+        try {
+            router.get(`/professeur?search=${search}`);
+        } catch (error) {
+            console.log("Echec lors de la recherche de professeur : ", error);
+        }
+    }
+
     // Création d'un professeur
     const createProfesseur = async (data: Data) => {
+           setLoading(true);
         try {
             await axios
                 .post('/professeur', data)
@@ -54,11 +66,14 @@ export default function useProfesseur() {
         } catch (error) {
             toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     // Modification d'un professeur
     const updateProfesseur = async (id: string, data: DataUpdate) => {
+           setLoading(true);
         try {
             await axios
                 .put(`/professeur/${id}/update`, data)
@@ -79,12 +94,15 @@ export default function useProfesseur() {
         } catch (error) {
             toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     // Suppression d'un professeur
     const deleteProfesseur = async (id: number) => {
         try {
+               setLoading(true);
             await axios
                 .delete(`/professeur/${id}/delete`)
                 .then((response) => {
@@ -102,11 +120,17 @@ export default function useProfesseur() {
         } catch (error) {
             toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     // Assigner des classes à un enseignant
-    const assignerClassesProfesseur = async (id: number, data: DataAssigner) => {
+    const assignerClassesProfesseur = async (
+        id: number,
+        data: DataAssigner,
+    ) => {
+        setLoading(true);
         try {
             await axios
                 .post(`/professeur/${id}/assigner-classe`, data)
@@ -117,16 +141,23 @@ export default function useProfesseur() {
                     }
                 })
                 .catch((error) => {
-                    toast.success(
-                        'Erreur survenue lors de l\'attribution',
-                    );
+                    toast.success("Erreur survenue lors de l'attribution");
                     console.log(error);
                 });
         } catch (error) {
             toast.error('Erreur survenue au niveau du serveur');
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    return { createProfesseur, updateProfesseur, deleteProfesseur, assignerClassesProfesseur };
+    return {
+        searchProfesseur,
+        createProfesseur,
+        updateProfesseur,
+        deleteProfesseur,
+        assignerClassesProfesseur,
+        loading,
+    };
 }
