@@ -2,7 +2,6 @@ import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationS
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import AddEnseignementModal from '@/features/enseignement/components/AddEnseignementModal';
-import EditEnseignementModal from '@/features/enseignement/components/EditEnseignementModal';
 import useEnseignement from '@/features/enseignement/hooks/useEnseignement';
 import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
@@ -11,7 +10,6 @@ import {
     ArrowLeft,
     Book,
     Calendar,
-    Edit,
     Globe,
     GraduationCap,
     Hash,
@@ -261,16 +259,6 @@ function Show() {
                                                 <Button
                                                     variant={'outline'}
                                                     size={'icon'}
-                                                    onClick={() =>
-                                                        handleModal(ens.id)
-                                                    }
-                                                >
-                                                    <Edit />
-                                                </Button>
-
-                                                <Button
-                                                    variant={'outline'}
-                                                    size={'icon'}
                                                     disabled={loading}
                                                     onClick={() =>
                                                         setSelectedId(ens.id)
@@ -297,13 +285,6 @@ function Show() {
                         <AddEnseignementModal
                             professeurId={professeur.id}
                             onClose={() => setOpenAdd(false)}
-                        />
-                    )}
-
-                    {openEdit && (
-                        <EditEnseignementModal
-                            enseignementId={enseignementId}
-                            onClose={() => setOpenEdit(false)}
                         />
                     )}
 

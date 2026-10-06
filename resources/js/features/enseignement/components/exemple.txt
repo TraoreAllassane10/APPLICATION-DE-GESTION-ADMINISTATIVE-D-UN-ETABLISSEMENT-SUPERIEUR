@@ -1,0 +1,199 @@
+import {
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList,
+} from '@/components/ui/combobox';
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+} from '@/components/ui/sheet';
+import { DataNiveau } from '@/types';
+import { CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { Label } from '../../../components/ui/label';
+import { Enseignement } from '../types/enseignement.types';
+import { getEnseignementLabel } from '../utils';
+
+interface ModalEnseignementProps {
+    open: boolean;
+    onClose: () => void;
+    enseignements: Enseignement[];
+    niveaux: DataNiveau[];
+}
+
+const ModalEnseignement = ({
+    open,
+    onClose,
+    enseignements,
+    niveaux,
+}: ModalEnseignementProps) => {
+    const [enseignementSelectionne, setEnseignementSelectionne] =
+        useState<Enseignement | null>(null);
+    const [niveauSelectionne, setNiveauSelectionne] =
+        useState<DataNiveau | null>(null);
+    const [coefficient, setCoefficient] = useState<string>('');
+
+    // Réinitialisation du formulaire à la fermeture
+    const handleClose = () => {
+        setEnseignementSelectionne(null);
+        setNiveauSelectionne(null);
+        setCoefficient('');
+        onClose();
+    };
+
+    // Soumission du formulaire
+    const handleSubmit = async () => {
+        const payload = {
+            enseignementId: enseignementSelectionne?.id,
+            niveauId: niveauSelectionne?.id,
+            coefficient: Number(coefficient),
+        };
+
+        console.log('Payload soumis :', payload);
+
+        handleClose();
+    };
+
+
+
+    return (
+        <Sheet open={open} onOpenChange={handleClose}>
+            <SheetContent side="right">
+                <SheetHeader>
+                    <SheetTitle>Assigner une classe à un enseignant</SheetTitle>
+                    <SheetDescription>
+                        <p className="text-sm tracking-wide text-muted-foreground">
+                            Choisissez un ennseignement (enseignant + matière).
+                            Ensuite, selectionnez une classe et enfin saisissez
+                            le coefficient.
+                        </p>
+                    </SheetDescription>
+                </SheetHeader>
+
+                <div className="space-y-5 px-4">
+                    <div className="space-y-2">
+                        <Label>Enseignement</Label>
+                        <Combobox
+                            items={enseignements}
+                            value={enseignementSelectionne}
+                            itemToStringLabel={(item) =>
+                                getEnseignementLabel(item as Enseignement)
+                            }
+                            onValueChange={(value) =>
+                                setEnseignementSelectionne(
+                                    (value as Enseignement | null) ?? null,
+                                )
+                            }
+                        >
+                            <ComboboxInput
+                                placeholder="Sélectionner un enseignement"
+                                value={getEnseignementLabel(
+                                    enseignementSelectionne,
+                                )}
+                                displayValue={(item: unknown) =>
+                                    getEnseignementLabel(item as Enseignement)
+                                }
+                            />
+                            {/* z-[60] et pointer-events-auto évitent les conflits d'affichage avec le Sheet */}
+                            <ComboboxContent className="pointer-events-auto z-[60]">
+                                <ComboboxEmpty>
+                                    Aucun enseignement trouvé.
+                                </ComboboxEmpty>
+                                <ComboboxList>
+                                    {(item) => (
+                                        <ComboboxItem
+                                            key={item.id}
+                                            value={item}
+                                        >
+                                            {getEnseignementLabel(item)}
+                                        </ComboboxItem>
+                                    )}
+                                </ComboboxList>
+                            </ComboboxContent>
+                        </Combobox>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Classe / Niveau</Label>
+                        <Combobox
+                            items={niveaux}
+                            value={niveauSelectionne}
+                            itemToStringLabel={(item) =>
+                                (item as DataNiveau)?.nom ?? ''
+                            }
+                            onValueChange={(value) =>
+                                setNiveauSelectionne(
+                                    (value as DataNiveau | null) ?? null,
+                                )
+                            }
+                        >
+                            <ComboboxInput
+                                placeholder="Sélectionner une classe"
+                                value={niveauSelectionne?.nom ?? ''}
+                                displayValue={(item: unknown) =>
+                                    (item as DataNiveau)?.nom ?? ''
+                                }
+                            />
+                            <ComboboxContent className="pointer-events-auto z-[60]">
+                                <ComboboxEmpty>
+                                    Aucun niveau trouvé.
+                                </ComboboxEmpty>
+                                <ComboboxList>
+                                    {(item) => (
+                                        <ComboboxItem
+                                            key={item.id}
+                                            value={item}
+                                        >
+                                            {item.nom}
+                                        </ComboboxItem>
+                                    )}
+                                </ComboboxList>
+                            </ComboboxContent>
+                        </Combobox>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="coefficient">Coefficient</Label>
+                        <Input
+                            id="coefficient"
+                            type="number"
+                            min="1"
+                            step="0.5"
+                            placeholder="Ex: 2"
+                            value={coefficient}
+                            onChange={(e) => setCoefficient(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <SheetFooter className="mt-6">
+                    <Button
+                        onClick={handleSubmit}
+                        disabled={
+                            !enseignementSelectionne ||
+                            !niveauSelectionne ||
+                            !coefficient
+                        }
+                        className="gap-2"
+                    >
+                        <CheckCircle2 className="h-4 w-4" /> Confirmer
+                    </Button>
+                    <Button variant="outline" onClick={handleClose}>
+                        Annuler
+                    </Button>
+                </SheetFooter>
+            </SheetContent>
+        </Sheet>
+    );
+};
+
+export default ModalEnseignement;

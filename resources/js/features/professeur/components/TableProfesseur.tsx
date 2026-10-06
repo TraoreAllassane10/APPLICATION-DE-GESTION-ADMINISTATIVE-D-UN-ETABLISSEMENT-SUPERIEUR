@@ -16,21 +16,24 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import Avatar from '@/features/etudiant/components/Avatar';
 import { Meta } from '@/types';
 import { Link } from '@inertiajs/react';
-import { ChevronDown, Edit, Folder, GraduationCap, Trash2, UserRound } from 'lucide-react';
+import { ChevronDown, Edit, Folder, Trash2, UserRound } from 'lucide-react';
 import { Professeur } from '../types/professeur.types';
-import Avatar from '@/features/etudiant/components/Avatar';
 
 interface TableProfesseurProps {
     professeurs: {
         data: Professeur[];
         meta: Meta;
     };
-    setSelectedId: React.Dispatch<React.SetStateAction<number | null>>
+    setSelectedId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const TableProfesseur = ({ professeurs, setSelectedId }: TableProfesseurProps) => {
+const TableProfesseur = ({
+    professeurs,
+    setSelectedId,
+}: TableProfesseurProps) => {
     return (
         <div>
             {/* Tableau */}
@@ -126,16 +129,6 @@ const TableProfesseur = ({ professeurs, setSelectedId }: TableProfesseurProps) =
                                                         >
                                                             <Folder className="h-4 w-4" />
                                                             Dossier
-                                                        </Link>
-                                                    </DropdownMenuItem>
-
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={`/professeur/${prof.id}/assigner-classe`}
-                                                            className="flex cursor-pointer items-center gap-2"
-                                                        >
-                                                            <GraduationCap className="h-4 w-4" />
-                                                            Attribuer des classes
                                                         </Link>
                                                     </DropdownMenuItem>
 

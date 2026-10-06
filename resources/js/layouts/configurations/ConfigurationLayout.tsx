@@ -47,11 +47,6 @@ const ConfigurationLayout = ({ children }: PropsWithChildren) => {
                       href: periodes(),
                       icon: null,
                   },
-                  {
-                      title: 'Utilisateurs',
-                      href: '/utilisateurs',
-                      icon: null,
-                  },
               ]
             : []),
 

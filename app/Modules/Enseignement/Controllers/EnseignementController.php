@@ -22,12 +22,16 @@ class EnseignementController extends Controller
         protected NiveauService $niveauService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
+        $professeurQuery = $request->query('professeur') ?? '';
+        $coursQuery = $request->query('cours') ?? '';
+        $niveauQuery = $request->query('niveau') ?? '';
+
         $professeurs = $this->professeurService->getAllProfesseurs();
         $cours = $this->coursService->getAllCours();
         $niveaux = $this->niveauService->getAllNiveaux();
-        $enseignements = $this->enseignementService->getEnseignementPaginate();
+        $enseignements = $this->enseignementService->getEnseignementPaginate($professeurQuery, $coursQuery, $niveauQuery);
 
         return Inertia::render('enseignement/Index', [
             'professeurs' => $professeurs,
@@ -76,25 +80,44 @@ class EnseignementController extends Controller
 
     public function update(Request $request, string $enseignement)
     {
-        $data = $request->validate([
-            'classes' => 'required|array'
-        ]);
+        try {
+            if ($request->has('classes')) {
+                $data = $request->validate([
+                    'classes' => 'present|array',
+                    'classes.*.niveauId' => 'required|exists:niveaux,id',
+                    'classes.*.coefficient' => 'required|numeric|min:0.1'
+                ]);
+                $this->enseignementService->updateEnseignement($enseignement, $data['classes']);
+            } else {
+                $data = $request->validate([
+                    'niveau' => 'required|numeric',
+                    'coefficient' => 'required|numeric'
+                ]);
+                $this->enseignementService->updateEnseignement($enseignement, [
+                    ['niveauId' => (int) $data['niveau'], 'coefficient' => (float) $data['coefficient']]
+                ]);
+            }
 
-        $enseignement = $this->enseignementService->updateEnseignement($enseignement, $data);
-
-        return response()->json([
-            "success" => true,
-            "data" => $enseignement
-        ]);
+            return response()->json([
+                "success" => true,
+                "message" => "Classes et coefficients mis à jour avec succès"
+            ]);
+        } catch (Exception $e) {
+            Log::error("Erreur survenue lors de la mise à jour d'un enseignement", ["erreur" => $e->getMessage()]);
+            return response()->json([
+                "success" => false,
+                "message" => "Erreur survenue lors de la mise à jour : " . $e->getMessage()
+            ], 422);
+        }
     }
 
     public function destroy(string $enseignement)
     {
         try {
-
             $this->enseignementService->deleteEnseignement($enseignement);
             return response()->json([
                 "success" => true,
+                "message" => "Enseignement supprimé avec succès"
             ]);
         } catch (Exception $e) {
             Log::error('Erreur survenue lors de la suppression d\'un enseignement', ["erreur" => $e->getMessage()]);

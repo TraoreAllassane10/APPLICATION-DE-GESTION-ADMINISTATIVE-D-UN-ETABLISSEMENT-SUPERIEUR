@@ -1,13 +1,15 @@
+import ModalConfirmationSuppression from '@/components/modals/ModalConfirmationSuppression';
 import { Button } from '@/components/ui/button';
 import { Cours } from '@/features/cours/types/cours.types';
 import FiltreEnseignement from '@/features/enseignement/components/filtre-enseignement';
+import ModalEnseignement from '@/features/enseignement/components/modal-enseignement';
 import TableEnseignement from '@/features/enseignement/components/table-enseignement';
 import useEnseignement from '@/features/enseignement/hooks/useEnseignement';
 import { EnseignementData } from '@/features/enseignement/types/enseignement.types';
 import { Professeur } from '@/features/professeur/types/professeur.types';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DataNiveau } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 
@@ -34,25 +36,37 @@ interface EnseignementPageProps {
 const EnseignementPage = () => {
     const { professeurs, cours, niveaux, enseignements, filters } =
         usePage<EnseignementPageProps>().props;
-        console.log(enseignements);
-        
 
     const [filtreProfesseur, setFiltreProfesseur] = useState('');
     const [filtreCours, setFiltreCours] = useState('');
     const [filtreNiveau, setFiltreNiveau] = useState('');
 
+    const [open, setOpen] = useState(false);
+    const [gererEnseignementId, setGererEnseignementId] = useState<number | null>(null);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
     const hasFilters = filtreProfesseur || filtreCours || filtreNiveau;
 
-    const { filtrageEnseignement } = useEnseignement();
+    const { filtrageEnseignement, deleteEnseignement } = useEnseignement();
+
+    const handleDelete = async () => {
+        if (selectedId) {
+            await deleteEnseignement(selectedId);
+            setSelectedId(null);
+            router.reload();
+        }
+    };
 
     const handleSearch = () => {
-        // filtrageEnseignement(filtreProfesseur, filtreCours, filtreNiveau);
+        filtrageEnseignement(filtreProfesseur, filtreCours, filtreNiveau);
     };
 
     const reset = () => {
         setFiltreProfesseur('');
         setFiltreCours('');
         setFiltreNiveau('');
+
+        router.get('/enseignements');
     };
 
     return (
@@ -69,13 +83,30 @@ const EnseignementPage = () => {
                             Visualiser et gerer tous les enseignements .
                         </p>
                     </div>
-                    <Link href="/etudiants/create">
-                        <Button className="gap-2 transition duration-300 hover:bg-red-700">
-                            <PlusCircle className="h-4 w-4" />
-                            Nouvel enseignement
-                        </Button>
-                    </Link>
+
+                    <Button
+                        onClick={() => {
+                            setGererEnseignementId(null);
+                            setOpen(true);
+                        }}
+                        className="gap-2 transition duration-300 hover:bg-red-700"
+                    >
+                        <PlusCircle className="h-4 w-4" />
+                        Assigner une classe à un enseignant
+                    </Button>
                 </div>
+
+                {/* Modal */}
+                <ModalEnseignement
+                    open={open}
+                    onClose={() => {
+                        setOpen(false);
+                        setGererEnseignementId(null);
+                    }}
+                    enseignements={enseignements.data}
+                    niveaux={niveaux}
+                    enseignementId={gererEnseignementId}
+                />
 
                 {/* Filtres */}
                 <FiltreEnseignement
@@ -91,7 +122,7 @@ const EnseignementPage = () => {
                     hasFilters={hasFilters}
                     reset={reset}
                     onSearch={handleSearch}
-                    totalEnseignement={2}
+                    totalEnseignement={enseignements.data.length}
                 />
 
                 {/* Liste des enseignements */}
@@ -99,6 +130,19 @@ const EnseignementPage = () => {
                     enseignements={enseignements}
                     hasFilters={hasFilters}
                     onReset={reset}
+                    onOpenModal={() => setOpen(true)}
+                    onGererEnseignement={setGererEnseignementId}
+                    onDelete={setSelectedId}
+                />
+
+                <ModalConfirmationSuppression
+                    title="Supprimer un enseignement ?"
+                    content=" Cette action est irréversible. Les données liées à
+                        cet enseignements (evaluations, notes, assiduités.) pourraient
+                        également être affectées."
+                    selectedId={selectedId}
+                    handleDelete={handleDelete}
+                    setSelectedId={setSelectedId}
                 />
             </div>
         </AppLayout>

@@ -18,9 +18,9 @@ class ProfesseurService
         protected AnneeAcademiqueService $anneeAcademiqueService
     ) {}
 
-     public function getAllProfesseursPaginate()
+    public function getAllProfesseursPaginate(string $search)
     {
-        return $this->professeurRepository->paginate();
+        return $this->professeurRepository->paginate($search);
     }
 
     public function getAllProfesseurs()
@@ -81,21 +81,5 @@ class ProfesseurService
         Cache::forget('dashboard:stats');
 
         return $professeurSupprime;
-    }
-
-    public function attribuerClassesProfesseur(array $data)
-    {
-
-        $enseignement = Enseignement::find($data['enseignement']);
-
-        if (!$enseignement) {
-            throw new Exception('Erreur lors de la recuperation de l\'enseignement');
-        }
-
-        foreach ($data['classes'] as $classeId) {
-            $enseignement->niveaux()->attach($classeId);
-        }
-
-        return $enseignement;
     }
 }

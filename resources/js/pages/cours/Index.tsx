@@ -87,7 +87,7 @@ const Index = () => {
     const [nom, setNom] = useState('');
     const [type_enseignement, setTypeEnseignement] = useState('');
 
-    const { createCours, deleteCours } = useCours();
+    const { createCours, deleteCours, loading } = useCours();
 
     // Enregistrement d'un cours
     const handleSubmit = async () => {
@@ -182,7 +182,7 @@ const Index = () => {
                                     </div>
                                 </div>
                                 <SheetFooter>
-                                    <Button onClick={handleSubmit}>
+                                    <Button onClick={handleSubmit} disabled={loading}>
                                         Enregistrer
                                     </Button>
                                     <SheetClose asChild>

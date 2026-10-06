@@ -14,7 +14,12 @@ class CoursService
 
     public function getAllCours()
     {
-        return $this->coursRepository->all();
+        return $this->coursRepository->all()->get();
+    }
+
+    public function PaginateCours()
+    {
+        return $this->coursRepository->all()->paginate(10);
     }
 
     public function createCours(array $data)

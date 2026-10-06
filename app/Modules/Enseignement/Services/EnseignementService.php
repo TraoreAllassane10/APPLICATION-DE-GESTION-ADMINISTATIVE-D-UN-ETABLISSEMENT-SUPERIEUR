@@ -20,11 +20,31 @@ class EnseignementService
         });
     }
 
-    public function getEnseignementPaginate()
+    public function getEnseignementPaginate(string $professeurQuery, string $coursQuery, string $niveauQuery)
     {
-        return Cache::remember('enseignement:all', 3600, function () {
-            return Enseignement::latest()->paginate(20);
+        $enseignements = Enseignement::query();
+
+        $enseignements->when($professeurQuery, function ($q) use ($professeurQuery) {
+            if ($professeurQuery !== "") {
+                $q->where("professeur_id", $professeurQuery);
+            }
         });
+
+        $enseignements->when($coursQuery, function ($q) use ( $coursQuery) {
+            if ($coursQuery !== "") {
+                $q->where("cours_id", $coursQuery);
+            }
+        });
+
+         $enseignements->when($niveauQuery, function ($q) use ( $niveauQuery) {
+            if ($niveauQuery !== "") {
+                $q->whereHas('niveaux', function($q) use ($niveauQuery) {
+                    $q->where('niveau_id', $niveauQuery);
+                });
+            }
+        });
+
+         return $enseignements->latest()->paginate(20);
     }
 
     public function getEnseignement(string $id)
@@ -48,14 +68,27 @@ class EnseignementService
         ]);
 
         Cache::forget('enseignement:all');
+     
 
         return $enseignement;
     }
 
     public function updateEnseignement(string $id, array $data)
     {
-        $enseignement = Enseignement::find($id);
-        $enseignementModifie = $enseignement->niveaux()->sync($data['classes']);
+        $enseignement = Enseignement::findOrFail($id);
+
+        $syncData = [];
+        foreach ($data as $item) {
+            $niveauId = $item['niveauId'] ?? $item['niveau_id'] ?? null;
+            $coeff = $item['coefficient'] ?? 1;
+            if ($niveauId) {
+                $syncData[$niveauId] = [
+                    'coefficient' => $coeff
+                ];
+            }
+        }
+
+        $enseignementModifie = $enseignement->niveaux()->sync($syncData);
 
         Cache::forget('enseignement:all');
 
@@ -64,7 +97,7 @@ class EnseignementService
 
     public function deleteEnseignement(string $id)
     {
-        $enseignement = Enseignement::find($id);
+        $enseignement = Enseignement::findOrFail($id);
         $enseignementSupprime = $enseignement->delete();
 
         Cache::forget('enseignement:all');

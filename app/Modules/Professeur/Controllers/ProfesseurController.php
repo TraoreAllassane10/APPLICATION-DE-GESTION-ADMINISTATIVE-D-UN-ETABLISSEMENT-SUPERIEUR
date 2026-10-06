@@ -27,13 +27,16 @@ class ProfesseurController extends Controller
         protected CoursService $coursService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $professeurs = ProfesseurResource::collection($this->professeurService->getAllProfesseursPaginate());
+            $search = $request->query('search') ?? "";
+
+            $professeurs = ProfesseurResource::collection($this->professeurService->getAllProfesseursPaginate($search));
 
             return Inertia::render("professeur/Index", [
                 "professeurs" => $professeurs,
+                "filtre" => $search
             ]);
         } catch (Exception $e) {
             return response()->json(["message" => $e->getMessage()]);
@@ -127,38 +130,5 @@ class ProfesseurController extends Controller
         $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
 
         return Excel::download(new EnseignantExport($anneeActive->id), 'Liste_des_enseignants_' . $anneeActive->libelle . '.xlsx');
-    }
-
-    public function createAssigner(Professeur $professeur)
-    {
-        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
-
-        $professeur->load(["enseignements" => function ($query) use ($anneeActive) {
-            $query->where('annee_universitaire_id', $anneeActive->id);
-        }]);
-
-        $niveaux = Niveau::latest()->get();
-
-        return Inertia::render("professeur/AssignerClasse", [
-            "professeur" => $professeur,
-            "niveaux" => $niveaux
-        ]);
-    }
-
-    public function assigner(Request $request, Professeur $professeur)
-    {
-        try {
-            $validated = $request->validate([
-                "enseignement" => "required",
-                "classes" => "required|array"
-            ]);
-
-            $this->professeurService->attribuerClassesProfesseur($validated);
-
-            return response()->json(["success" => true]);
-        } catch (Exception $e) {
-
-            return response()->json(["message" => "Erreur survenue lors de l'attribution"]);
-        }
     }
 }

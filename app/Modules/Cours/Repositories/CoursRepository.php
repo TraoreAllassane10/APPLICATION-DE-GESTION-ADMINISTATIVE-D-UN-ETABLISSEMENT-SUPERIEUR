@@ -8,7 +8,7 @@ class CoursRepository
 {
     public function all()
     {
-        return Cours::latest()->get();
+        return Cours::latest();
     }
 
     public function create(array $data)
