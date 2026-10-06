@@ -18,6 +18,7 @@ import {
     historique,
     niveau,
     professeur,
+    utilisateur,
 } from '@/routes';
 import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
@@ -38,6 +39,7 @@ import {
     TrendingUp,
     User,
     UserCheck,
+    UserCog,
     Users,
 } from 'lucide-react';
 import AppLogo from './app-logo';
@@ -101,6 +103,11 @@ export function AppSidebar() {
                       title: 'Paiements',
                       href: '/paiements',
                       icon: CreditCard,
+                  },
+                  {
+                      title: 'Utilisateurs',
+                      href: utilisateur(),
+                      icon: UserCog,
                   },
                   {
                       title: 'Historiques des activités',
