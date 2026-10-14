@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -14,7 +13,7 @@ import { Etudiant } from '@/features/etudiant/types/etudiant.types';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DataNiveau } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Folder, GraduationCap, Printer } from 'lucide-react';
+import { Folder, GraduationCap, Printer, Sheet } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -35,6 +34,11 @@ interface ListeEtudiantProps {
 
 const ListeDeClasse = () => {
     const { liste, niveau } = usePage<ListeEtudiantProps>().props;
+
+    const handleExportExcel = () => {
+        window.location.href = `/niveau/${niveau.id}/liste-de-classe/export`
+    };
+
     return (
         <div>
             <AppLayout breadcrumbs={breadcrumbs}>
@@ -48,15 +52,26 @@ const ListeDeClasse = () => {
                             </span>
                         </h1>
 
-                        <a
-                            href={`/niveau/${niveau.id}/liste-de-classe/imprimer`}
-                            target="_blank"
-                        >
-                            <Button variant="outline" size="sm">
-                                <Printer />
-                                Telécharger la liste de classe
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <a
+                                href={`/niveau/${niveau.id}/liste-de-classe/imprimer`}
+                                target="_blank"
+                            >
+                                <Button variant="outline" size="sm">
+                                    <Printer className="text-red-500" />
+                                    Telécharger la liste de classe
+                                </Button>
+                            </a>
+
+                            <Button
+                                onClick={handleExportExcel}
+                                variant="outline"
+                                size="sm"
+                            >
+                                <Sheet className="text-green-500" />
+                                Exporter la liste sous Excel
                             </Button>
-                        </a>
+                        </div>
                     </div>
 
                     <Card className="overflow-hidden shadow-sm">
@@ -95,7 +110,9 @@ const ListeDeClasse = () => {
                                             <TableCell className="space-x-1">
                                                 <div className="flex items-center gap-2">
                                                     <Avatar
-                                                    photo={etudiant.photo as string}
+                                                        photo={
+                                                            etudiant.photo as string
+                                                        }
                                                         nom={etudiant.nom}
                                                         prenom={etudiant.prenom}
                                                         genre={etudiant.genre}
@@ -130,7 +147,7 @@ const ListeDeClasse = () => {
                                                         variant="outline"
                                                         size="sm"
                                                     >
-                                                        <Folder />
+                                                        <Folder className="text-purple-500" />
                                                         Consulter son dossier
                                                     </Button>
                                                 </Link>

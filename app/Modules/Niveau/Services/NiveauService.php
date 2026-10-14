@@ -88,4 +88,5 @@ class NiveauService
 
         return $pdf->stream("liste_de_classe_{$nom_classe}.pdf");
     }
+
 }
