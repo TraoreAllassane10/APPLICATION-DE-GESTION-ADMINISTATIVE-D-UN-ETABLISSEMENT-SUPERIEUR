@@ -2,9 +2,11 @@
 
 namespace App\Modules\Niveau\Controllers;
 
+use App\Exports\ListeClasseExport;
 use App\Http\Controllers\Controller;
 use App\Models\Filiere;
 use App\Models\Niveau;
+use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
 use App\Modules\Filiere\Resources\FiliereResource;
 use App\Modules\Filiere\Services\FiliereService;
 use App\Modules\Niveau\Requests\CreateNiveauRequest;
@@ -13,12 +15,14 @@ use App\Modules\Niveau\Resources\NiveauResource;
 use App\Modules\Niveau\Services\NiveauService;
 use Exception;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NiveauController extends Controller
 {
     public function __construct(
         protected NiveauService $niveauService,
-        protected FiliereService $filiereService
+        protected FiliereService $filiereService,
+        protected AnneeAcademiqueService $anneeAcademiqueService
     ) {}
 
     public function index()
@@ -108,5 +112,12 @@ class NiveauController extends Controller
     public function downloadListeDeClase(string $niveauId)
     {
         return $this->niveauService->getListeDeClasseEnPdf($niveauId);
+    }
+
+    public function exportListeDeClasseExcel(string $niveauId)
+    {
+        $anneeActive = $this->anneeAcademiqueService->getAnneeActive();
+
+        return Excel::download(new ListeClasseExport($niveauId, $anneeActive->id), 'Liste_de_classe.xlsx');
     }
 }
