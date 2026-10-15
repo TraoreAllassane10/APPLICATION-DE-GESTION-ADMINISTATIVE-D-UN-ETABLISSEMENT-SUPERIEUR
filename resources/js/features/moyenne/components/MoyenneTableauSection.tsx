@@ -2,6 +2,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
+    NativeSelect,
+    NativeSelectOption,
+} from '@/components/ui/native-select';
+import {
     Table,
     TableBody,
     TableCell,
@@ -9,18 +13,21 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { SharedData } from '@/types';
 import { formatRang } from '@/utils/util';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Check, Edit2, X } from 'lucide-react';
 import { useState } from 'react';
+import { appreciations } from '../constants/data';
 import { Moyenne } from '../types/moyennes.types';
-import { formatNote } from '../utils';
+import { formatAppreciation, formatNote } from '../utils';
 
 interface MoyenneTableauSectionProps {
     moyennes: Moyenne[];
     coefficient: string;
     onChangeCoefficient: (value: string) => void;
     onUpdateCoefficient: () => Promise<void>;
+    onUpdateAppreciation: (inscriptionId: number, Appreciation: string) => void;
 }
 
 const MoyenneTableauSection = ({
@@ -28,65 +35,80 @@ const MoyenneTableauSection = ({
     coefficient,
     onChangeCoefficient,
     onUpdateCoefficient,
+    onUpdateAppreciation,
 }: MoyenneTableauSectionProps) => {
+    const { user } = usePage<SharedData>().props.auth;
+
     const [isEditCoefficient, setIsEditCoefficient] = useState(false);
+    const isInspecteur = user?.roles?.some(
+        (role) => role.name == 'Inspecteur pedagogique',
+    );
 
     return (
         <Card>
-            <CardHeader>
-                <div className="flex items-center gap-2">
-                    <h1 className="text-md font-medium tracking-wide">
-                        Coefficient dans le bulletin :
-                    </h1>
-                    <Input
-                        type="number"
-                        value={coefficient}
-                        onChange={(e) => onChangeCoefficient(e.target.value)}
-                        disabled={!isEditCoefficient}
-                        className="w-[100px]"
-                    />
-                    {!isEditCoefficient ? (
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => setIsEditCoefficient(true)}
-                        >
-                            <Edit2 className="h-4 w-4" />
-                        </Button>
-                    ) : (
-                        <div className="flex items-center gap-2">
+            {isInspecteur && (
+                <CardHeader>
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-md font-medium tracking-wide">
+                            Coefficient dans le bulletin :
+                        </h1>
+                        <Input
+                            type="number"
+                            value={coefficient}
+                            onChange={(e) =>
+                                onChangeCoefficient(e.target.value)
+                            }
+                            disabled={!isEditCoefficient}
+                            className="w-[100px]"
+                        />
+                        {!isEditCoefficient ? (
                             <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={async () => {
-                                    await onUpdateCoefficient();
-                                    setIsEditCoefficient(false);
-                                }}
+                                onClick={() => setIsEditCoefficient(true)}
                             >
-                                <Check className="h-4 w-4 text-emerald-600" />
+                                <Edit2 className="h-4 w-4" />
                             </Button>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => setIsEditCoefficient(false)}
-                            >
-                                <X className="h-4 w-4 text-red-600" />
-                            </Button>
-                        </div>
-                    )}
-                </div>
-            </CardHeader>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={async () => {
+                                        await onUpdateCoefficient();
+                                        setIsEditCoefficient(false);
+                                    }}
+                                >
+                                    <Check className="h-4 w-4 text-emerald-600" />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => setIsEditCoefficient(false)}
+                                >
+                                    <X className="h-4 w-4 text-red-600" />
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                </CardHeader>
+            )}
 
             <CardContent className="p-0">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow className="bg-muted/40 hover:bg-muted/40">
-                                <TableHead className="w-[52px] text-center">N°</TableHead>
+                                <TableHead className="w-[52px] text-center">
+                                    N°
+                                </TableHead>
                                 <TableHead>Nom et Prénom</TableHead>
 
                                 {moyennes[0]?.evaluations?.map((_, index) => (
-                                    <TableHead key={index} className="text-center">
+                                    <TableHead
+                                        key={index}
+                                        className="text-center"
+                                    >
                                         Évaluation {index + 1}
                                     </TableHead>
                                 ))}
@@ -97,7 +119,12 @@ const MoyenneTableauSection = ({
                                 <TableHead className="text-center font-semibold">
                                     Moyenne
                                 </TableHead>
-                                <TableHead className="text-center">Rang</TableHead>
+                                <TableHead className="text-center">
+                                    Rang
+                                </TableHead>
+                                <TableHead className="text-center">
+                                    Appréciation
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
 
@@ -106,7 +133,8 @@ const MoyenneTableauSection = ({
                                 <TableRow
                                     key={moyenne.id}
                                     className={
-                                        moyenne.moyenne !== null && moyenne.moyenne < 10
+                                        moyenne.moyenne !== null &&
+                                        moyenne.moyenne < 10
                                             ? 'bg-red-50/50 dark:bg-red-950/10'
                                             : ''
                                     }
@@ -125,31 +153,49 @@ const MoyenneTableauSection = ({
                                         const isEliminatoire =
                                             (evaluation.note !== null &&
                                                 evaluation.note < 10 &&
-                                                evaluation.note_maximale === 20) ||
+                                                evaluation.note_maximale ===
+                                                    20) ||
                                             (evaluation.note !== null &&
                                                 evaluation.note < 5 &&
-                                                evaluation.note_maximale === 10);
+                                                evaluation.note_maximale ===
+                                                    10);
 
                                         return (
-                                            <TableCell key={evaluation.id} className="text-center">
-                                                <Link href={`/notes/${evaluation.id}/create-note`}>
+                                            <TableCell
+                                                key={evaluation.id}
+                                                className="text-center"
+                                            >
+                                                <Link
+                                                    href={`/notes/${evaluation.id}/create-note`}
+                                                >
                                                     <span
                                                         className={
-                                                            evaluation.note === null
+                                                            evaluation.note ===
+                                                            null
                                                                 ? 'text-muted-foreground'
                                                                 : isEliminatoire
-                                                                ? 'font-medium text-red-600 dark:text-red-400'
-                                                                : 'font-medium'
+                                                                  ? 'font-medium text-red-600 dark:text-red-400'
+                                                                  : 'font-medium'
                                                         }
                                                     >
-                                                        {evaluation.note ?? 'NC'}
+                                                        {evaluation.note ??
+                                                            'NC'}
                                                     </span>
 
-                                                    {evaluation.note !== null && (
+                                                    {evaluation.note !==
+                                                        null && (
                                                         <>
-                                                            <span>/{evaluation.note_maximale}</span>
+                                                            <span>
+                                                                /
+                                                                {
+                                                                    evaluation.note_maximale
+                                                                }
+                                                            </span>
                                                             <span className="ml-1.5 inline-flex items-center text-xs font-semibold text-amber-600">
-                                                                x{evaluation.coefficient}
+                                                                x
+                                                                {
+                                                                    evaluation.coefficient
+                                                                }
                                                             </span>
                                                         </>
                                                     )}
@@ -170,8 +216,8 @@ const MoyenneTableauSection = ({
                                                 moyenne.moyenne === null
                                                     ? 'text-muted-foreground'
                                                     : moyenne.moyenne >= 10
-                                                    ? 'text-emerald-600 dark:text-emerald-400'
-                                                    : 'text-red-600 dark:text-red-400'
+                                                      ? 'text-emerald-600 dark:text-emerald-400'
+                                                      : 'text-red-600 dark:text-red-400'
                                             }`}
                                         >
                                             {formatNote(moyenne.moyenne)}
@@ -182,6 +228,37 @@ const MoyenneTableauSection = ({
                                         {moyenne.moyenne !== null
                                             ? formatRang(Number(moyenne.rang))
                                             : '—'}
+                                    </TableCell>
+
+                                    <TableCell className="text-center">
+                                        {isInspecteur ? (
+                                            
+                                            <span className={`${formatAppreciation(moyenne.appreciation)} px-4 py-1 text-sm font-bold rounded-full`}>
+                                                {moyenne.appreciation}
+                                            </span>
+                                        ) : (
+                                            <NativeSelect
+                                                onChange={(e) =>
+                                                    onUpdateAppreciation(
+                                                        moyenne.moyenne_id,
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            >
+                                                <NativeSelectOption value=""></NativeSelectOption>
+
+                                                {appreciations.map(
+                                                    (appreciation) => (
+                                                        <NativeSelectOption
+                                                            value={appreciation}
+                                                            selected={moyenne.appreciation == appreciation}
+                                                        >
+                                                            {appreciation}
+                                                        </NativeSelectOption>
+                                                    ),
+                                                )}
+                                            </NativeSelect>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -6,7 +6,7 @@ import MoyenneTableauSection from '@/features/moyenne/components/MoyenneTableauS
 import useProfesseurMoyenne from '@/features/moyenne/hooks/useProfesseurMoyenne';
 import { Moyenne } from '@/features/moyenne/types/moyennes.types';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, DataNiveau, Periode } from '@/types';
+import { Auth, BreadcrumbItem, DataNiveau, Periode } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { BookOpen, Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -18,12 +18,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface MoyenneProps {
     niveaux: DataNiveau[];
     periodes: Periode[];
+    auth: Auth;
     [key: string]: unknown;
 }
 
 export default function Index() {
-    const { niveaux, periodes } = usePage<MoyenneProps>().props;
-
+    const { niveaux, periodes, auth } = usePage<MoyenneProps>().props;
+    
     const [selectedEnseignementId, setSelectedEnseignementId] = useState<string>('');
     const [selectedClasseId, setSelectedClasseId] = useState<string>('');
     const [selectedPeriodeId, setSelectedPeriodeId] = useState<string>('');
@@ -31,9 +32,7 @@ export default function Index() {
     const [moyennes, setMoyennes] = useState<Moyenne[]>([]);
     const [coefficient, setCoefficient] = useState<string>('');
 
-    console.table(moyennes)
-
-    const { getMoyennes, loading } = useProfesseurMoyenne();
+    const { getMoyennes, udpateAppreciation, loading } = useProfesseurMoyenne();
     const { updateCoefficientEnseignementInclasse } = useEnseignement();
 
     // Récupère les enseignements de la classe sélectionnée
@@ -41,12 +40,18 @@ export default function Index() {
         setSelectedEnseignementId('');
         setEnseignements([]);
 
+        // Tous les enseignements de la classe selectionnée
         const enseignementClasseSelectionnee = niveaux.find(
             (n) => n.id === Number(selectedClasseId),
         )?.enseignements;
 
-        if (enseignementClasseSelectionnee) {
-            setEnseignements(enseignementClasseSelectionnee as Enseignement[]);
+        // Les enseignements du professeur connecté dans parmi ceux de la classe
+        const enseignementProfesseurConnecte = enseignementClasseSelectionnee?.filter((ens) => {
+            return ens.professeur.id === auth.user.professeur?.id
+        })
+
+        if (enseignementProfesseurConnecte) {
+            setEnseignements(enseignementProfesseurConnecte as Enseignement[]);
         }
     }, [selectedClasseId, niveaux]);
 
@@ -75,6 +80,10 @@ export default function Index() {
             Number(coefficient),
         );
     };
+
+    const handleUpdateAppreciation = async (moyenneId: number, appreciation: string) => {
+        await udpateAppreciation(moyenneId, appreciation);
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -115,6 +124,7 @@ export default function Index() {
                         coefficient={coefficient}
                         onChangeCoefficient={setCoefficient}
                         onUpdateCoefficient={handleUpdateCoefficient}
+                        onUpdateAppreciation={handleUpdateAppreciation}
                     />
                 )}
             </div>
