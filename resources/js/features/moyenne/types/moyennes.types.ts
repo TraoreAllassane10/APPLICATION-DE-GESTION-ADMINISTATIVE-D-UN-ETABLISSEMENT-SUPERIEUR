@@ -1,5 +1,6 @@
 export interface Moyenne {
     id: string;
+    inscription_id: number;
     nom: string;
     prenom: string;
     evaluations: {
@@ -10,6 +11,8 @@ export interface Moyenne {
     }[];
     total_notes: number;
     diviseur: number;
+    moyenne_id: number;
     moyenne: number;
     rang: string;
+    appreciation: string;
 }

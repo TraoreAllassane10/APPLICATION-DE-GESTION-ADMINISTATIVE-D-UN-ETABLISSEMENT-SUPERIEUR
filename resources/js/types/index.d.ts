@@ -1,4 +1,5 @@
 import { Enseignement } from '@/features/enseignement/types/enseignement.types';
+import { Professeur } from '@/features/professeur/types/professeur.types';
 import { InertiaLinkProps } from '@inertiajs/react';
 import { LucideIcon } from 'lucide-react';
 
@@ -45,6 +46,7 @@ export interface User {
     created_at: string;
     updated_at: string;
     roles?: Role[];
+    professeur?: Professeur
     [key: string]: unknown; // This allows for additional properties...
 }
 

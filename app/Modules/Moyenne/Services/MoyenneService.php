@@ -2,20 +2,22 @@
 
 namespace App\Modules\Moyenne\Services;
 
+use App\Models\Moyenne;
 use App\Models\Niveau;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class MoyenneService
 {
-
     public function getMoyennes(int $classeId, int $enseignementId, int $periodeId)
     {
         $data = [];
-
+        // Récupere l'enseignement sélectionné
         $niveau = Niveau::with('inscriptions')
             ->where('id', $classeId)
             ->first();
 
+        // Récupere l'enseignement sélectionné
         $enseignement = $niveau->enseignements()
             ->where('enseignement_id', $enseignementId)
             ->with(['evaluations' => function ($q) use ($periodeId) {
@@ -27,11 +29,13 @@ class MoyenneService
             throw new Exception('Aucun cours associé a cette classe !');
         }
 
+        // Calcule la moyenne de chaque etudiant
         foreach ($niveau->inscriptions as $inscrit) {
             $evaluations = [];
             $totalNote = 0;
             $diviseur = 0;
 
+            // Parcourir les evaluations de l'enseignement
             foreach ($enseignement->evaluations as $evaluation) {
                 $noteObj = $evaluation->notes->firstWhere('inscription_id', $inscrit->id);
                 $valeurNote = $noteObj?->valeur ?  $noteObj->valeur : null;
@@ -65,18 +69,24 @@ class MoyenneService
                 }
             }
 
-            // Calculer la moyenne
-            $moyenne = $diviseur > 0 ? round($totalNote / $diviseur, 2) : null;
+            // Recupere la moyenne de l'etudiant dans la table moyennes
+            $moyenne = Moyenne::where('inscription_id', $inscrit->id)
+                ->where('enseignement_id', $enseignementId)
+                ->where('periode_academique_id', $periodeId)
+                ->first();
 
             $data[] = [
                 "id" => $inscrit->etudiant->ip,
+                "inscription_id" => $inscrit->id,
                 "nom" => $inscrit->etudiant->nom,
                 "prenom" => $inscrit->etudiant->prenom,
                 "evaluations" => $evaluations,
                 "total_notes" => $totalNote,
                 "diviseur" => $diviseur,
-                "moyenne" => $moyenne,
-                "rang" => null
+                "moyenne_id" => $moyenne->id,
+                "moyenne" => (float) $moyenne->valeur,
+                "appreciation" => $moyenne->appreciation,
+                "rang" => null,
             ];
         }
 
@@ -112,6 +122,15 @@ class MoyenneService
 
             $etudiant['rang'] = $rangActuel;
             $precedentMoyenne = $etudiant['moyenne'];
+
+            // Mise à jour du rang de l'etudiant
+            $moyenne = Moyenne::where('inscription_id', $etudiant['inscription_id'])
+                ->where('enseignement_id', $enseignementId)
+                ->where('periode_academique_id', $periodeId)
+                ->first();
+
+            $moyenne->rang = $etudiant['rang'];
+            $moyenne->save();
         }
 
         unset($etudiant); //Sécurité pour libérer la référence PHP

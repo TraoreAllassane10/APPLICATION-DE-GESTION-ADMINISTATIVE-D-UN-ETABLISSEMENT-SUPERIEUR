@@ -3,10 +3,13 @@
 namespace App\Modules\Moyenne\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Moyenne;
 use App\Modules\Moyenne\Services\MoyenneService;
 use App\Modules\PeriodeAcademique\Services\PeriodeAcademiqueService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ProfesseurMoyenneController extends Controller
@@ -49,5 +52,24 @@ class ProfesseurMoyenneController extends Controller
             "coefficient" => $data['coefficient'],
             "data" => $data['data']
         ]);
+    }
+
+    public function updateAppreciation(Request $request, Moyenne $moyenne) {
+        $data = $request->validate([
+            "appreciation" => ["required", "string"]
+        ]);
+
+        try {
+            $moyenne->update([
+                "appreciation" => $data['appreciation']
+            ]);
+
+            return response()->json([
+                "success" => true,
+                "message" => "Appréciation mis à jour avec succès !"
+            ]);
+        } catch (Exception $e) {
+           Log::info("Erreur survenue lors de la mise à jour d'une appreciation", ["error" => $e->getMessage()]);
+        }
     }
 }

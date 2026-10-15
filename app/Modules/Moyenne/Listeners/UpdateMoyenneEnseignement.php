@@ -4,6 +4,7 @@ namespace App\Modules\Moyenne\Listeners;
 
 use App\Models\Bulletin;
 use App\Models\Enseignement;
+use App\Models\Moyenne;
 use App\Models\Niveau;
 use App\Modules\Evaluation\Events\EvaluationNoteUpdated;
 use App\Modules\Evaluation\Events\EvaluationUpdated;
@@ -90,7 +91,7 @@ class UpdateMoyenneEnseignement
                 }
 
                 // Calcule de la moyenne
-                $moyenne = $diviseur > 0 ? $totalGenerale / $diviseur : null;
+                $moyenne = $diviseur > 0 ?  $totalGenerale / $diviseur : null;
 
                 // Enregistrement de la moyenne de l'etudiant pour l'enseignement
                 $ancienneMoyenneExiste = $bulletin->enseignements()->where('enseignement_id', $enseignementId)->exists();
@@ -101,6 +102,15 @@ class UpdateMoyenneEnseignement
 
                 $bulletin->enseignements()->attach($enseignementId, [
                     "moyenne_generale_matiere" => $moyenne ?? null,
+                ]);
+
+                // Enregistrer la moyenne dans la table moyenne
+                Moyenne::updateOrCreate([
+                    "inscription_id" => $inscrit->id,
+                    "enseignement_id" => $enseignementId,
+                    "periode_academique_id" => $periodeAcademiqueId
+                ], [
+                    "valeur" => $moyenne ? (float) $moyenne : null,
                 ]);
             }
         }

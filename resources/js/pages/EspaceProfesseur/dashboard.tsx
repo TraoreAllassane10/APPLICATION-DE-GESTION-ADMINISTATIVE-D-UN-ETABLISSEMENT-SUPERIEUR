@@ -243,20 +243,24 @@ export default function DashboardProfesseur() {
                                 label: 'Évaluations',
                                 icon: CheckSquare,
                                 color: 'text-amber-600 bg-amber-50',
+                                href: '/professeur/evaluations'
                             },
                             {
                                 label: 'Moyennes',
                                 icon: Award,
                                 color: 'text-pink-600 bg-pink-50',
+                                  href: '/professeur/moyennes'
                             },
                             {
                                 label: 'Présences',
                                 icon: Users,
                                 color: 'text-emerald-600 bg-emerald-50',
+                                  href: '#'
                             },
                         ].map((link, idx) => (
-                            <button
+                            <Link
                                 key={idx}
+                                href={link.href}
                                 className="group flex flex-col items-center justify-center rounded-xl border border-slate-50 bg-slate-50/50 p-3 transition-all hover:border-slate-200 hover:bg-white hover:shadow-sm"
                             >
                                 <div
@@ -267,7 +271,7 @@ export default function DashboardProfesseur() {
                                 <span className="text-xs font-semibold text-slate-700 transition-colors group-hover:text-blue-600">
                                     {link.label}
                                 </span>
-                            </button>
+                            </Link>
                         ))}
                     </div>
                 </div>
@@ -283,7 +287,7 @@ export default function DashboardProfesseur() {
                                 </div>
                                 <div>
                                     <CardTitle className="text-base font-bold text-slate-800">
-                                        Mes Classes / Niveaux
+                                        Mes Classes
                                     </CardTitle>
                                     <p className="text-xs text-slate-400">
                                         Classes sous votre responsabilité
@@ -339,7 +343,7 @@ export default function DashboardProfesseur() {
                                 </div>
                                 <div>
                                     <CardTitle className="text-base font-bold text-slate-800">
-                                        Mes Matières & Cours
+                                        Mes Matières
                                     </CardTitle>
                                     <p className="text-xs text-slate-400">
                                         Modules de cours dispensés

@@ -8,7 +8,6 @@ use App\Modules\Dashboard\Controllers\DashboardController;
 use App\Modules\Dashboard\Controllers\ProfesseurDashboardController;
 use App\Modules\Enseignement\Controllers\EnseignementController;
 use App\Modules\Etudiant\Controllers\EtudiantController;
-use App\Modules\Etudiant\Controllers\ProfesseurEtudiantController;
 use App\Modules\Evaluation\Controllers\EvaluationController;
 use App\Modules\Evaluation\Controllers\ProfesseurEvaluationController;
 use App\Modules\Filiere\Controllers\FiliereController;
@@ -261,6 +260,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(ProfesseurMoyenneController::class)->group(function () {
             Route::get('/professeur/moyennes', 'index')->name('professeur.moyennes');
             Route::get('/professeur/moyennes/search', "getMoyennes")->name('professeur.moyennes.getMoyennes');
+            Route::post('/professeur/moyennes/{moyenne}/update-appreciation', "updateAppreciation")->name('professeur.moyennes.update-appreciation');
         });
     });
 });

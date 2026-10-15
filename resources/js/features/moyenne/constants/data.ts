@@ -1,0 +1,1 @@
+export const appreciations = ["Insuffisant", "Médiocre", "Passable", "Bien", "Assez bien", "Très bien"];
