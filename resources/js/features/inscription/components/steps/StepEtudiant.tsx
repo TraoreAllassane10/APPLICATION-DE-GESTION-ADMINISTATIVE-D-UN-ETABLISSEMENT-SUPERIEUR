@@ -1,6 +1,6 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
-import { Etudiant } from '@/types';
+import { Etudiant } from '@/features/etudiant/types/etudiant.types';
 import { CheckCircle2, Search } from 'lucide-react';
 import { useState } from 'react';
 
@@ -13,7 +13,6 @@ export default function StepEtudiant({
     selected: Etudiant | null;
     onSelect: (e: Etudiant) => void;
 }) {
-    // const { etudiants } = usePage().props;
     const [query, setQuery] = useState('');
 
     const results = etudiants.filter((e) => {

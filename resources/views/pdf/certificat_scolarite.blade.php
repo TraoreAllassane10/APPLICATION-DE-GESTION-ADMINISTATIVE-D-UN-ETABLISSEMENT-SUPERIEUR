@@ -70,6 +70,7 @@
     <div id="arriere">
         <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="600" height="600"
             onerror="this.style.display='none'">
+        
     </div>
 
     <div class="header">
@@ -78,6 +79,10 @@
             <td style="border: none; text-align: left;">
                 <img src="{{ public_path('./images/logo_inec.jpg') }}" alt="INEC SA" width="100" height="100"
                     onerror="this.style.display='none'">
+            </td>
+
+             <td style="border: none; width: 100%; text-align: center; ">
+                <div style="border-bottom: 1px solid black; margin-top: 70px;" />
             </td>
         </table>
         {{-- <h2>INSTITUT NATIONAL D'INTELLIGENCE NUMÉRIQUE</h2> --}}
