@@ -119,6 +119,7 @@ export default function useEvaluationProfesseur() {
                                 'Evaluation transmisse au service pédagogique avec succès !',
                         );
 
+                        router.reload()
                         router.visit('/professeur/evaluations');
                     }
                 })

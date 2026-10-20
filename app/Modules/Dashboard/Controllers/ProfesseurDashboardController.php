@@ -61,13 +61,17 @@ class ProfesseurDashboardController extends Controller
         // 5 Dernieres evaluations
         $dernieres_evaluations = $this->professeurEvaluationService->getDernieresEvaluation();
 
+        // Les evaluations non transmisse 
+        $evaluations_non_transmisse = $this->professeurEvaluationService->getEvaluationNonTransmisse();
+
         return Inertia::render('EspaceProfesseur/dashboard', [
             "professeur" => $professeur,
             "total_matiere" => $total_matiere,
             "total_classe" => $total_classe,
             "total_evaluation" => $total_evaluation,
             "total_evaluation_non_transmise" => $total_evaluation_non_transmise,
-            "dernieres_evaluations" => $dernieres_evaluations
+            "dernieres_evaluations" => $dernieres_evaluations,
+            "evaluations_non_transmisse" => $evaluations_non_transmisse
         ]);
     }
 }

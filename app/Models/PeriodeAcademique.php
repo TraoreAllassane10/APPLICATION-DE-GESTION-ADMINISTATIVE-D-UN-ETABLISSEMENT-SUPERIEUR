@@ -11,6 +11,7 @@ class PeriodeAcademique extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $with = ["anneeAcademique"];
 
     public function anneeAcademique() {
         return $this->belongsTo(AnneeUniversitaire::class);

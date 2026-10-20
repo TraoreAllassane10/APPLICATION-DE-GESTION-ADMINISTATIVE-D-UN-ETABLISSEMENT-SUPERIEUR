@@ -39,6 +39,7 @@ class NiveauService
         $niveau = $this->niveauRepository->create($data);
 
         Cache::forget('niveau:all');
+        Cache::forget('dashboard:stats');
 
         return $niveau;
     }
@@ -48,6 +49,7 @@ class NiveauService
         $niveauModifie = $this->niveauRepository->update($niveau, $data);
 
         Cache::forget('niveau:all');
+        Cache::forget('dashboard:stats');
 
         return $niveauModifie;
     }
@@ -57,6 +59,7 @@ class NiveauService
         $niveauSupprime = $this->niveauRepository->delete($niveau);
 
         Cache::forget('niveau:all');
+        Cache::forget('dashboard:stats');
 
         return $niveauSupprime;
     }

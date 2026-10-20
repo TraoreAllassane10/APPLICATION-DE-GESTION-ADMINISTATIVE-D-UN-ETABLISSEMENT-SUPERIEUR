@@ -13,7 +13,12 @@ class EvaluationRepository
     ) {}
     public function all()
     {
-        return Evaluation::latest()->get();
+        $anneActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        return Evaluation::whereHas("periode_academique", function ($q) use ($anneActive) {
+            $q->where('annee_universitaire_id', $anneActive->id);
+        })
+            ->latest()->get();
     }
 
     public function paginate(mixed $filtreEnseignement, mixed $filtrePeriode)
@@ -50,6 +55,20 @@ class EvaluationRepository
             }])
             ->first()
         ;
+    }
+
+    // Liste des 5 Dernieres évaluations transmisse par les enseiganants
+    public function lastEvaluations()
+    {
+        $anneActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        return Evaluation::whereHas("periode_academique", function ($q) use ($anneActive) {
+            $q->where('annee_universitaire_id', $anneActive->id);
+        })
+            ->where("est_transmise", 1)
+            ->latest()
+            ->limit(5)
+            ->get();
     }
 
     public function create(array $data)

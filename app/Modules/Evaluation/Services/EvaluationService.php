@@ -23,6 +23,10 @@ class EvaluationService
         return $this->evaluationRepository->find($id);
     }
 
+    public function getLastEvaluations() {
+        return $this->evaluationRepository->lastEvaluations();
+    }
+
     public function createEvaluation(array $data)
     {
         return $this->evaluationRepository->create($data);

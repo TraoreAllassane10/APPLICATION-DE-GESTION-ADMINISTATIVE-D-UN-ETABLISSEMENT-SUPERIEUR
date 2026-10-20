@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { RepartitionNiveau } from "../types/dashboard.types";
+import { Badge } from '@/components/ui/badge';
 import {
     Card,
     CardContent,
@@ -7,12 +6,16 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { RepartitionNiveau } from '../types/dashboard.types';
 interface RepartitionNiveauCardProps {
     anneeActive: string;
     repartitionNiveaux: RepartitionNiveau[];
 }
 
-const RepartitionNiveauCard = ({anneeActive, repartitionNiveaux} : RepartitionNiveauCardProps) => {
+const RepartitionNiveauCard = ({
+    anneeActive,
+    repartitionNiveaux,
+}: RepartitionNiveauCardProps) => {
     return (
         <Card className="flex flex-col justify-between border-border/60 shadow-xs transition-all hover:shadow-md">
             <CardHeader className="pb-4">
@@ -28,7 +31,7 @@ const RepartitionNiveauCard = ({anneeActive, repartitionNiveaux} : RepartitionNi
                     Distribution des étudiants inscrits par cycle d'étude
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="h-75 space-y-4 overflow-y-auto">
                 {(() => {
                     const max = Math.max(
                         ...repartitionNiveaux.map((r) => r.inscrits),
