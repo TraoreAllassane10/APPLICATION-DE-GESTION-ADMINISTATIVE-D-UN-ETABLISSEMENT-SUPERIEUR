@@ -1,4 +1,4 @@
-import { UserPlus } from "lucide-react";
+import { UserPlus, ClipboardList } from "lucide-react";
 import { EtudiantCreeNotification } from "../types/notification.types";
 
 export function formatRelativeDate(iso: string): string {
@@ -48,5 +48,10 @@ export const typeConfig: Record<
         icon: UserPlus,
         bg: 'bg-blue-50',
         color: 'text-blue-600',
+    },
+    'App\\Notifications\\EvaluationTransmisseNotification': {
+        icon: ClipboardList,
+        bg: 'bg-purple-50',
+        color: 'text-purple-600',
     },
 };

@@ -4,19 +4,22 @@ namespace App\Modules\Dashboard\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Etudiant;
+use App\Models\Evaluation;
 use App\Models\Filiere;
 use App\Models\Inscription;
 use App\Models\Niveau;
 use App\Models\Paiement;
 use App\Models\Professeur;
 use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
+use App\Modules\Evaluation\Services\EvaluationService;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function __construct(
-        protected AnneeAcademiqueService $anneeAcademiqueService
+        protected AnneeAcademiqueService $anneeAcademiqueService,
+        protected EvaluationService $evaluationService  
     ) {}
     public function index()
     {
@@ -35,7 +38,9 @@ class DashboardController extends Controller
                     "totalEtudiants" => Etudiant::count(),
                     "totalInscriptions" => Inscription::where("annee_universitaire_id", $anneeActive->id)->count(),
                     "totalEnseignants" => Professeur::count(),
-                    "totalFilieres" => Filiere::count()
+                    "totalFilieres" => Filiere::count(),
+                    "totalClasses" => Niveau::count(),
+                    "totalEvaluationRecues" => Evaluation::where('est_transmise', 1)->count()
                 ];
             }
         );
@@ -49,19 +54,22 @@ class DashboardController extends Controller
         $tauxRecouvrement = $totalAttendu > 0 ? ceil(($totalPaye / $totalAttendu) * 100) : 0;
 
 
-        // derniers paiements et inscriptions
+        // derniers paiements
         $derniers_paiements = Paiement::with([
             "inscription",
             "inscription.etudiant",
             "inscription.niveaux"
         ])->latest()->limit(5)->get();
 
+        // dernieres inscriptions
         $dernieres_inscriptions = Inscription::with([
             "etudiant",
             "niveaux"
         ])->where("annee_universitaire_id", $anneeActive->id)
             ->latest()->limit(5)->get();
-
+        
+        // Dernieres evaluations
+        $dernieres_evaluations = $this->evaluationService->getLastEvaluations();
 
         // Repartition des niveaux
         $couleurs = [
@@ -95,7 +103,9 @@ class DashboardController extends Controller
                     "totalEtudiants" => $stats['totalEtudiants'],
                     "totalInscriptions" => $stats['totalInscriptions'],
                     "totalEnseignants" => $stats['totalEnseignants'],
-                    "totalFilieres" => $stats['totalFilieres']
+                    "totalFilieres" => $stats['totalFilieres'],
+                    "totalClasses" => $stats['totalClasses'],
+                    "totalEvaluationRecues" => $stats['totalEvaluationRecues']
                 ],
                 "stats_financiere" => [
                     "totalAttendu" => $totalAttendu,
@@ -106,6 +116,7 @@ class DashboardController extends Controller
                 "repartitionNiveaux" => $repartitionNiveaux,
                 "derniers_paiements" => $derniers_paiements,
                 "dernieres_inscriptions" => $dernieres_inscriptions,
+                "dernieres_evaluations" => $dernieres_evaluations
             ]
         );
     }

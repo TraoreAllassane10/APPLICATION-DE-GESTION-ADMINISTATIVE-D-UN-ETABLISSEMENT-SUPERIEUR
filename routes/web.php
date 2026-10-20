@@ -248,6 +248,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get("/professeur/evaluations/{evaluation}/edit", "edit")->name("professeur.evaluations.edit");
             Route::put("/professeur/evaluations/{evaluation}/update", "update")->name("professeur.evaluations.update");
             Route::delete('/professeur/evaluations/{evaluation}/delete', "destroy")->name('professeur.evaluations.destroy');
+
+            Route::get('/professeur/evaluations/{evaluation}/send-to-pedagogique', "sendEvaluationToPedagogique")->name('professeur.evaluations.send_pedagogique');
         });
 
         // Routes Note

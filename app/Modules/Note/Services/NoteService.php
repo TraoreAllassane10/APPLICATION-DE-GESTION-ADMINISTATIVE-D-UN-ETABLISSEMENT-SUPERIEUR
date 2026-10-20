@@ -5,7 +5,6 @@ namespace App\Modules\Note\Services;
 use App\Modules\Evaluation\Events\EvaluationNoteUpdated;
 use App\Modules\Evaluation\Services\EvaluationService;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class NoteService
 {

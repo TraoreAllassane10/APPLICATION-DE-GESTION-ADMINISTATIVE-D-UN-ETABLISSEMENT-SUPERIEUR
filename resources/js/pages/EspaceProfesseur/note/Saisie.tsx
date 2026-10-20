@@ -1,6 +1,7 @@
-import { Save, Users } from 'lucide-react';
+import { Save, Send, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,19 +21,19 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import useEvaluationProfesseur from '@/features/evaluations/hooks/useEvaluationProfesseur';
 import { Evaluation } from '@/features/evaluations/types/evaluation.types';
-import useNote from '@/features/note/hooks/useNote';
+import useProfesseurNote from '@/features/note/hooks/useProfesseurNote';
 import { EtudiantNote } from '@/features/note/types/note.types';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
 import { formatDate } from '@/utils/date';
-import useProfesseurNote from '@/features/note/hooks/useProfesseurNote';
+import { Head, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tableau de bord', href: '/professeur/dashboard' },
     { title: 'Evaluations', href: '/professeur/evaluations' },
-    { title: "Saisie des notes", href: '#' },
+    { title: 'Saisie des notes', href: '#' },
 ];
 
 function getAppreciation(note: number | null, absent: boolean) {
@@ -172,7 +173,10 @@ export default function Saisie() {
     }, [etudiants]);
 
     const { updateNotes, loading } = useProfesseurNote();
+    const { sendEvaluationToPedagogique, loading: loadingEvaluation } =
+        useEvaluationProfesseur();
 
+    // Enrgistre les notes
     const handleSave = async () => {
         const payload = etudiants.map((etudiant) => ({
             inscription_id: etudiant.id,
@@ -181,6 +185,11 @@ export default function Saisie() {
         }));
 
         await updateNotes({ evaluation_id: evaluation.id, notes: payload });
+    };
+
+    // Transmettre les notes au service pédagogique
+    const handleSend = async () => {
+        await sendEvaluationToPedagogique(evaluation.id);
     };
 
     return (
@@ -201,7 +210,8 @@ export default function Saisie() {
                             </h1>
 
                             <p className="mt-1 text-sm text-muted-foreground">
-                                {evaluation.titre} — {evaluation.enseignement.cours.nom}
+                                {evaluation.titre} —{' '}
+                                {evaluation.enseignement.cours.nom}
                             </p>
 
                             <p className="text-sm text-muted-foreground">
@@ -210,14 +220,37 @@ export default function Saisie() {
                         </div>
                     </div>
 
-                    <Button
-                        onClick={handleSave}
-                        disabled={loading}
-                        className="w-full md:w-auto"
-                    >
-                        <Save className="mr-2 h-4 w-4" />
-                        {loading ? 'Enregistrement...' : 'Enregistrer'}
-                    </Button>
+                    <div className="flex items-center gap-4">
+                        <Button
+                            onClick={handleSave}
+                            disabled={loading}
+                            className="w-full transition hover:bg-red-700 md:w-auto"
+                        >
+                            <Save className="mr-2 h-4 w-4" />
+                            {loading ? 'Enregistrement...' : 'Enregistrer'}
+                        </Button>
+
+                        {evaluation.est_transmise ? (
+                            <Badge className="bg-green-500">
+                                Notes déjà transmisse au service pédagogique
+                            </Badge>
+                        ) : (
+                            <Button
+                                variant={'outline'}
+                                onClick={handleSend}
+                                disabled={
+                                    evaluation.notes.length <= 0 ||
+                                    loadingEvaluation
+                                }
+                                className="w-full md:w-auto"
+                            >
+                                <Send className="mr-2 h-4 w-4" />
+                                {loadingEvaluation
+                                    ? 'Transmission des notes en cours...'
+                                    : 'Transmettre au service pédagogiques'}
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Filtres */}
@@ -266,13 +299,14 @@ export default function Saisie() {
                 <Card>
                     <CardHeader className="border-b">
                         <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
-                            <div className='mb-4'>
+                            <div className="mb-4">
                                 <h2 className="font-semibold">
                                     Liste des étudiants
                                 </h2>
 
                                 <p className="text-sm text-muted-foreground">
-                                    Saisissez les notes sur {evaluation.note_maximale} et indiquez les
+                                    Saisissez les notes sur{' '}
+                                    {evaluation.note_maximale} et indiquez les
                                     absences.
                                 </p>
                             </div>
@@ -358,7 +392,14 @@ export default function Saisie() {
                                                             disabled={
                                                                 student.absent
                                                             }
-                                                            onChange={(event) => {handleChange(event, student)}}
+                                                            onChange={(
+                                                                event,
+                                                            ) => {
+                                                                handleChange(
+                                                                    event,
+                                                                    student,
+                                                                );
+                                                            }}
                                                             className="pr-8 text-center"
                                                             placeholder="—"
                                                         />
@@ -392,8 +433,6 @@ export default function Saisie() {
                                                         />
                                                     </div>
                                                 </TableCell>
-
-                                            
                                             </TableRow>
                                         );
                                     })}
@@ -419,7 +458,7 @@ export default function Saisie() {
                         disabled={loading}
                         className="w-full md:w-auto"
                     >
-                        <Save className="mr-2 h-4 w-4" />
+                        <Save className="mr-2 h-4 w-4 transition hover:bg-red-700" />
                         {loading
                             ? 'Enregistrement...'
                             : 'Enregistrer les notes'}

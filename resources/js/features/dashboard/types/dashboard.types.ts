@@ -6,11 +6,13 @@ export interface StatFinanciere {
 }
 
 export interface StatGlobales {
-    totalEtudiants: 247;
-    totalInscriptions: 231;
-    totalEnseignants: 34;
-    totalFilieres: 8;
+    totalEtudiants: number;
+    totalInscriptions: number;
+    totalEnseignants: number;
+    totalFilieres: number;
     anneeEnCours: string;
+    totalClasses: number;
+    totalEvaluationRecues: number;
 }
 
 export interface RepartitionNiveau {

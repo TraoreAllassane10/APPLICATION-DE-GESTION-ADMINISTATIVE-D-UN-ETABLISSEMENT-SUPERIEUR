@@ -18,11 +18,11 @@ import {
 } from '@/components/ui/table';
 import { EvaluationData } from '@/pages/evaluation/Index';
 import { Link } from '@inertiajs/react';
+import { cn } from 'cn';
 import {
     BookOpen,
     ChevronDown,
     GraduationCap,
-    Pen,
     PenBox,
     Pencil,
     Trash2,
@@ -79,6 +79,9 @@ const EvaluationTableSection = ({
                             <TableHead>Coefficient</TableHead>
                             <TableHead>Matière</TableHead>
                             <TableHead>Période</TableHead>
+                            {pathname.startsWith('/professeur') && (
+                                <TableHead>Etat</TableHead>
+                            )}
 
                             <TableHead className="w-[100px]" />
                         </TableRow>
@@ -144,6 +147,23 @@ const EvaluationTableSection = ({
                                             }
                                         </TableCell>
 
+                                        {pathname.startsWith('/professeur') && (
+                                            <TableCell>
+                                                <span
+                                                    className={cn(
+                                                        'flex items-center justify-center font-bold rounded-full p-1',
+                                                        evaluation.est_transmise
+                                                            ? 'bg-green-50 text-green-500'
+                                                            : 'bg-red-50 text-red-500',
+                                                    )}
+                                                >
+                                                    {evaluation.est_transmise
+                                                        ? 'Transmisse'
+                                                        : 'Non transmisse'}
+                                                </span>
+                                            </TableCell>
+                                        )}
+
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
@@ -160,7 +180,7 @@ const EvaluationTableSection = ({
                                                     align="end"
                                                     className="w-48"
                                                 >
-                                                      <DropdownMenuItem asChild>
+                                                    <DropdownMenuItem asChild>
                                                         <Link
                                                             href={
                                                                 lienSaisieNote
@@ -171,7 +191,7 @@ const EvaluationTableSection = ({
                                                             Saisir les notes
                                                         </Link>
                                                     </DropdownMenuItem>
-                                                    
+
                                                     <DropdownMenuItem asChild>
                                                         <Link
                                                             href={
