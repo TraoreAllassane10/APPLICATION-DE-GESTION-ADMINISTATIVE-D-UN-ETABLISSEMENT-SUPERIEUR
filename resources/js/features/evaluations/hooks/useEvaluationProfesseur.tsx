@@ -2,7 +2,10 @@ import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { EvaluationStoreData, EvaluationUpdateData } from '../types/evaluation.types';
+import {
+    EvaluationStoreData,
+    EvaluationUpdateData,
+} from '../types/evaluation.types';
 
 export default function useEvaluationProfesseur() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -18,10 +21,10 @@ export default function useEvaluationProfesseur() {
                     response.data.message ?? 'Evaluation crée avec succès !',
                 );
                 router.visit('/professeur/evaluations');
-            }
-            else {
+            } else {
                 toast.error(
-                    response.data.message ?? 'La création d\'evaluation a échouée !',
+                    response.data.message ??
+                        "La création d'evaluation a échouée !",
                 );
             }
         } catch (error) {
@@ -54,14 +57,16 @@ export default function useEvaluationProfesseur() {
         }
     };
 
-
     const updateEvaluation = async (id: number, data: EvaluationUpdateData) => {
         try {
             await axios
                 .put(`/professeur/evaluations/${id}/update`, data)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success(response.data.message ?? 'Evaluation modifiée avec succès !');
+                        toast.success(
+                            response.data.message ??
+                                'Evaluation modifiée avec succès !',
+                        );
                         router.visit('/professeur/evaluations');
                     }
                 })
@@ -77,20 +82,21 @@ export default function useEvaluationProfesseur() {
         }
     };
 
-   
     const deleteEvaluation = async (id: number) => {
         try {
             await axios
                 .delete(`/professeur/evaluations/${id}/delete`)
                 .then((response) => {
                     if (response.data.success) {
-                        toast.success(response.data.message ?? 'Evaluation supprimée !');
+                        toast.success(
+                            response.data.message ?? 'Evaluation supprimée !',
+                        );
                         router.reload();
                     }
                 })
                 .catch((error) => {
                     toast.error(
-                        'Erreur survenue lors de la suppression du Enseignant',
+                        "Erreur survenue lors de la suppression de l'évaluation",
                     );
                     console.log(error);
                 });
@@ -100,5 +106,43 @@ export default function useEvaluationProfesseur() {
         }
     };
 
-    return { createEvaluation, deleteEvaluation, updateEvaluation, filterEvaluation, loading };
+    const sendEvaluationToPedagogique = async (id: number) => {
+        setLoading(true);
+
+        try {
+            await axios
+                .get(`/professeur/evaluations/${id}/send-to-pedagogique`)
+                .then((response) => {
+                    if (response.data.success) {
+                        toast.success(
+                            response.data.message ??
+                                'Evaluation transmisse au service pédagogique avec succès !',
+                        );
+
+                        router.visit('/professeur/evaluations');
+                    }
+                })
+                .catch((error) => {
+                    toast.error(
+                        "Erreur survenue lors de l'envoie de l'évaluation au service pedagogique",
+                    );
+                    console.log(error);
+                });
+        } catch (error) {
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+
+    return {
+        createEvaluation,
+        deleteEvaluation,
+        updateEvaluation,
+        filterEvaluation,
+        sendEvaluationToPedagogique,
+        loading,
+    };
 }

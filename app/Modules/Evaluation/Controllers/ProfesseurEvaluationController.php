@@ -73,8 +73,7 @@ class ProfesseurEvaluationController extends Controller
             $enseignement = $this->enseignementService->getEnseignement($data['enseignement_id']);
 
             // On verifie si l'enseignement choisir appartient au professeur connecté.
-            if ($enseignement->professeur_id !== $user->professeur?->id)
-            {
+            if ($enseignement->professeur_id !== $user->professeur?->id) {
                 abort(403, "Vous n'etes pas authorisé créer des evaluations pour cet enseignement");
             }
 
@@ -109,8 +108,8 @@ class ProfesseurEvaluationController extends Controller
 
     public function update(UpdateEvaluationRequest $updateEvaluationRequest, Evaluation $evaluation)
     {
-         Gate::authorize('update', $evaluation);
-         
+        Gate::authorize('update', $evaluation);
+
         try {
             $data = $updateEvaluationRequest->validated();
 
@@ -147,6 +146,23 @@ class ProfesseurEvaluationController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => "La suppression d'evaluation a echouée !"
+            ]);
+        }
+    }
+
+    public function sendEvaluationToPedagogique(string $evaluation)
+    {
+        try {
+            $this->professeurEvaluationService->sendEvaluationToPedagogique($evaluation);
+
+            return response()->json([
+                "success" => true,
+                "message" => "L'évaluation et ses notes ont été transmisse au service pédagogique avec success"
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Erreur survenue lors de l'envoi de l'evaluation au service pedagogique"
             ]);
         }
     }

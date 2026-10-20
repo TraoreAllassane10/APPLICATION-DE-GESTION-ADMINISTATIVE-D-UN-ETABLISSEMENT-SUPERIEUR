@@ -4,7 +4,6 @@ namespace App\Modules\Evaluation\Repositories;
 
 use App\Models\Evaluation;
 use App\Modules\AnneeAcademique\Repositories\AnneeAcademiqueRepository;
-use Override;
 
 class ProfesseurEvaluationRepository extends EvaluationRepository
 {
@@ -12,10 +11,10 @@ class ProfesseurEvaluationRepository extends EvaluationRepository
     {
         return parent::__construct($anneeAcademiqueRepository);
     }
-    
+
     public function allEvaluation(string $professeurId, mixed $filtreEnseignement, mixed $filtrePeriode)
     {
-        
+
         $anneActive = $this->anneeAcademiqueRepository->anneeActive();
 
         if (!$anneActive) {
@@ -36,5 +35,23 @@ class ProfesseurEvaluationRepository extends EvaluationRepository
             });
 
         return $query->latest()->paginate(20)->withQueryString();
+    }
+
+    public function lastEvaluation(string $professeurId)
+    {
+        $anneActive = $this->anneeAcademiqueRepository->anneeActive();
+
+        if (!$anneActive) {
+            return collect([]);
+        }
+
+        $evaluations = Evaluation::latest()->whereHas('enseignement', function ($q) use ($anneActive, $professeurId) {
+            $q->where('professeur_id', $professeurId)
+                ->where('annee_universitaire_id', $anneActive->id);
+        })
+            ->with('enseignement')
+            ->limit(5)->get();
+
+        return $evaluations;
     }
 }

@@ -29,6 +29,7 @@ export interface Evaluation {
     date: string;
     coefficient: number;
     note_maximale: number;
+    est_transmise: boolean;
 
     enseignement: Enseignement;
     periode_academique: Periode;

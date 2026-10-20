@@ -214,7 +214,7 @@ export default function Saisie() {
                         disabled={loading}
                         className="w-full md:w-auto"
                     >
-                        <Save className="mr-2 h-4 w-4" />
+                        <Save className="mr-2 h-4 w-4 hover:bg-red-700 transition" />
                         {loading ? 'Enregistrement...' : 'Enregistrer'}
                     </Button>
                 </div>
@@ -416,7 +416,7 @@ export default function Saisie() {
                     <Button
                         onClick={handleSave}
                         disabled={loading}
-                        className="w-full md:w-auto"
+                        className="w-full md:w-auto hover:bg-red-700 transition" 
                     >
                         <Save className="mr-2 h-4 w-4" />
                         {loading

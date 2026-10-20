@@ -18,7 +18,7 @@ class EvaluationRepository
 
     public function paginate(mixed $filtreEnseignement, mixed $filtrePeriode)
     {
-        $query = Evaluation::query();
+        $query = Evaluation::query()->where('est_transmise', 1);
 
         $query->when($filtreEnseignement, function ($q) use ($filtreEnseignement) {
             if ($filtreEnseignement !== "all") {

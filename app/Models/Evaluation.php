@@ -14,7 +14,8 @@ class Evaluation extends Model
     protected $with = ["enseignement", "periode_academique"];
 
     protected $casts = [
-        'date' => 'date:Y-m-d'
+        'date' => 'date:Y-m-d',
+        'est_transmise' => "boolean"
     ];
 
     public function enseignement()
