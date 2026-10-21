@@ -194,7 +194,7 @@ export default function Dashboard() {
                 {isInspecteurPedagogique && (
                     <>
                         {/* ── Key Metrics Grid ────────────────────────────────────────── */}
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             <StatCard
                                 label="Classes"
                                 value={stats_globales.totalClasses}
@@ -216,13 +216,13 @@ export default function Dashboard() {
                                 color="text-green-600"
                                 bg="bg-green-50 dark:bg-green-950/40"
                             />
-                            <StatCard
+                            {/* <StatCard
                                 label="Evaluations reçues"
                                 value={stats_globales.totalEvaluationRecues}
                                 icon={ClipboardList}
                                 color="text-pink-600"
                                 bg="bg-pink-100 dark:bg-pink-800/50"
-                            />
+                            /> */}
                         </div>
 
                         <DashbaordPedagogie

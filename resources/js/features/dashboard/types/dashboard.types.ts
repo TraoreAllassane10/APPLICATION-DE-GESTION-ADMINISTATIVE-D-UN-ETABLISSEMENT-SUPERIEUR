@@ -12,7 +12,6 @@ export interface StatGlobales {
     totalFilieres: number;
     anneeEnCours: string;
     totalClasses: number;
-    totalEvaluationRecues: number;
 }
 
 export interface RepartitionNiveau {
