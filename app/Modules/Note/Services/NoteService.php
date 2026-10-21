@@ -4,12 +4,16 @@ namespace App\Modules\Note\Services;
 
 use App\Modules\Evaluation\Events\EvaluationNoteUpdated;
 use App\Modules\Evaluation\Services\EvaluationService;
+use App\Modules\Utilisateur\Services\UserService;
+use App\Notifications\NoteEditedNotification;
 use Exception;
+use Illuminate\Support\Facades\Notification;
 
 class NoteService
 {
     public function __construct(
-        protected EvaluationService $evaluationService
+        protected EvaluationService $evaluationService,
+        protected UserService $userService
     ) {}
 
     public function createOrUpdateNote(array $data)
@@ -34,6 +38,10 @@ class NoteService
         }
 
         EvaluationNoteUpdated::dispatch($evaluation);
+
+        // Envoie une notification aux inspecteurs pédagogiques
+        $inspecteurs = $this->userService->getInspecteursPedagogique();
+        Notification::send($inspecteurs, new NoteEditedNotification($evaluation));
 
         return $evaluation;
     }

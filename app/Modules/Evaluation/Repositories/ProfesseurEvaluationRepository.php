@@ -55,20 +55,4 @@ class ProfesseurEvaluationRepository extends EvaluationRepository
 
         return $evaluations;
     }
-
-    public function evaluationNonTransmisse(string $professeurId)
-    {
-        $anneActive = $this->anneeAcademiqueRepository->anneeActive();
-
-        if (!$anneActive) {
-            return collect([]);
-        }
-
-        return Evaluation::whereHas('enseignement', function ($q) use ($anneActive, $professeurId) {
-            $q->where("professeur_id", $professeurId)->where('annee_universitaire_id', $anneActive->id);
-        })
-            ->where("est_transmise", 0)
-            ->limit(3)
-            ->get(["id", "titre"]);
-    }
 }

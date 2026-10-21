@@ -57,9 +57,7 @@ interface DashboardProfesseurProps {
     total_matiere: number;
     total_classe: number;
     total_evaluation: number;
-    total_evaluation_non_transmise: number;
     dernieres_evaluations: Evaluation[];
-    evaluations_non_transmisse: {id: number; titre: string}[]
     [key: string]: unknown;
 }
 
@@ -68,9 +66,7 @@ export default function DashboardProfesseur() {
         total_matiere,
         total_classe,
         total_evaluation,
-        total_evaluation_non_transmise,
         dernieres_evaluations,
-        evaluations_non_transmisse
     } = usePage<DashboardProfesseurProps>().props;
 
     useEffect(() => {
@@ -97,7 +93,7 @@ export default function DashboardProfesseur() {
                 </section>
 
                 {/* Statitiques */}
-                <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <StatCard
                         label="Matière"
                         value={total_matiere}
@@ -122,18 +118,18 @@ export default function DashboardProfesseur() {
                         bg="bg-yellow-50 dark:bg-yellow-950/40"
                     />
 
-                    <StatCard
+                    {/* <StatCard
                         label="Evaluation non transmise"
                         value={total_evaluation_non_transmise}
                         icon={ClipboardList}
                         color="text-red-600"
                         bg="bg-red-50 dark:bg-red-950/40"
-                    />
+                    /> */}
                 </section>
 
                 {/* Dernieres evaluations*/}
-                <section className="grid grid-cols-1 gap-4 md:grid-cols-12">
-                    <Card className="col-span-12 md:col-span-8">
+                <section>
+                    <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center justify-between">
                                 <span>Dernières évaluations</span>
@@ -226,76 +222,6 @@ export default function DashboardProfesseur() {
                                                                     .periode_academique
                                                                     .libelle
                                                             }
-                                                        </TableCell>
-                                                    </TableRow>
-                                                );
-                                            },
-                                        )
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="col-span-12 md:col-span-4">
-                        <CardHeader>
-                            <CardTitle className="flex items-center justify-between">
-                                <span>Evaluation non transmise</span>
-
-                                <Link href="/professeur/evaluations">
-                                    <Button variant={'ghost'}>
-                                        Voir plus <ArrowRight />
-                                    </Button>
-                                </Link>
-                            </CardTitle>
-
-                            <CardDescription>
-                                La liste des evaluations que vous n'avez pas
-                                encore transmisse au service pédagogique
-                            </CardDescription>
-                        </CardHeader>
-
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted/40">
-                                        <TableHead>Titre</TableHead>
-                                        <TableHead>Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                    {evaluations_non_transmisse.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell
-                                                colSpan={7}
-                                                className="h-48 text-center"
-                                            >
-                                                <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                                                    <GraduationCap className="h-10 w-10 opacity-20" />
-                                                    <p className="text-sm">
-                                                        Aucune evaluation non
-                                                        transmisse.
-                                                    </p>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : (
-                                        evaluations_non_transmisse.map(
-                                            (evaluation) => {
-                                                return (
-                                                    <TableRow
-                                                        key={evaluation.id}
-                                                        className="group"
-                                                    >
-                                                        <TableCell className="space-x-1">
-                                                            {evaluation.titre}
-                                                        </TableCell>
-
-                                                        <TableCell className="space-x-1">
-                                                            <Link href={`/professeur/notes/${evaluation.id}/create-note`}>
-                                                                <Button size={'sm'} variant={"outline"}>Transmettre</Button>
-                                                            </Link>
                                                         </TableCell>
                                                     </TableRow>
                                                 );
