@@ -106,44 +106,11 @@ export default function useEvaluationProfesseur() {
         }
     };
 
-    const sendEvaluationToPedagogique = async (id: number) => {
-        setLoading(true);
-
-        try {
-            await axios
-                .get(`/professeur/evaluations/${id}/send-to-pedagogique`)
-                .then((response) => {
-                    if (response.data.success) {
-                        toast.success(
-                            response.data.message ??
-                                'Evaluation transmisse au service pédagogique avec succès !',
-                        );
-
-                        router.reload()
-                        router.visit('/professeur/evaluations');
-                    }
-                })
-                .catch((error) => {
-                    toast.error(
-                        "Erreur survenue lors de l'envoie de l'évaluation au service pedagogique",
-                    );
-                    console.log(error);
-                });
-        } catch (error) {
-            toast.error('Erreur survenue au niveau du serveur');
-            console.log(error);
-        }
-        finally {
-            setLoading(false);
-        }
-    };
-
     return {
         createEvaluation,
         deleteEvaluation,
         updateEvaluation,
         filterEvaluation,
-        sendEvaluationToPedagogique,
         loading,
     };
 }

@@ -31,7 +31,7 @@ import { formatDate } from '@/utils/date';
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tableau de bord', href: '/dashboard' },
     { title: 'Evaluations', href: '/evaluations' },
-    { title: "Saisie des notes", href: '#' },
+    { title: "Consulter les notes", href: '#' },
 ];
 
 function getAppreciation(note: number | null, absent: boolean) {
@@ -172,15 +172,15 @@ export default function Saisie() {
 
     const { updateNotes, loading } = useNote();
 
-    const handleSave = async () => {
-        const payload = etudiants.map((etudiant) => ({
-            inscription_id: etudiant.id,
-            valeur: etudiant.absent ? null : etudiant.note,
-            est_absent: etudiant.absent,
-        }));
+    // const handleSave = async () => {
+    //     const payload = etudiants.map((etudiant) => ({
+    //         inscription_id: etudiant.id,
+    //         valeur: etudiant.absent ? null : etudiant.note,
+    //         est_absent: etudiant.absent,
+    //     }));
 
-        await updateNotes({ evaluation_id: evaluation.id, notes: payload });
-    };
+    //     await updateNotes({ evaluation_id: evaluation.id, notes: payload });
+    // };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -196,7 +196,7 @@ export default function Saisie() {
 
                         <div>
                             <h1 className="text-2xl font-semibold tracking-tight">
-                                Saisie des notes
+                                Consulter les notes
                             </h1>
 
                             <p className="mt-1 text-sm text-muted-foreground">
@@ -209,14 +209,14 @@ export default function Saisie() {
                         </div>
                     </div>
 
-                    <Button
+                    {/* <Button
                         onClick={handleSave}
                         disabled={loading}
                         className="w-full md:w-auto"
                     >
                         <Save className="mr-2 h-4 w-4 hover:bg-red-700 transition" />
                         {loading ? 'Enregistrement...' : 'Enregistrer'}
-                    </Button>
+                    </Button> */}
                 </div>
 
                 {/* Filtres */}
@@ -321,11 +321,6 @@ export default function Saisie() {
 
                                 <TableBody>
                                     {etudiants.map((student, index) => {
-                                        const appreciation = getAppreciation(
-                                            student.note,
-                                            student.absent,
-                                        );
-
                                         return (
                                             <TableRow key={student.id}>
                                                 {/* Numéro */}
@@ -355,7 +350,7 @@ export default function Saisie() {
                                                                 ''
                                                             }
                                                             disabled={
-                                                                student.absent
+                                                               true
                                                             }
                                                             onChange={(event) => {handleChange(event, student)}}
                                                             className="pr-8 text-center"
@@ -375,6 +370,7 @@ export default function Saisie() {
                                                 <TableCell>
                                                     <div className="flex justify-center">
                                                         <Checkbox
+                                                        disabled={true}
                                                             checked={
                                                                 student.absent
                                                             }
@@ -413,7 +409,7 @@ export default function Saisie() {
                         </span>
                     </div>
 
-                    <Button
+                    {/* <Button
                         onClick={handleSave}
                         disabled={loading}
                         className="w-full md:w-auto hover:bg-red-700 transition" 
@@ -422,7 +418,7 @@ export default function Saisie() {
                         {loading
                             ? 'Enregistrement...'
                             : 'Enregistrer les notes'}
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
         </AppLayout>

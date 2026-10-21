@@ -5,11 +5,7 @@ namespace App\Modules\Evaluation\Services;
 use App\Modules\Evaluation\Repositories\ProfesseurEvaluationRepository;
 use App\Modules\Professeur\Repositories\ProfesseurRepository;
 use App\Modules\Utilisateur\Services\UserService;
-use App\Notifications\EvaluationTransmisseNotification;
-use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Notification;
 
 class ProfesseurEvaluationService extends EvaluationService
 {
@@ -39,34 +35,4 @@ class ProfesseurEvaluationService extends EvaluationService
         return $this->professeurEvaluationRepository->lastEvaluation($professeur->id);
     }
 
-    public function getEvaluationNonTransmisse() {
-        $user = Auth::user();
-
-        $professeur = $this->professeurRepository->findByUserId($user->id);
-
-        return $this->professeurEvaluationRepository->evaluationNonTransmisse($professeur->id);
-    }
-
-    // Envoie l'évaluation au service pédagogique
-    public function sendEvaluationToPedagogique(string $evaluationId)
-    {
-
-        $evaluation = $this->professeurEvaluationRepository->find($evaluationId);
-
-        if ($evaluation->notes()->count() <= 0) {
-            throw new Exception('Aucune notes saisie pour cette evaluation');
-        }
-
-        $evaluation->est_transmise = 1;
-        $evaluation->save();
-
-        // Vider le cache de statistique
-        Cache::forget('dashboard:stats');
-
-        // Recupérer tous les inspecteurs pédagogique
-        $inspecteurs = $this->userService->getInspecteursPedagogique();
-
-        // Envoyer la notification pour l'évaluation transmisse
-        Notification::send($inspecteurs, new EvaluationTransmisseNotification($evaluation));
-    }
 }

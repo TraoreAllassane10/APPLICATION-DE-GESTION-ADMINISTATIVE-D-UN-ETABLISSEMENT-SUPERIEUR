@@ -11,11 +11,14 @@ use App\Modules\Evaluation\Requests\UpdateEvaluationRequest;
 use App\Modules\Evaluation\Services\ProfesseurEvaluationService;
 use App\Modules\PeriodeAcademique\Services\PeriodeAcademiqueService;
 use App\Modules\Professeur\Services\ProfesseurService;
+use App\Modules\Utilisateur\Services\UserService;
+use App\Notifications\EvaluationCreatedNotification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class ProfesseurEvaluationController extends Controller
@@ -24,7 +27,8 @@ class ProfesseurEvaluationController extends Controller
         public ProfesseurEvaluationService $professeurEvaluationService,
         public EnseignementService $enseignementService,
         public PeriodeAcademiqueService $periodeAcademiqueService,
-        public ProfesseurService $professeurService
+        public ProfesseurService $professeurService,
+        protected UserService $userService
     ) {}
 
     public function index(Request $request)
@@ -78,7 +82,11 @@ class ProfesseurEvaluationController extends Controller
             }
 
             // Cree l'evaluation
-            $this->professeurEvaluationService->createEvaluation($data);
+            $evaluation = $this->professeurEvaluationService->createEvaluation($data);
+
+            // Envoie une notification aux inspecteurs pédagogiques
+            $inspecteurs = $this->userService->getInspecteursPedagogique();
+            Notification::send($inspecteurs, new EvaluationCreatedNotification($evaluation));
 
             return response()->json([
                 "success" => true,
@@ -150,20 +158,4 @@ class ProfesseurEvaluationController extends Controller
         }
     }
 
-    public function sendEvaluationToPedagogique(string $evaluation)
-    {
-        try {
-            $this->professeurEvaluationService->sendEvaluationToPedagogique($evaluation);
-
-            return response()->json([
-                "success" => true,
-                "message" => "L'évaluation et ses notes ont été transmisse au service pédagogique avec success"
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                "success" => false,
-                "message" => "Erreur survenue lors de l'envoi de l'evaluation au service pedagogique"
-            ]);
-        }
-    }
 }

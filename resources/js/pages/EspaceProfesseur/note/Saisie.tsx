@@ -1,7 +1,6 @@
-import { Save, Send, Users } from 'lucide-react';
+import { Save, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -173,10 +172,8 @@ export default function Saisie() {
     }, [etudiants]);
 
     const { updateNotes, loading } = useProfesseurNote();
-    const { sendEvaluationToPedagogique, loading: loadingEvaluation } =
-        useEvaluationProfesseur();
 
-    // Enrgistre les notes
+    // Enregistre les notes
     const handleSave = async () => {
         const payload = etudiants.map((etudiant) => ({
             inscription_id: etudiant.id,
@@ -185,11 +182,6 @@ export default function Saisie() {
         }));
 
         await updateNotes({ evaluation_id: evaluation.id, notes: payload });
-    };
-
-    // Transmettre les notes au service pédagogique
-    const handleSend = async () => {
-        await sendEvaluationToPedagogique(evaluation.id);
     };
 
     return (
@@ -220,37 +212,14 @@ export default function Saisie() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <Button
-                            onClick={handleSave}
-                            disabled={loading}
-                            className="w-full transition hover:bg-red-700 md:w-auto"
-                        >
-                            <Save className="mr-2 h-4 w-4" />
-                            {loading ? 'Enregistrement...' : 'Enregistrer'}
-                        </Button>
-
-                        {evaluation.est_transmise ? (
-                            <Badge className="bg-green-500">
-                                Notes déjà transmisse au service pédagogique
-                            </Badge>
-                        ) : (
-                            <Button
-                                variant={'outline'}
-                                onClick={handleSend}
-                                disabled={
-                                    evaluation.notes.length <= 0 ||
-                                    loadingEvaluation
-                                }
-                                className="w-full md:w-auto"
-                            >
-                                <Send className="mr-2 h-4 w-4" />
-                                {loadingEvaluation
-                                    ? 'Transmission des notes en cours...'
-                                    : 'Transmettre au service pédagogiques'}
-                            </Button>
-                        )}
-                    </div>
+                    <Button
+                        onClick={handleSave}
+                        disabled={loading}
+                        className="w-full transition hover:bg-red-700 md:w-auto"
+                    >
+                        <Save className="mr-2 h-4 w-4" />
+                        {loading ? 'Enregistrement...' : 'Enregistrer'}
+                    </Button>
                 </div>
 
                 {/* Filtres */}
