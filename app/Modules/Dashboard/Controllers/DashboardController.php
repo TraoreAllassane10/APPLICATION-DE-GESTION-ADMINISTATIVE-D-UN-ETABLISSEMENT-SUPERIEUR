@@ -4,7 +4,6 @@ namespace App\Modules\Dashboard\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Etudiant;
-use App\Models\Evaluation;
 use App\Models\Filiere;
 use App\Models\Inscription;
 use App\Models\Niveau;
@@ -40,7 +39,6 @@ class DashboardController extends Controller
                     "totalEnseignants" => Professeur::count(),
                     "totalFilieres" => Filiere::count(),
                     "totalClasses" => Niveau::count(),
-                    "totalEvaluationRecues" => Evaluation::where('est_transmise', 1)->count()
                 ];
             }
         );
@@ -105,7 +103,6 @@ class DashboardController extends Controller
                     "totalEnseignants" => $stats['totalEnseignants'],
                     "totalFilieres" => $stats['totalFilieres'],
                     "totalClasses" => $stats['totalClasses'],
-                    "totalEvaluationRecues" => $stats['totalEvaluationRecues']
                 ],
                 "stats_financiere" => [
                     "totalAttendu" => $totalAttendu,
