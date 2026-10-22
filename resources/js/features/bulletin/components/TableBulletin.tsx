@@ -2,6 +2,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
     Table,
     TableBody,
     TableCell,
@@ -9,69 +17,116 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { formatRang } from '@/utils/util';
-import { Download, Eye, FileText, LockOpen, Trophy } from 'lucide-react';
+import {
+    AlertTriangle,
+    CheckCircle,
+    CheckCircle2,
+    Clock,
+    Download,
+    Eye,
+    FileText,
+    GraduationCap,
+    MoreHorizontal,
+    RefreshCw,
+    Send,
+    ShieldAlert,
+    ShieldCheck,
+    Trophy,
+} from 'lucide-react';
+import { useState } from 'react';
 import { getMentionConfig, getMoyenneColor } from '../helpers';
 import { Bulletin } from '../types/bulletin.types';
 
-const getRangIcon = (rang: number) => {
-    if (rang === 1) return <Trophy className="size-4 text-yellow-500" />;
+const getRangIcon = (rang: number | string | null) => {
+    if (typeof rang !== 'number') return null;
+    if (rang === 1) return <Trophy className="size-4 text-amber-500" />;
     if (rang === 2) return <Trophy className="size-4 text-slate-400" />;
-    if (rang === 3) return <Trophy className="size-4 text-amber-600" />;
+    if (rang === 3) return <Trophy className="size-4 text-amber-700" />;
     return null;
+};
+
+const getStatutBadge = (statut: string) => {
+    switch (statut) {
+        case 'PUBLIE':
+            return (
+                <Badge className="border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 gap-1 font-normal">
+                    <ShieldCheck className="size-3 text-emerald-600" />
+                    Publié
+                </Badge>
+            );
+        case 'VALIDE':
+            return (
+                <Badge className="border-blue-200 bg-blue-100 text-blue-800 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-400 gap-1 font-normal">
+                    <CheckCircle className="size-3 text-blue-600" />
+                    Validé
+                </Badge>
+            );
+        default:
+            return (
+                <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400 gap-1 font-normal">
+                    <Clock className="size-3 text-amber-600" />
+                    Brouillon
+                </Badge>
+            );
+    }
 };
 
 interface TableBulletinProps {
     bulletins: Bulletin[];
-    onTelechargerTous: () => void;
     onOpenDetail: (bulletin: Bulletin) => void;
-    onTelechargerPDF: (etudiant: Bulletin, e: React.MouseEvent) => void;
+    onRegenererIndividuel: (bulletin: Bulletin) => void;
+    onValider: (bulletin: Bulletin) => void;
+    onPublier: (bulletin: Bulletin) => void;
+    actionLoadingId: number | null;
 }
 
-const TableBulletin = ({
+export default function TableBulletin({
     bulletins,
-    onTelechargerTous,
     onOpenDetail,
-    onTelechargerPDF,
-}: TableBulletinProps) => {
+    onRegenererIndividuel,
+    onValider,
+    onPublier,
+    actionLoadingId,
+}: TableBulletinProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 15;
+
+    const totalPages = Math.ceil(bulletins.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedBulletins = bulletins.slice(
+        startIndex,
+        startIndex + itemsPerPage,
+    );
+
     return (
-        <Card>
-            <CardHeader className="pb-0">
-                {/* Barre statut + actions */}
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                        <LockOpen className="size-4 text-amber-500" />
-                        <span className="text-sm font-medium">Statut :</span>
-                        <Badge className="border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
-                            Brouillon (Non verrouillé)
-                        </Badge>
-                    </div>
-
-                    <Button
-                        id="btn-telecharger-tous"
-                        variant="outline"
-                        onClick={onTelechargerTous}
-                        className="gap-2"
-                    >
-                        <Download className="size-4" />
-                        Télécharger Tous (ZIP/PDF)
-                    </Button>
+        <Card className="border-border/60 shadow-xs">
+            <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-6 border-b">
+                <div className="flex items-center gap-2">
+                    <GraduationCap className="size-4 text-primary" />
+                    <span className="text-sm font-semibold">
+                        Liste des étudiants ({bulletins.length})
+                    </span>
                 </div>
-
-                {/* Sous-titre contextuel */}
-                <p className="mt-2 text-xs text-muted-foreground">
-                    Semestre 1 —1ère Année Finance
-                </p>
+                <div className="text-xs text-muted-foreground">
+                    Page {currentPage} sur {totalPages || 1}
+                </div>
             </CardHeader>
 
-            <CardContent className="pt-4">
+            <CardContent className="p-0">
                 <Table>
                     <TableHeader>
-                        <TableRow className="bg-muted/50">
-                            <TableHead className="w-16 text-center font-semibold">
+                        <TableRow className="bg-muted/40 hover:bg-muted/40 text-xs">
+                            <TableHead className="w-20 text-center font-semibold">
                                 Rang
                             </TableHead>
-                            <TableHead className="font-semibold">
+                            <TableHead className="w-28 font-semibold">
                                 Matricule
                             </TableHead>
                             <TableHead className="font-semibold">
@@ -84,49 +139,65 @@ const TableBulletin = ({
                                 Mention
                             </TableHead>
                             <TableHead className="text-center font-semibold">
+                                Décision
+                            </TableHead>
+                            <TableHead className="text-center font-semibold">
+                                Complétude
+                            </TableHead>
+                            <TableHead className="text-center font-semibold">
+                                Statut
+                            </TableHead>
+                            <TableHead className="text-right font-semibold pr-6">
                                 Actions
                             </TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {bulletins.map((bulletin) => {
+                        {paginatedBulletins.map((bulletin) => {
                             const mentionConfig = getMentionConfig(
-                                bulletin.mention ?? 'Passable',
+                                bulletin.mention ?? 'Non évalué',
                             );
+                            const isActionLoading =
+                                actionLoadingId === bulletin.id;
+
                             return (
                                 <TableRow
-                                    key={bulletin.id}
-                                    className="group cursor-pointer transition-colors hover:bg-muted/60"
+                                    key={bulletin.inscription_id}
+                                    className="group cursor-pointer transition-colors hover:bg-muted/50"
                                     onClick={() => onOpenDetail(bulletin)}
                                 >
-                                    {/* Rang */}
+                                    {/* Rang & Effectif */}
                                     <TableCell className="text-center">
                                         <div className="flex items-center justify-center gap-1">
-                                            {getRangIcon(bulletin.rang!)}
+                                            {typeof bulletin.rang === 'number' &&
+                                                getRangIcon(bulletin.rang)}
                                             <span
-                                                className={`text-sm font-bold ${
-                                                    bulletin.rang &&
+                                                className={`text-xs font-bold ${
+                                                    typeof bulletin.rang ===
+                                                        'number' &&
                                                     bulletin.rang <= 3
                                                         ? 'text-amber-600 dark:text-amber-400'
                                                         : 'text-muted-foreground'
                                                 }`}
                                             >
-                                                {formatRang(bulletin.rang!)}
+                                                {typeof bulletin.rang === 'number'
+                                                    ? `${formatRang(bulletin.rang)} / ${bulletin.effectif_classe ?? '?'}`
+                                                    : 'N/A'}
                                             </span>
                                         </div>
                                     </TableCell>
 
-                                    {/* Matricule */}
+                                    {/* Matricule (IP) */}
                                     <TableCell>
-                                        <span className="font-mono text-sm text-muted-foreground">
+                                        <span className="font-mono text-xs text-muted-foreground">
                                             {bulletin.etudiant_ip}
                                         </span>
                                     </TableCell>
 
                                     {/* Nom & Prénoms */}
                                     <TableCell>
-                                        <div className="font-medium">
-                                            <span className="uppercase">
+                                        <div className="font-medium text-xs">
+                                            <span className="uppercase text-foreground">
                                                 {bulletin.nom}
                                             </span>{' '}
                                             <span className="text-muted-foreground">
@@ -135,64 +206,213 @@ const TableBulletin = ({
                                         </div>
                                     </TableCell>
 
-                                    {/* Moyenne */}
+                                    {/* Moyenne Générale */}
                                     <TableCell className="text-center">
                                         <span
-                                            className={getMoyenneColor(
-                                                bulletin.moyenne_generale!,
-                                            )}
+                                            className={`text-xs ${
+                                                bulletin.moyenne_generale !== null
+                                                    ? getMoyenneColor(
+                                                          bulletin.moyenne_generale,
+                                                      )
+                                                    : 'text-muted-foreground'
+                                            }`}
                                         >
-                                            {bulletin.moyenne_generale ?? 'NC'}
+                                            {bulletin.moyenne_generale !== null
+                                                ? `${bulletin.moyenne_generale} / 20`
+                                                : 'Non calculée'}
                                         </span>
-                                        {bulletin.moyenne_generale && (
-                                            <span className="text-xs text-muted-foreground">
-                                                {' '}
-                                                / 20
-                                            </span>
-                                        )}
                                     </TableCell>
 
                                     {/* Mention */}
                                     <TableCell className="text-center">
                                         <Badge
-                                            className={mentionConfig?.className}
+                                            className={`${
+                                                mentionConfig?.className ??
+                                                'bg-muted text-muted-foreground'
+                                            } py-0.5 text-[11px] font-normal`}
                                         >
-                                            {mentionConfig?.label}
+                                            {bulletin.mention ?? 'Non évalué'}
                                         </Badge>
+                                    </TableCell>
+
+                                    {/* Décision Jury */}
+                                    <TableCell className="text-center text-xs">
+                                        <span
+                                            className={`font-semibold ${
+                                                bulletin.decision_jury === 'Admis'
+                                                    ? 'text-emerald-600 dark:text-emerald-400'
+                                                    : bulletin.decision_jury ===
+                                                      'Ajourné'
+                                                    ? 'text-rose-600 dark:text-rose-400'
+                                                    : 'text-amber-600 dark:text-amber-400'
+                                            }`}
+                                        >
+                                            {bulletin.decision_jury ?? 'En attente'}
+                                        </span>
+                                    </TableCell>
+
+                                    {/* Indicateur de Complétude */}
+                                    <TableCell className="text-center">
+                                        {bulletin.is_complet ? (
+                                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+                                                <CheckCircle2 className="size-3" />
+                                                Complet
+                                            </span>
+                                        ) : (
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <span className="inline-flex items-center gap-1 cursor-help rounded-md bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:text-amber-400">
+                                                            <AlertTriangle className="size-3 text-amber-600" />
+                                                            {bulletin.matieres_manquantes
+                                                                ?.length ?? 1}{' '}
+                                                            manquante(s)
+                                                        </span>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent
+                                                        side="top"
+                                                        className="max-w-xs text-xs"
+                                                    >
+                                                        <p className="font-semibold text-rose-500">
+                                                            Matières non évaluées :
+                                                        </p>
+                                                        <ul className="mt-1 list-disc pl-4 space-y-0.5">
+                                                            {bulletin.matieres_manquantes?.map(
+                                                                (m) => (
+                                                                    <li
+                                                                        key={
+                                                                            m.enseignement_id
+                                                                        }
+                                                                    >
+                                                                        {m.cours_nom}
+                                                                    </li>
+                                                                ),
+                                                            )}
+                                                        </ul>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        )}
+                                    </TableCell>
+
+                                    {/* Statut officiel */}
+                                    <TableCell className="text-center">
+                                        {getStatutBadge(bulletin.statut)}
                                     </TableCell>
 
                                     {/* Actions */}
                                     <TableCell
+                                        className="text-right pr-6"
                                         onClick={(e) => e.stopPropagation()}
                                     >
-                                        <div className="flex items-center justify-center gap-2">
+                                        <div className="flex items-center justify-end gap-1.5">
+                                            {/* Bouton Aperçu */}
                                             <Button
-                                                id={`btn-apercu-${bulletin.id}`}
-                                                variant="outline"
+                                                variant="ghost"
                                                 size="sm"
                                                 onClick={() =>
                                                     onOpenDetail(bulletin)
                                                 }
-                                                className="h-7 gap-1.5 text-xs"
+                                                className="h-7 px-2 text-xs gap-1"
+                                                title="Consulter le relevé détaillé"
                                             >
-                                                <Eye className="size-3" />
+                                                <Eye className="size-3.5" />
                                                 Aperçu
                                             </Button>
 
-                                            <a
-                                                href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`}
-                                                target="_blank"
-                                            >
-                                                <Button
-                                                    id={`btn-pdf-${bulletin.id}`}
-                                                    variant="default"
-                                                    size="sm"
-                                                    className="h-7 gap-1.5 text-xs"
+                                            {/* Bouton PDF si généré */}
+                                            {bulletin.id && (
+                                                <a
+                                                    href={`/bulletins/${bulletin.id}/telecharger-bulletin-pdf`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
                                                 >
-                                                    <FileText className="size-3" />
-                                                    PDF
-                                                </Button>
-                                            </a>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className="h-7 px-2 text-xs gap-1"
+                                                        title="Télécharger le PDF"
+                                                    >
+                                                        <FileText className="size-3.5" />
+                                                        PDF
+                                                    </Button>
+                                                </a>
+                                            )}
+
+                                            {/* Menu contextuel pour les opérations d'état */}
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-7 w-7"
+                                                    >
+                                                        <MoreHorizontal className="size-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent
+                                                    align="end"
+                                                    className="w-48 text-xs"
+                                                >
+                                                    <DropdownMenuLabel>
+                                                        Actions académiques
+                                                    </DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+
+                                                    {/* Régénérer individuel */}
+                                                    <DropdownMenuItem
+                                                        disabled={
+                                                            bulletin.statut ===
+                                                            'PUBLIE'
+                                                        }
+                                                        onClick={() =>
+                                                            onRegenererIndividuel(
+                                                                bulletin,
+                                                            )
+                                                        }
+                                                        className="gap-2"
+                                                    >
+                                                        <RefreshCw className="size-3.5 text-primary" />
+                                                        Régénérer notes
+                                                    </DropdownMenuItem>
+
+                                                    {/* Valider si brouillon et complet */}
+                                                    {bulletin.statut ===
+                                                        'BROUILLON' && (
+                                                        <DropdownMenuItem
+                                                            disabled={
+                                                                !bulletin.is_complet ||
+                                                                isActionLoading
+                                                            }
+                                                            onClick={() =>
+                                                                onValider(bulletin)
+                                                            }
+                                                            className="gap-2"
+                                                        >
+                                                            <CheckCircle className="size-3.5 text-blue-600" />
+                                                            Valider le bulletin
+                                                        </DropdownMenuItem>
+                                                    )}
+
+                                                    {/* Publier si validé et complet */}
+                                                    {bulletin.statut ===
+                                                        'VALIDE' && (
+                                                        <DropdownMenuItem
+                                                            disabled={
+                                                                !bulletin.is_complet ||
+                                                                isActionLoading
+                                                            }
+                                                            onClick={() =>
+                                                                onPublier(bulletin)
+                                                            }
+                                                            className="gap-2 text-emerald-600 focus:text-emerald-700"
+                                                        >
+                                                            <Send className="size-3.5 text-emerald-600" />
+                                                            Publier officiellement
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -201,21 +421,49 @@ const TableBulletin = ({
                     </TableBody>
                 </Table>
 
-                {bulletins.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                        <FileText className="mb-3 size-12 text-muted-foreground/30" />
-                        <p className="text-sm text-muted-foreground">
-                            Aucun bulletin disponible pour cette sélection.
-                        </p>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                            Sélectionnez une période et une classe, puis cliquez
-                            sur <strong>Recalculer</strong>.
-                        </p>
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between border-t px-6 py-3">
+                        <div className="text-xs text-muted-foreground">
+                            Affichage de {startIndex + 1} à{' '}
+                            {Math.min(
+                                startIndex + itemsPerPage,
+                                bulletins.length,
+                            )}{' '}
+                            sur {bulletins.length} étudiants
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={currentPage === 1}
+                                onClick={() =>
+                                    setCurrentPage((p) => Math.max(1, p - 1))
+                                }
+                                className="h-7 text-xs"
+                            >
+                                Précédent
+                            </Button>
+                            <div className="text-xs font-medium px-2">
+                                {currentPage} / {totalPages}
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={currentPage === totalPages}
+                                onClick={() =>
+                                    setCurrentPage((p) =>
+                                        Math.min(totalPages, p + 1),
+                                    )
+                                }
+                                className="h-7 text-xs"
+                            >
+                                Suivant
+                            </Button>
+                        </div>
                     </div>
                 )}
             </CardContent>
         </Card>
     );
-};
-
-export default TableBulletin;
+}

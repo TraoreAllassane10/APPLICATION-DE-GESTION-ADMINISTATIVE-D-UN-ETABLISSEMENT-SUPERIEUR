@@ -11,4 +11,19 @@ class Moyenne extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function inscription()
+    {
+        return $this->belongsTo(Inscription::class);
+    }
+
+    public function enseignement()
+    {
+        return $this->belongsTo(Enseignement::class);
+    }
+
+    public function periodeAcademique()
+    {
+        return $this->belongsTo(PeriodeAcademique::class);
+    }
 }
