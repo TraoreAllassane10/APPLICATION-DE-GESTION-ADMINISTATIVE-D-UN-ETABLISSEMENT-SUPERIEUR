@@ -84,6 +84,7 @@ export interface Periode {
     libelle: string;
     date_debut: string;
     date_fin: string;
+    annee_universitaire_id: number
 }
 
 // Types Niveau

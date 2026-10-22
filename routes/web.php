@@ -230,6 +230,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(BulletinController::class)->group(function () {
             Route::get("bulletins", "index")->name("bulletins");
             Route::get('bulletins/search', "getBulletins")->name('bulletins.getBulletins');
+            Route::post('bulletins/generer', "generer")->name('bulletins.generer');
+            Route::put('bulletins/{bulletin}/valider', "valider")->name('bulletins.valider');
+            Route::put('bulletins/{bulletin}/publier', "publier")->name('bulletins.publier');
             Route::get('bulletins/{bulletin}/telecharger-bulletin-pdf', "telechargerBulletin")->name('bulletins.telechargerBulletinPdf');
             Route::get('/classes/{classe}/periodes/{periode}/download-zip', 'telechargerZip')->name('bulletins.download-zip');
         });

@@ -53,6 +53,13 @@ class AppServiceProvider extends ServiceProvider
                 \App\Enums\ScolariteType::class
             );
         }
+
+        if (!class_exists(\App\Enums\TypeInscription::class)) {
+            class_alias(
+                \App\Modules\Inscription\Enums\TypeInscription::class,
+                \App\Enums\TypeInscription::class
+            );
+        }
     }
 
     /**
@@ -66,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Enregistrement des policies
         Gate::policy(Evaluation::class, ProfesseurEvaluationPolicy::class);
+        Gate::policy(\App\Models\Bulletin::class, \App\Modules\Bulletin\Policies\BulletinPolicy::class);
 
         // Enregistrement des observers
         Etudiant::observe(EtudiantObserver::class);

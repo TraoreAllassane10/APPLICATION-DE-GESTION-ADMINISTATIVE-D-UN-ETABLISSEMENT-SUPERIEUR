@@ -15,7 +15,9 @@ class BulletinPdfService
     {
         $bulletin = $this->bulletinRepository->find($inscriptionId, $periodeId);
 
-        // Si le bulletin existe et que les données n'ont pas changées
+        if (!$bulletin) {
+            $bulletin = $this->bulletinRepository->findOrCreate($inscriptionId, $periodeId);
+        }
         if ($bulletin->pdf_path && !$bulletin->is_changed && Storage::exists($bulletin->pdf_path)) {
             return $bulletin->pdf_path;
         }

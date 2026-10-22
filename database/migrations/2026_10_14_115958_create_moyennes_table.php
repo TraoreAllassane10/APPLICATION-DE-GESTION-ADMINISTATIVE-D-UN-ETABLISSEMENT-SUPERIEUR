@@ -21,8 +21,7 @@ return new class extends Migration
             $table->foreignId('enseignement_id')->constrained()->cascadeOnDelete();
             $table->foreignId('periode_academique_id')->constrained()->cascadeOnDelete();
 
-           
-
+            $table->unique(["inscription_id", "enseignement_id", "periode_academique_id"]);
             $table->timestamps();
         });
     }
