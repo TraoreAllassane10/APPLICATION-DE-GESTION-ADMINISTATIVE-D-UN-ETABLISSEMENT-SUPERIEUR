@@ -14,13 +14,19 @@ class InscriptionObserver
      */
     public function created(Inscription $inscription): void
     {
+        $nouvelle_valeur = [
+            ...$inscription->toArray(),
+            "nom" => $inscription->etudiant->nom,
+            "prenom" => $inscription->etudiant->prenom
+        ];
+
         ActivityLog::create([
             "user_id" => Auth::user()->id,
-               "user_name" => Auth::user()->name,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::CREATION->value,
             "entite_type" => "Inscription",
             "entite_id" => (string) $inscription->id,
-            "nouvelle_valeur" => $inscription->toArray()
+            "nouvelle_valeur" => $nouvelle_valeur
         ]);
     }
 
@@ -31,7 +37,7 @@ class InscriptionObserver
     {
         ActivityLog::create([
             "user_id" => Auth::user()->id,
-               "user_name" => Auth::user()->name,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::MODIFICATION->value,
             "entite_type" => "Inscription",
             "entite_id" => (string) $inscription->id,
@@ -45,15 +51,19 @@ class InscriptionObserver
      */
     public function deleted(Inscription $inscription): void
     {
-         ActivityLog::create([
+        $ancienne_valeur = [
+            ...$inscription->getOriginal(),
+            "nom" => $inscription->etudiant->nom,
+            "prenom" => $inscription->etudiant->prenom
+        ];
+
+        ActivityLog::create([
             "user_id" => Auth::user()->id,
-               "user_name" => Auth::user()->name,
+            "user_name" => Auth::user()->name,
             "action" => TypeAction::SUPPRESSION->value,
             "entite_type" => "Inscription",
             "entite_id" => (string) $inscription->id,
-            "ancienne_valeur" => $inscription->getOriginal(),
+            "ancienne_valeur" => $ancienne_valeur,
         ]);
     }
-
-
 }
