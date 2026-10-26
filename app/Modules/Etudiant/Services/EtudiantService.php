@@ -9,7 +9,6 @@ use App\Modules\Etudiant\Resources\EtudiantRessource;
 use App\Modules\Utilisateur\Services\UserService;
 use App\Notifications\EtudiantCreatedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
