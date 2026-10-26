@@ -3,6 +3,7 @@
 namespace App\Modules\Etudiant\Services;
 
 use App\Models\Etudiant;
+use App\Modules\Etudiant\Exceptions\EtudiantExisteException;
 use App\Modules\Etudiant\Repositories\EtudiantRepository;
 use App\Modules\Etudiant\Resources\EtudiantRessource;
 use App\Modules\Utilisateur\Services\UserService;
@@ -53,7 +54,7 @@ class EtudiantService
             ->exists();
 
         if ($etudiantExiste) {
-            throw new Exception('Cet étudiant existe déjà');
+            throw new EtudiantExisteException("L'étudiant {$data['nom']} {$data['prenom']} existe déjà");
         }
 
         // Creer un etudiant

@@ -74,7 +74,6 @@ const Index = () => {
             return;
         }
 
-        // Création d'un horaire
         try {
             await axios
                 .post('/utilisateurs', { name, email, password, role })
