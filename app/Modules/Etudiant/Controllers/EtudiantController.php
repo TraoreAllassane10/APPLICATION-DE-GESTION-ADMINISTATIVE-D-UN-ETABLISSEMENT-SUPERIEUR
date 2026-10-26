@@ -5,6 +5,7 @@ namespace App\Modules\Etudiant\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Etudiant;
 use App\Modules\Etudiant\Enums\StatutEtudiant;
+use App\Modules\Etudiant\Exceptions\EtudiantExisteException;
 use App\Modules\Etudiant\Requests\CreateEtudiantRequest;
 use App\Modules\Etudiant\Requests\UpdateEtudiantRequest;
 use App\Modules\Etudiant\Services\EtudiantService;
@@ -63,12 +64,16 @@ class EtudiantController extends Controller
     {
         // Validation des entrées
         $data = $request->validated();
-        
+
         try {
             //Creation d'un etudiant
             $this->etudiantService->create($data);
 
             return response()->json(["success" => true, "message" => "Etudiant enregistré avec succès !"]);
+
+        } catch (EtudiantExisteException $e) {
+            Log::error("Etudiant existe déjà ", ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => $e->getMessage()]);
         } catch (Exception $e) {
             Log::error("Erreur lors de la création d'un etudiant", ["erreur" => $e->getMessage()]);
             return response()->json(["success" => false, "message" => "Erreur lors de la création d'un etudiant"]);

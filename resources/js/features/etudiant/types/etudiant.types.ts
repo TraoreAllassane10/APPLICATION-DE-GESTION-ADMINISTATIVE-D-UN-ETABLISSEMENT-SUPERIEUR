@@ -63,3 +63,16 @@ export type ShowTabs = {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
 }
+
+export type PersonnelFormData = Omit<
+    Etudiant,
+    'created_at' | 'updated_at'| 'photo' 
+> & {
+    experiences?: {
+        annee: string;
+        nom_ecole: string;
+        fonction: string;
+        nombre_annee_enseignement: string;
+        matiere: string;
+    }[]
+};

@@ -3,12 +3,12 @@
 namespace App\Modules\Etudiant\Services;
 
 use App\Models\Etudiant;
+use App\Modules\Etudiant\Exceptions\EtudiantExisteException;
 use App\Modules\Etudiant\Repositories\EtudiantRepository;
 use App\Modules\Etudiant\Resources\EtudiantRessource;
 use App\Modules\Utilisateur\Services\UserService;
 use App\Notifications\EtudiantCreatedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -53,7 +53,7 @@ class EtudiantService
             ->exists();
 
         if ($etudiantExiste) {
-            throw new Exception('Cet étudiant existe déjà');
+            throw new EtudiantExisteException("L'étudiant {$data['nom']} {$data['prenom']} existe déjà");
         }
 
         // Creer un etudiant

@@ -8,19 +8,20 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { EtudiantFormData } from '@/types';
 import { Plus, Trash, X } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import Field from '../Field';
 import { Separator } from '@/components/ui/separator';
+import { PersonnelFormData } from '@/types';
+
 
 export function Step4({
     data,
     setData,
 }: {
-    data: EtudiantFormData;
-    setData: (d: EtudiantFormData) => void;
+    data: PersonnelFormData;
+    setData: (d: PersonnelFormData) => void;
 }) {
     const [openForm, setOpenForm] = useState(false);
 
@@ -40,8 +41,7 @@ export function Step4({
         dataForm.annee === '' ||
         dataForm.nom_ecole === '' ||
         dataForm.fonction === '' ||
-        dataForm.nombre_annee_enseignement === '' ||
-        dataForm.matiere === '';
+        dataForm.nombre_annee_enseignement === '';
 
     const handleAddExperience = () => {
         if (cannotRegister) {
@@ -81,7 +81,7 @@ export function Step4({
                 <TableHeader>
                     <TableRow>
                         <TableHead>Annee(s)</TableHead>
-                        <TableHead>Nom ecole / Université</TableHead>
+                        <TableHead>Nom de la structure</TableHead>
                         <TableHead>Fonction</TableHead>
                         <TableHead>Nombre d'annees d'enseignement</TableHead>
                         <TableHead>Matieres enseignées</TableHead>
@@ -134,7 +134,7 @@ export function Step4({
                         />
                     </Field>
 
-                    <Field label="Nom ecole / Université">
+                    <Field label="Nom de la structure">
                         <Input
                             value={dataForm.nom_ecole}
                             onChange={(e) =>

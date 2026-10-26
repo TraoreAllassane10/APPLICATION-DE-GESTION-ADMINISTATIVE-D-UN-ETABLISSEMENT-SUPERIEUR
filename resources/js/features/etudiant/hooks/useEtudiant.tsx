@@ -16,12 +16,12 @@ export default function useEtudiant() {
 
             // Lors de la mise à jour , Laravel attend une image pour le champs photo
             // Donc on ne l'envoie pas photo lorsque c'est un string
-            if (key === "photo" && typeof value === "string") return;
+            if (key === 'photo' && typeof value === 'string') return;
 
             if (value instanceof File) {
                 formData.append(key, value);
             } else {
-                formData.append(key, value);
+                formData.append(key, value as any);
             }
         });
 
@@ -54,32 +54,31 @@ export default function useEtudiant() {
 
     // Création d'un etudiant
     const createEtudiant = async (data: EtudiantFormData) => {
+        setIsLoading(true);
+        const formData = getEtudiantFormData(data);
+
         try {
-            setIsLoading(true);
+            const response = await axios.post('/etudiants', formData);
 
-            const formData = getEtudiantFormData(data);
-
-            await axios
-                .post('/etudiants', formData)
-                .then((response) => {
-                    if (response.data.message) {
-                        toast.error(response.data.message);
-                        return;
-                    }
-
-                    if (response.data.success) {
-                        toast.success('Etudiant crée avec succès !');
-
-                        // Redirection vers la page d'affichage des seances
-                        router.visit(etudiants());
-                    }
-                })
-                .catch((error) => {
-                    toast.error(error.response.data.message);
-                    console.log(error);
-                });
+            if (response.data.success) {
+                toast.success(
+                    response.data.message ?? 'Etudiant crée avec succès !',
+                );
+                router.visit(etudiants());
+            } else {
+                toast.error(
+                    response.data.message ??
+                        "Une erreur est survenue lors d'enregistrement de l'etudiant",
+                );
+            }
         } catch (error) {
-            toast.error('Erreur survenue au niveau du serveur');
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message);
+            } else {
+                toast.error(
+                    "Une erreur est survenue lors d'enregistrement de l'etudiant",
+                );
+            }
             console.log(error);
         } finally {
             setIsLoading(false);
@@ -109,7 +108,12 @@ export default function useEtudiant() {
                     console.log(error);
                 });
         } catch (error) {
-            toast.error('Erreur survenue au niveau du serveur');
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message);
+            } else {
+                toast.error('Erreur survenue lors de la modification');
+            }
+
             console.log(error);
         } finally {
             setIsLoading(false);
@@ -126,17 +130,22 @@ export default function useEtudiant() {
                 .then((response) => {
                     if (response.data.success) {
                         toast.success('Etudiant supprimé !');
-                        router.visit('/etudiants')
+                        router.visit('/etudiants');
                     }
                 })
                 .catch((error) => {
                     toast.error(
-                        'Erreur survenue lors de la suppression de l\'etudiant',
+                        "Erreur survenue lors de la suppression de l'etudiant",
                     );
                     console.log(error);
                 });
         } catch (error) {
-            toast.error('Erreur survenue au niveau du serveur');
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message);
+            } else {
+                toast.error('Erreur survenue au lors de la suppression');
+            }
+
             console.log(error);
         } finally {
             setIsLoading(false);

@@ -141,10 +141,12 @@ function DiffTable({
     );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 const Show = () => {
     const { activite } = usePage<ActiviteProps>().props;
+
+    console.log(activite);
+    
 
     const { icon: ActionIcon, className: actionClass } = getActionConfig(activite.action);
 
@@ -247,9 +249,9 @@ const Show = () => {
                                 <Activity className="w-4 h-4 text-amber-500" />
                                 Modifications apportées
                             </CardTitle>
-                            <p className="text-xs text-muted-foreground mt-0.5">
+                            {/* <p className="text-xs text-muted-foreground mt-0.5">
                                 Les lignes <span className="text-amber-600 font-medium">surlignées</span> indiquent les champs modifiés.
-                            </p>
+                            </p> */}
                         </CardHeader>
                         <Separator />
                         <CardContent className="pt-4">
