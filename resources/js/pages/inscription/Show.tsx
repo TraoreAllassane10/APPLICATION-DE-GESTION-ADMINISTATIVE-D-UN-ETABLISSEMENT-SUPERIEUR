@@ -33,6 +33,10 @@ export default function Show() {
         (role) => role.name == 'Administrateur',
     );
 
+    const isComptable = auth.user?.roles?.some(
+        (role) => role.name == 'Comptable',
+    );
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head
@@ -64,7 +68,7 @@ export default function Show() {
                         <TabGeneral ins={inscription} />
                     )}
                     {activeTab === 'financier' &&
-                        (isAdmin ? (
+                        (isAdmin || isComptable? (
                             <TabFinancier ins={inscription} />
                         ) : (
                             <Alert>

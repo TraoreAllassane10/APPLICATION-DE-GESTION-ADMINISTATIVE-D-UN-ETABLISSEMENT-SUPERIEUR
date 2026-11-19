@@ -5,7 +5,6 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
     BookOpen,
-    ClipboardList,
     GraduationCap,
     Layers,
     ReceiptText,
@@ -15,6 +14,21 @@ import {
 } from 'lucide-react';
 
 import StatCard from '@/components/dashboard/StatCardDashboard';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import DashbaordPedagogie from '@/features/dashboard/components/DashbaordPedagogie';
 import DashbaordScolarite from '@/features/dashboard/components/DashbaordScolarite';
 import DashboardAdmin from '@/features/dashboard/components/DashboardAdmin';
@@ -23,12 +37,10 @@ import {
     StatFinanciere,
     StatGlobales,
 } from '@/features/dashboard/types/dashboard.types';
+import { Evaluation } from '@/features/evaluations/types/evaluation.types';
 import { Inscription } from '@/features/inscription/types/inscription.types';
 import { Paiement } from '@/features/paiement/types/paiement.types';
 import { Annee, Auth } from '@/types';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Evaluation } from '@/features/evaluations/types/evaluation.types';
 
 interface DashboardProps {
     anneeActive: Annee;
@@ -51,7 +63,7 @@ export default function Dashboard() {
         dernieres_inscriptions,
         auth,
         repartitionNiveaux,
-        dernieres_evaluations
+        dernieres_evaluations,
     } = usePage<DashboardProps>().props;
 
     const taux = stats_financiere.tauxRecouvrement;
@@ -66,6 +78,10 @@ export default function Dashboard() {
 
     const isInspecteurPedagogique = auth.user.roles?.some(
         (role) => role.name === 'Inspecteur pedagogique',
+    );
+
+    const isComptable = auth.user.roles?.some(
+        (role) => role.name === 'Comptable',
     );
 
     return (
@@ -101,6 +117,53 @@ export default function Dashboard() {
                 </div>
 
                 {isAdmin && (
+                    <>
+                        {/* ── Key Metrics Grid ────────────────────────────────────────── */}
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                            <StatCard
+                                label="Alumnis"
+                                value={stats_globales.totalEtudiants}
+                                sub="Fichier général"
+                                icon={Users}
+                                color="text-blue-600"
+                                bg="bg-blue-50 dark:bg-blue-950/40"
+                            />
+                            <StatCard
+                                label="Inscriptions"
+                                value={stats_globales.totalInscriptions}
+                                sub={anneeActive.libelle}
+                                icon={GraduationCap}
+                                color="text-violet-600"
+                                bg="bg-violet-50 dark:bg-violet-950/40"
+                            />
+                            <StatCard
+                                label="Enseignants"
+                                value={stats_globales.totalEnseignants}
+                                icon={BookOpen}
+                                color="text-cyan-600"
+                                bg="bg-cyan-50 dark:bg-cyan-950/40"
+                            />
+                            <StatCard
+                                label="Filières actives"
+                                value={stats_globales.totalFilieres}
+                                icon={ReceiptText}
+                                color="text-slate-600"
+                                bg="bg-slate-100 dark:bg-slate-800/50"
+                            />
+                        </div>
+
+                        <DashboardAdmin
+                            anneeActive={anneeActive.libelle}
+                            taux={taux}
+                            stats_financiere={stats_financiere}
+                            repartitionNiveaux={repartitionNiveaux}
+                            dernieres_inscriptions={dernieres_inscriptions}
+                            derniers_paiements={derniers_paiements}
+                        />
+                    </>
+                )}
+
+                {isComptable && (
                     <>
                         {/* ── Key Metrics Grid ────────────────────────────────────────── */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -230,109 +293,117 @@ export default function Dashboard() {
                             repartitionNiveaux={repartitionNiveaux}
                         />
 
-                            <Card className="col-span-12 md:col-span-8">
-                        <CardHeader>
-                            <CardTitle className="flex items-center justify-between">
-                                <span>Dernières évaluations reçues</span>
+                        <Card className="col-span-12 md:col-span-8">
+                            <CardHeader>
+                                <CardTitle className="flex items-center justify-between">
+                                    <span>Dernières évaluations reçues</span>
 
-                                <Link href="/evaluations">
-                                    <Button variant={'ghost'}>
-                                        Voir plus <ArrowRight />
-                                    </Button>
-                                </Link>
-                            </CardTitle>
+                                    <Link href="/evaluations">
+                                        <Button variant={'ghost'}>
+                                            Voir plus <ArrowRight />
+                                        </Button>
+                                    </Link>
+                                </CardTitle>
 
-                            <CardDescription>
-                                Liste des 5 dernières évaluations que vous avez reçu
-                            </CardDescription>
-                        </CardHeader>
+                                <CardDescription>
+                                    Liste des 5 dernières évaluations que vous
+                                    avez reçu
+                                </CardDescription>
+                            </CardHeader>
 
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-muted/40">
-                                        <TableHead>Titre</TableHead>
-                                        <TableHead>Type</TableHead>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Note maximale</TableHead>
-                                        <TableHead>Coefficient</TableHead>
-                                        <TableHead>Matière</TableHead>
-                                        <TableHead>Période</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                    {dernieres_evaluations.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell
-                                                colSpan={7}
-                                                className="h-48 text-center"
-                                            >
-                                                <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                                                    <GraduationCap className="h-10 w-10 opacity-20" />
-                                                    <p className="text-sm">
-                                                        Aucune evaluation
-                                                        trouvée.
-                                                    </p>
-                                                </div>
-                                            </TableCell>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="bg-muted/40">
+                                            <TableHead>Titre</TableHead>
+                                            <TableHead>Type</TableHead>
+                                            <TableHead>Date</TableHead>
+                                            <TableHead>Note maximale</TableHead>
+                                            <TableHead>Coefficient</TableHead>
+                                            <TableHead>Matière</TableHead>
+                                            <TableHead>Période</TableHead>
                                         </TableRow>
-                                    ) : (
-                                        dernieres_evaluations.map(
-                                            (evaluation) => {
-                                                return (
-                                                    <TableRow
-                                                        key={evaluation.id}
-                                                        className="group"
-                                                    >
-                                                        <TableCell className="space-x-1">
-                                                            {evaluation.titre}
-                                                        </TableCell>
+                                    </TableHeader>
 
-                                                        <TableCell>
-                                                            {evaluation.type}
-                                                        </TableCell>
+                                    <TableBody>
+                                        {dernieres_evaluations.length === 0 ? (
+                                            <TableRow>
+                                                <TableCell
+                                                    colSpan={7}
+                                                    className="h-48 text-center"
+                                                >
+                                                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                                        <GraduationCap className="h-10 w-10 opacity-20" />
+                                                        <p className="text-sm">
+                                                            Aucune evaluation
+                                                            trouvée.
+                                                        </p>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ) : (
+                                            dernieres_evaluations.map(
+                                                (evaluation) => {
+                                                    return (
+                                                        <TableRow
+                                                            key={evaluation.id}
+                                                            className="group"
+                                                        >
+                                                            <TableCell className="space-x-1">
+                                                                {
+                                                                    evaluation.titre
+                                                                }
+                                                            </TableCell>
 
-                                                        <TableCell>
-                                                            {evaluation.date}
-                                                        </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    evaluation.type
+                                                                }
+                                                            </TableCell>
 
-                                                        <TableCell>
-                                                            {
-                                                                evaluation.note_maximale
-                                                            }
-                                                        </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    evaluation.date
+                                                                }
+                                                            </TableCell>
 
-                                                        <TableCell>
-                                                            {
-                                                                evaluation.coefficient
-                                                            }
-                                                        </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    evaluation.note_maximale
+                                                                }
+                                                            </TableCell>
 
-                                                        <TableCell>
-                                                            {
-                                                                evaluation
-                                                                    .enseignement
-                                                                    .cours.nom
-                                                            }
-                                                        </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    evaluation.coefficient
+                                                                }
+                                                            </TableCell>
 
-                                                        <TableCell>
-                                                            {
-                                                                evaluation
-                                                                    .periode_academique
-                                                                    .libelle
-                                                            }
-                                                        </TableCell>
-                                                    </TableRow>
-                                                );
-                                            },
-                                        )
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
+                                                            <TableCell>
+                                                                {
+                                                                    evaluation
+                                                                        .enseignement
+                                                                        .cours
+                                                                        .nom
+                                                                }
+                                                            </TableCell>
+
+                                                            <TableCell>
+                                                                {
+                                                                    evaluation
+                                                                        .periode_academique
+                                                                        .libelle
+                                                                }
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                },
+                                            )
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
                     </>
                 )}
             </div>

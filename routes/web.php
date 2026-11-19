@@ -79,8 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("/inscriptions/{inscription}/edit", "edit")->name("inscriptions.edit");
         Route::put("/inscriptions/{inscription}/update", "update")->name("inscriptions.update");
         Route::delete("/inscriptions/{inscription}/delete", "delete")->name("inscriptions.delete");
-
-    })->middleware(["administrateur", "service_scolarite"]);
+    })->middleware(["administrateur", "service_scolarite", "comptable"]);
 
     // Routes Professeur
     Route::controller(ProfesseurController::class)->group(function () {
@@ -118,7 +117,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // ADMINISTRATEUR
-    Route::middleware("administrateur")->group(function () {
+    Route::middleware(["role:Administrateur,Comptable"])->group(function () {
         // Routes Paiement
         Route::controller(PaiementController::class)->group(function () {
             Route::get('/paiements', 'index')->name('paiements');
@@ -149,7 +148,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get("historiques", "index")->name("historique");
             Route::get("historiques/{activite}", "show")->name("historique.show");
         });
-
 
         // ----------------------------GESTION DU PERSONNEL-------------------------------
         Route::controller(PersonnelController::class)->group(function () {
