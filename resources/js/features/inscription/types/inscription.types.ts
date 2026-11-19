@@ -5,6 +5,7 @@ export type TypeInscription = 'Nouvelle' | 'Redoublement' | 'Transfert';
 
 export interface Inscription {
     id: number;
+    etudiant_ip: string;
     etudiant: Etudiant;
     annee: Annee;
     niveaux: DataNiveau[];

@@ -20,7 +20,7 @@ import {
 import Avatar from '@/features/etudiant/components/Avatar';
 import { fmt } from '@/utils/util';
 import { Link } from '@inertiajs/react';
-import { ChevronDown, Folder, GraduationCap, Trash2 } from 'lucide-react';
+import { ChevronDown, Edit, Folder, GraduationCap, Trash2 } from 'lucide-react';
 import { Inscription } from '../../types/inscription.types';
 import ProgressFinanciere from '../ProgressFinancier';
 
@@ -170,6 +170,16 @@ const InscriptionTable = ({
                                             align="end"
                                             className="w-48"
                                         >
+                                            <DropdownMenuItem className="cursor-pointer gap-2">
+                                                <Link
+                                                   href={`/inscriptions/${ins.id}/edit`}
+                                                    className="flex cursor-pointer items-center gap-2"
+                                                >
+                                                    <Edit className="h-4 w-4" />{' '}
+                                                    Modifier
+                                                </Link>
+                                            </DropdownMenuItem>
+
                                             <DropdownMenuItem asChild>
                                                 <Link
                                                     href={`/inscriptions/${ins.id}`}
@@ -179,11 +189,9 @@ const InscriptionTable = ({
                                                     Dossier inscription
                                                 </Link>
                                             </DropdownMenuItem>
-                                            {/* <DropdownMenuItem className="cursor-pointer gap-2">
-                                                        <FileText className="h-4 w-4" />{' '}
-                                                        Générer le bulletin
-                                                    </DropdownMenuItem> */}
+
                                             <DropdownMenuSeparator />
+
                                             <DropdownMenuItem
                                                 onClick={() => {
                                                     onChangeSelectedId(ins.id);

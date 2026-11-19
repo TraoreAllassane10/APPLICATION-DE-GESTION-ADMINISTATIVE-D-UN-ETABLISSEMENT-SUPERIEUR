@@ -98,7 +98,7 @@ class InscriptionService
             if ($scolarites->count() !== count($data['niveaux'])) {
                 return response()->json([
                     "success" => false,
-                    "message" => "Certains niveaux sélectionnés n'ont pas encore de scolarité définie dans la configuration."
+                    "message" => "Certains niveaux sélectionnés n'ont pas encore de scolarité définie."
                 ]);
             }
 
@@ -149,9 +149,68 @@ class InscriptionService
         }
     }
 
+    public function update(Inscription $inscription, array $data)
+    {
+        // Type de scolarite selon le statut de l'etudiant
+        $typeScolarite = $inscription->etudiant->statut == StatutEtudiant::NAFF->value ? ScolariteType::NAFF->value : ScolariteType::AFFECTE->value;
+
+        // Liste des scolarite en fonction des niveaux choisit
+        $scolarites = Scolarite::whereIn("niveau_id", $data['niveaux'])
+            ->whereIn("type", [$typeScolarite, ScolariteType::LICENCE->value])
+            ->get();
+
+
+        if ($scolarites->count() !== count($data['niveaux'])) {
+            return response()->json([
+                "success" => false,
+                "message" => "Certains niveaux sélectionnés n'ont pas encore de scolarité définie."
+            ]);
+        }
+
+        // Scolarite total sans frais annexe
+        $scolarite = $scolarites->sum("montant");
+
+        // Calcul de la réduction : priorité au montant fixe, sinon au taux.
+        // Les deux étant mutuellement exclusifs (validé en amont), un seul est non nul.
+        $tauxReduction    = $data['taux_reduction'] ?? null;
+        $montantReduction = $data['montant_reduction'] ?? null;
+
+        if ($montantReduction !== null && $montantReduction > 0) {
+            // Réduction saisie en montant fixe
+            if ($montantReduction > $scolarite) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Le montant de réduction ({$montantReduction}) ne peut pas dépasser la scolarité de référence ({$scolarite})."
+                ]);
+            }
+            $reductionCalculee = (int) $montantReduction;
+        } elseif ($tauxReduction !== null && $tauxReduction > 0) {
+            // Réduction saisie en pourcentage
+            $reductionCalculee = (int) round(($scolarite * $tauxReduction) / 100);
+        } else {
+            // Aucune réduction
+            $reductionCalculee = 0;
+        }
+
+        $scolariteApresReduction = $scolarite - $reductionCalculee;
+
+        // Calucle du montant total avec les frais annexe
+        $montantTotalScolarite = $inscription->frais_annexe + $scolariteApresReduction;
+
+        // Modification de l'inscription
+        $inscriptionModifiee = $this->inscriptionRepository->update($inscription, $data, $scolariteApresReduction, $montantTotalScolarite);
+
+        // Vider le cache de statistique
+        Cache::forget('dashboard:stats');
+
+        if ($inscriptionModifiee) {
+            return $inscription->niveaux()->sync($data['niveaux']);
+        }
+    }
+
     public function delete(Inscription $inscription)
     {
-       $inscriptionSupprimee = $this->inscriptionRepository->delete($inscription);
+        $inscriptionSupprimee = $this->inscriptionRepository->delete($inscription);
 
         // Vider le cache de statistique
         Cache::forget('dashboard:stats');

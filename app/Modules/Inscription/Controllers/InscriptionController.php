@@ -8,6 +8,7 @@ use App\Models\Etudiant;
 use App\Models\Inscription;
 use App\Modules\AnneeAcademique\Services\AnneeAcademiqueService;
 use App\Modules\Inscription\Requests\CreateInscriptionRequest;
+use App\Modules\Inscription\Requests\UpdateInscriptionRequest;
 use App\Modules\Inscription\services\InscriptionService;
 use App\Modules\Niveau\Services\NiveauService;
 use Exception;
@@ -76,8 +77,8 @@ class InscriptionController extends Controller
             // Creation d'une inscription
             return $this->inscriptionService->create($data);
         } catch (Exception $e) {
-            Log::error('Erreur lors de la suppression d\'une année', ["erreur" => $e->getMessage()]);
-            return response()->json(["success" => false, "message" => "Erreur lors de la suppression d\'une année"]);
+            Log::error('Erreur lors de la creation d\'une inscription', ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la creation d\'une inscription"]);
         }
     }
 
@@ -88,6 +89,40 @@ class InscriptionController extends Controller
         return Inertia::render('inscription/Show', [
             "inscription" => $inscriptionData
         ]);
+    }
+
+    public function edit(Inscription $inscription)
+    {
+        $niveaux = $this->niveauService->getAllNiveaux();
+
+        // La recuperation de l'annee active MAIS en collection
+        $user = Auth::user();
+        $annees = AnneeUniversitaire::where("id", $user->annee_active)->get();
+
+        return Inertia::render('inscription/Edit', [
+            'inscription' => $inscription,
+            "niveaux" => $niveaux,
+            "annees" => $annees
+        ]);
+    }
+
+    public function update(UpdateInscriptionRequest $request, Inscription $inscription)
+    {
+        try {
+            $data = $request->validated();
+
+            // Modification d'une inscription
+            $this->inscriptionService->update($inscription, $data);
+
+            return response()->json([
+                "success" => true,
+                "message" => "Une inscription a été mis à jour"
+            ]);
+            
+        } catch (Exception $e) {
+            Log::error('Erreur lors de la modification d\'une inscription', ["erreur" => $e->getMessage()]);
+            return response()->json(["success" => false, "message" => "Erreur lors de la modification d\'une inscription"]);
+        }
     }
 
     public function delete(Inscription $inscription)

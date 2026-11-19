@@ -6,9 +6,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { TypeInscription } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { ArrowRightLeft, GraduationCap, RefreshCw } from 'lucide-react';
+import { TypeInscription } from '../../types/inscription.types';
 
 export default function StepAcademique({
     annee,

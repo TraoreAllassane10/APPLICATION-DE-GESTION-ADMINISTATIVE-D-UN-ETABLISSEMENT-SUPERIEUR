@@ -1,6 +1,6 @@
 import { BookOpen, CheckCircle2, User, Wallet } from "lucide-react";
 
-const STEPS = [
+export const STEPS = [
     {
         id: 1,
         label: 'Étudiant',
