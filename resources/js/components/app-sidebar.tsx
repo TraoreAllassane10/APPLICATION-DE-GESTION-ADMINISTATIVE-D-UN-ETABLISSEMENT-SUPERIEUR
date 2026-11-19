@@ -52,6 +52,10 @@ export function AppSidebar() {
         (role) => role.name == 'Administrateur',
     );
 
+    const isComptable = auth.user?.roles?.some(
+        (role) => role.name === 'Comptable',
+    );
+
     const isSecretaireScolarite = auth.user?.roles?.some(
         (role) => role.name == 'Secrétaire de scolarité',
     );
@@ -113,6 +117,32 @@ export function AppSidebar() {
                       title: 'Historiques des activités',
                       href: historique(),
                       icon: History,
+                  },
+              ]
+            : []),
+
+        // Onglets disponnible que pour les comptables
+        ...(isComptable
+            ? [
+                  {
+                      title: 'Dashboard',
+                      href: dashboard(),
+                      icon: LayoutDashboard,
+                  },
+                  {
+                      title: 'Inscriptions',
+                      href: '/inscriptions',
+                      icon: ClipboardList,
+                  },
+                  {
+                      title: 'Scolarités',
+                      href: '/scolarite',
+                      icon: Receipt,
+                  },
+                  {
+                      title: 'Paiements',
+                      href: '/paiements',
+                      icon: CreditCard,
                   },
               ]
             : []),

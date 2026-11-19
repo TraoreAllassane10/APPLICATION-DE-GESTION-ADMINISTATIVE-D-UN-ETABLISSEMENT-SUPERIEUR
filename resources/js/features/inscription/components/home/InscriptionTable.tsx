@@ -26,6 +26,7 @@ import ProgressFinanciere from '../ProgressFinancier';
 
 interface InscriptionTableProps {
     isAdmin: boolean | undefined;
+    isComptable: boolean | undefined;
     inscriptions: {
         data: Inscription[];
         links: {
@@ -42,6 +43,7 @@ interface InscriptionTableProps {
 
 const InscriptionTable = ({
     isAdmin,
+    isComptable,
     inscriptions,
     hasFilters,
     onReset,
@@ -57,7 +59,7 @@ const InscriptionTable = ({
                         <TableHead>Niveau</TableHead>
                         <TableHead>Type</TableHead>
 
-                        {isAdmin && (
+                        {isAdmin || isComptable && (
                             <>
                                 <TableHead>Réduction (%)</TableHead>
                                 <TableHead>
@@ -131,7 +133,7 @@ const InscriptionTable = ({
                                     </span>
                                 </TableCell>
 
-                                {isAdmin && (
+                                {isAdmin || isComptable && (
                                     <>
                                         <TableCell className="text-sm font-medium tabular-nums">
                                             {ins.taux_reduction > 0

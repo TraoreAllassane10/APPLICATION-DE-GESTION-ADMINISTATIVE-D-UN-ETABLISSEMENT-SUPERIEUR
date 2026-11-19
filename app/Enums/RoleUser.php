@@ -8,4 +8,5 @@ enum RoleUser: string
     case INSPECTEUR_PEDAGOGIQUE = "Inspecteur pedagogique";
     case SCOLARITE = "Secrétaire de scolarité";
     case PROFESSEUR = "Professeur";
+    case COMPTABLE = "Comptable";
 }

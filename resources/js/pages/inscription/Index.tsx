@@ -48,6 +48,9 @@ export default function Index() {
     const isAdmin = auth.user?.roles?.some(
         (role) => role.name == 'Administrateur',
     );
+    const isComptable = auth.user?.roles?.some(
+        (role) => role.name == 'Comptable',
+    );
 
     const [search, setSearch] = useState(filters.search ?? '');
     const [filtreNiveau, setFiltreNiveau] = useState(filters.niveau ?? 'all');
@@ -107,6 +110,7 @@ export default function Index() {
                 {/* Tableau */}
                 <InscriptionTable
                     isAdmin={isAdmin}
+                    isComptable={isComptable}
                     hasFilters={hasFilters}
                     inscriptions={inscriptions}
                     onChangeSelectedId={setSelectedId}

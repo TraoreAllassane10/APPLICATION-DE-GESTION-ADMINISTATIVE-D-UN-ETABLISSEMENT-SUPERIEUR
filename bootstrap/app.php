@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\AdministrateurMiddleware;
+use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\ComptableMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\InspecteurPedagogiqueMiddleware;
@@ -27,9 +29,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             "administrateur" => AdministrateurMiddleware::class,
+            "comptable" => ComptableMiddleware::class,
             "inspecteur_pedagogique" => InspecteurPedagogiqueMiddleware::class,
             "service_scolarite" => ServiceScolariteMiddleware::class,
-            "professeur" => ProfesseurMiddleware::class
+            "professeur" => ProfesseurMiddleware::class,
+            "role" => CheckRole::class
         ]);
 
         $middleware->web(append: [
