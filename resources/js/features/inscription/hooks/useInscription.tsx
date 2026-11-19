@@ -1,4 +1,3 @@
-import inscriptions from '@/routes/inscriptions';
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
@@ -13,11 +12,23 @@ interface CreateInscriptionData {
     montant_reduction: number | null;
 }
 
+interface UpdateInscriptionData {
+    annee_id: string;
+    niveaux: number[];
+    type_inscription: string;
+    taux_reduction: number | null;
+    montant_reduction: number | null;
+}
+
 export default function useInscription() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Recherche et filtrage des données
-    const rechercheEtFiltrage = (search: string, filtreStatut: string, filtreNiveau: string) => {
+    const rechercheEtFiltrage = (
+        search: string,
+        filtreStatut: string,
+        filtreNiveau: string,
+    ) => {
         try {
             return router.get(
                 `/inscriptions`,
@@ -25,7 +36,7 @@ export default function useInscription() {
                     search: search,
                     statut: filtreStatut,
                     niveau: filtreNiveau,
-                    page: 1
+                    page: 1,
                 },
                 {
                     preserveState: true,
@@ -47,8 +58,9 @@ export default function useInscription() {
                 .then((response) => {
                     // Sucess
                     if (response.data.success) {
-                        console.log(response);
-                        toast.success(response.data.message ?? 'Inscription effectuée !');
+                        toast.success(
+                            response.data.message ?? 'Inscription effectuée !',
+                        );
 
                         router.visit('/inscriptions');
                     }
@@ -71,6 +83,32 @@ export default function useInscription() {
         }
     };
 
+    // Modification d'une inscription
+    const updateInscription = async (inscriptionId: number, data: UpdateInscriptionData) => {
+        try {
+            setIsLoading(true);
+
+            const response = await axios.put(
+                `/inscriptions/${inscriptionId}/update`,
+                data,
+            );
+
+            if (response.data.success) {
+                toast.success(
+                    response.data.message ?? 'Inscription Modifiée !',
+                );
+
+                router.visit('/inscriptions');
+            }
+        } catch (error) {
+            toast.error('Erreur survenue au niveau du serveur');
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Suppression d'une inscription
     const deleteEtudiant = async (id: number) => {
         try {
             setIsLoading(true);
@@ -82,7 +120,7 @@ export default function useInscription() {
                     if (response.data.success) {
                         toast.success('Inscription supprimée !');
 
-                        router.visit("/inscriptions");
+                        router.visit('/inscriptions');
                     }
 
                     // Echec
@@ -103,5 +141,11 @@ export default function useInscription() {
         }
     };
 
-    return { createInscription, deleteEtudiant, rechercheEtFiltrage, isLoading };
+    return {
+        createInscription,
+        updateInscription,
+        deleteEtudiant,
+        rechercheEtFiltrage,
+        isLoading,
+    };
 }

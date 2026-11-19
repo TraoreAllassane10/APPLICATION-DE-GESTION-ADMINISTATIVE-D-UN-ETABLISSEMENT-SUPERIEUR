@@ -62,7 +62,7 @@ class InscriptionRepository
             ->withSum("paiements as total_paiements", "montant")
             ->first();
     }
-    public function create(array $data, $frais_annexe, $scolariteApresReduction, $montantTotalScolarite, $etudiant, $anneeUniversitaire)
+    public function create(array $data, mixed $frais_annexe, mixed $scolariteApresReduction, mixed $montantTotalScolarite, mixed $etudiant, mixed $anneeUniversitaire)
     {
         return Inscription::create([
             "date"               => now(),
@@ -75,6 +75,16 @@ class InscriptionRepository
             "montant_total"      => $montantTotalScolarite,
             "etudiant_ip"        => $etudiant->ip,
             "annee_universitaire_id" => $anneeUniversitaire->id
+        ]);
+    }
+
+    public function update(Inscription $inscription, array $data, int $scolariteApresReduction, int $montantTotalScolarite) {
+       return $inscription->update([
+            "type_inscription"   => $data["type_inscription"],
+            "taux_reduction"     => isset($data['taux_reduction']) && $data['taux_reduction'] > 0 ? $data['taux_reduction'] : 0,
+            "montant_reduction"  => isset($data['montant_reduction']) && $data['montant_reduction'] > 0 ? $data['montant_reduction'] : null,
+            "montant_scolarite"  => $scolariteApresReduction,
+            "montant_total"      => $montantTotalScolarite,
         ]);
     }
 

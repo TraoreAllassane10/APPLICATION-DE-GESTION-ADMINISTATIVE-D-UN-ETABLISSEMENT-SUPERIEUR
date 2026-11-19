@@ -76,7 +76,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post("/inscriptions", "store")->name("inscriptions.store");
 
         Route::get("/inscriptions/{inscription}", "show")->name("inscriptions.show");
+        Route::get("/inscriptions/{inscription}/edit", "edit")->name("inscriptions.edit");
+        Route::put("/inscriptions/{inscription}/update", "update")->name("inscriptions.update");
         Route::delete("/inscriptions/{inscription}/delete", "delete")->name("inscriptions.delete");
+
     })->middleware(["administrateur", "service_scolarite"]);
 
     // Routes Professeur
